@@ -4,8 +4,8 @@
 
 @section('content')
     <h2>Iniciar Sesión</h2>
-    <form>
-        @csrf <!-- Protección CSRF -->
+    <form method="POST" action="{{ route('login.submit') }}">
+        @csrf 
         <div class="form-group">
             <label for="email">Correo Electrónico:</label>
             <input type="email" id="email" name="email" placeholder="Ingresa tu correo electrónico" required>
