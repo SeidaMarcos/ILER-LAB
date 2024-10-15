@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User; // Asegúrate de importar el modelo User
+use Illuminate\Support\Facades\Hash;
+use App\Models\User; 
 
 class AdminController extends Controller
 {
@@ -21,6 +22,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . Auth::id()],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'], // Validar la nueva contraseña si se proporciona
         ]);
 
         // Obtener el usuario autenticado
@@ -29,6 +31,12 @@ class AdminController extends Controller
         // Actualizar los datos del administrador
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+
+        // Solo actualizar la contraseña si se proporciona una nueva
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+
         $user->save(); // Guardar los cambios en la base de datos
 
         // Redirigir de vuelta al dashboard con un mensaje de éxito

@@ -47,6 +47,16 @@
                             <input type="email" id="email" name="email" value="{{ auth()->user()->email }}" class="form-control" required>
                         </div>
 
+                        <div class="form-group">
+                            <label for="password">Nueva Contraseña (opcional):</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password_confirmation">Confirmar Nueva Contraseña:</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirmar nueva contraseña">
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
