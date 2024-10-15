@@ -24,6 +24,9 @@ Route::middleware('auth')->group(function () {
     // Ruta para el dashboard del administrador
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
+    // Ruta para actualizar los datos del administrador
+    Route::put('/admin/update', [AdminController::class, 'update'])->name('admin.update');
+
 });
 
 // Redirigir a la página de inicio de sesión por defecto

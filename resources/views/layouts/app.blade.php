@@ -5,6 +5,8 @@
     <title>@yield('title') - IlerLab</title>
     @vite('resources/css/app.css') 
     @stack('styles') 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
@@ -12,5 +14,6 @@
     </div>
     @vite('resources/js/app.js')
     @stack('scripts') 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
