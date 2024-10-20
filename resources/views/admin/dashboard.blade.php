@@ -142,6 +142,13 @@
                     <td>
                         <!-- Botón para abrir el modal de edición -->
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}">Editar</button>
+
+                        <!-- Botón para eliminar el usuario -->
+                        <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
                     </td>
                 </tr>
 

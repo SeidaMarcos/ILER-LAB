@@ -106,4 +106,20 @@ class AdminController extends Controller
         // Redirigir de vuelta al dashboard con un mensaje de éxito
         return redirect()->route('admin.dashboard')->with('success', 'Usuario actualizado correctamente.');
     }
+
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Verifica si el usuario es el administrador (id_rol = 1)
+        if ($user->id_rol == 1) {
+            return redirect()->route('admin.dashboard')->with('error', 'No se puede eliminar al administrador.');
+        }
+
+        // Eliminar el usuario
+        $user->delete();
+
+        return redirect()->route('admin.dashboard')->with('success', 'Usuario eliminado correctamente.');
+    }
+
 }

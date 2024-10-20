@@ -45,6 +45,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Ruta para actualizar un usuario específico
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.updateUser');
+    
+    // Ruta para eliminar usuario
+    Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+
 });
 
 // Redirigir a la página de inicio de sesión por defecto
