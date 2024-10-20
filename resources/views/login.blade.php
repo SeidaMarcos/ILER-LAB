@@ -4,6 +4,18 @@
 
 @section('content')
     <h2>Iniciar Sesión</h2>
+
+    <!-- Mostrar mensajes de error -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login.submit') }}">
         @csrf 
         <div class="form-group">

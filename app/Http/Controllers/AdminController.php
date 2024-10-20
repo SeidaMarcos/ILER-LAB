@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class AdminController extends Controller
@@ -13,7 +14,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         // Obtener todos los registros pendientes
-        $registrations = \DB::table('pending_registrations')->get();
+        $registrations = DB::table('pending_registrations')->get();
         return view('admin.dashboard', compact('registrations'));
     }
 
@@ -48,7 +49,7 @@ class AdminController extends Controller
     // Aprobar un registro pendiente
     public function approveRegistration($id)
     {
-        $registration = \DB::table('pending_registrations')->find($id);
+        $registration = DB::table('pending_registrations')->find($id);
 
         if ($registration) {
             // Crear el usuario en la tabla users con el rol correspondiente
@@ -60,7 +61,7 @@ class AdminController extends Controller
             ]);
 
             // Eliminar el registro pendiente
-            \DB::table('pending_registrations')->where('id', $id)->delete();
+            DB::table('pending_registrations')->where('id', $id)->delete();
 
             return redirect()->route('admin.dashboard')->with('success', 'Registro aprobado y usuario creado.');
         }
@@ -72,7 +73,7 @@ class AdminController extends Controller
     public function rejectRegistration($id)
     {
         // Eliminar el registro pendiente
-        \DB::table('pending_registrations')->where('id', $id)->delete();
+        DB::table('pending_registrations')->where('id', $id)->delete();
 
         return redirect()->route('admin.dashboard')->with('success', 'Registro rechazado y eliminado.');
     }

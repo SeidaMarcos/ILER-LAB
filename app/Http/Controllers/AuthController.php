@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 
 class AuthController extends Controller
 {
@@ -32,7 +34,7 @@ class AuthController extends Controller
         ]);
 
         // Guardar en la tabla de registros pendientes
-        \DB::table('pending_registrations')->insert([
+        DB::table('pending_registrations')->insert([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
@@ -59,11 +61,11 @@ class AuthController extends Controller
 
             // Redirigir según el rol del usuario autenticado
             $user = Auth::user();
-            if ($user->id_rol == 1) { // Asumiendo que el ID 1 es el rol de Administrador
+            if ($user->id_rol == 1) { 
                 return redirect()->route('admin.dashboard');
-            } elseif ($user->id_rol == 2) { // Asumiendo que el ID 2 es el rol de Profesor
+            } elseif ($user->id_rol == 2) { 
                 return redirect()->route('teacher.dashboard');
-            } elseif ($user->id_rol == 3) { // Asumiendo que el ID 3 es el rol de Estudiante
+            } elseif ($user->id_rol == 3) { 
                 return redirect()->route('student.dashboard');
             }
 
@@ -73,7 +75,7 @@ class AuthController extends Controller
 
         // Si falla la autenticación, redirigir de vuelta con error
         return back()->withErrors([
-            'email' => 'Las credenciales no coinciden con nuestros registros.',
+            'email' => 'Las credenciales no coinciden con nuestros registros, o falta de la aprobación del administrador.',
         ])->onlyInput('email');
     }
 
