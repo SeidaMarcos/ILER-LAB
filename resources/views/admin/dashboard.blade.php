@@ -66,4 +66,48 @@
             </div>
         </div>
     </div>
+
+    <!-- Sección de registros pendientes -->
+    <h2>Registros Pendientes</h2>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($registrations as $registration)
+                <tr>
+                    <td>{{ $registration->name }}</td>
+                    <td>{{ $registration->email }}</td>
+                    <td>{{ ucfirst($registration->role) }}</td>
+                    <td>
+                        <form action="{{ route('admin.registrations.approve', $registration->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-success">Aprobar</button>
+                        </form>
+                        <form action="{{ route('admin.registrations.reject', $registration->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Rechazar</button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4">No hay registros pendientes.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 @endsection

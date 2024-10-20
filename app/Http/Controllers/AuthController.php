@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -13,12 +14,36 @@ class AuthController extends Controller
         return view('login');
     }
 
-        // Mostrar la vista de registro
-        public function showRegistrationForm()
-        {
-            return view('register');
-        }
-    
+    // Mostrar la vista de registro
+    public function showRegistrationForm()
+    {
+        return view('register');
+    }
+
+    // Procesar el registro del usuario
+    public function register(Request $request)
+    {
+        // Validar los datos de registro
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:pending_registrations,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'in:student,professor'],
+        ]);
+
+        // Guardar en la tabla de registros pendientes
+        \DB::table('pending_registrations')->insert([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'role' => $data['role'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('login')->with('success', 'Registro enviado para aprobación. Espera la confirmación del administrador.');
+    }
+
     // Procesar el inicio de sesión
     public function login(Request $request)
     {
@@ -32,13 +57,17 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redirigir según el rol
+            // Redirigir según el rol del usuario autenticado
             $user = Auth::user();
             if ($user->id_rol == 1) { // Asumiendo que el ID 1 es el rol de Administrador
                 return redirect()->route('admin.dashboard');
+            } elseif ($user->id_rol == 2) { // Asumiendo que el ID 2 es el rol de Profesor
+                return redirect()->route('teacher.dashboard');
+            } elseif ($user->id_rol == 3) { // Asumiendo que el ID 3 es el rol de Estudiante
+                return redirect()->route('student.dashboard');
             }
 
-            // Redirigir a home para otros roles
+            // Si el rol no coincide con ninguno, redirigir a una ruta por defecto
             return redirect()->route('home');
         }
 

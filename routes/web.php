@@ -13,20 +13,35 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 // Ruta para cerrar sesión (POST)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Ruta para mostrar el formulario de registro (futuro uso)
+// Ruta para mostrar el formulario de registro
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
-// Ruta para procesar el formulario de registro (futuro uso)
+// Ruta para procesar el formulario de registro
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 
 // Rutas protegidas con middleware de autenticación
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Ruta para el dashboard del administrador
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // Ruta para el dashboard del profesor
+    Route::get('/teacher/dashboard', function () {
+        return view('teacher.dashboard');
+    })->name('teacher.dashboard');
+
+    // Ruta para el dashboard del estudiante
+    Route::get('/student/dashboard', function () {
+        return view('student.dashboard');
+    })->name('student.dashboard');
 
     // Ruta para actualizar los datos del administrador
     Route::put('/admin/update', [AdminController::class, 'update'])->name('admin.update');
 
+    // Ruta para aprobar un registro pendiente
+    Route::post('/admin/registrations/{id}/approve', [AdminController::class, 'approveRegistration'])->name('admin.registrations.approve');
+
+    // Ruta para rechazar un registro pendiente
+    Route::post('/admin/registrations/{id}/reject', [AdminController::class, 'rejectRegistration'])->name('admin.registrations.reject');
 });
 
 // Redirigir a la página de inicio de sesión por defecto

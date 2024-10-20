@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User; 
+use App\Models\User;
 
 class AdminController extends Controller
 {
     // Mostrar el dashboard del administrador
     public function dashboard()
     {
-        return view('admin.dashboard');
+        // Obtener todos los registros pendientes
+        $registrations = \DB::table('pending_registrations')->get();
+        return view('admin.dashboard', compact('registrations'));
     }
 
     // Actualizar los datos del administrador
@@ -41,5 +43,37 @@ class AdminController extends Controller
 
         // Redirigir de vuelta al dashboard con un mensaje de éxito
         return redirect()->route('admin.dashboard')->with('success', 'Datos actualizados correctamente.');
+    }
+
+    // Aprobar un registro pendiente
+    public function approveRegistration($id)
+    {
+        $registration = \DB::table('pending_registrations')->find($id);
+
+        if ($registration) {
+            // Crear el usuario en la tabla users con el rol correspondiente
+            User::create([
+                'name' => $registration->name,
+                'email' => $registration->email,
+                'password' => $registration->password, // La contraseña ya está encriptada
+                'id_rol' => $registration->role == 'professor' ? 2 : 3, // Asignar el rol: 2 para profesor, 3 para estudiante
+            ]);
+
+            // Eliminar el registro pendiente
+            \DB::table('pending_registrations')->where('id', $id)->delete();
+
+            return redirect()->route('admin.dashboard')->with('success', 'Registro aprobado y usuario creado.');
+        }
+
+        return redirect()->route('admin.dashboard')->with('error', 'Registro no encontrado.');
+    }
+
+    // Rechazar un registro pendiente
+    public function rejectRegistration($id)
+    {
+        // Eliminar el registro pendiente
+        \DB::table('pending_registrations')->where('id', $id)->delete();
+
+        return redirect()->route('admin.dashboard')->with('success', 'Registro rechazado y eliminado.');
     }
 }
