@@ -13,9 +13,11 @@ class AdminController extends Controller
     // Mostrar el dashboard del administrador
     public function dashboard()
     {
-        // Obtener todos los registros pendientes
+        // Obtener todos los registros pendientes y todos los usuarios registrados
         $registrations = DB::table('pending_registrations')->get();
-        return view('admin.dashboard', compact('registrations'));
+        $users = User::all();
+
+        return view('admin.dashboard', compact('registrations', 'users'));
     }
 
     // Actualizar los datos del administrador
@@ -76,5 +78,32 @@ class AdminController extends Controller
         DB::table('pending_registrations')->where('id', $id)->delete();
 
         return redirect()->route('admin.dashboard')->with('success', 'Registro rechazado y eliminado.');
+    }
+
+    // Actualizar los datos de un usuario específico
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Validar los datos del formulario
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'], // Validar la nueva contraseña si se proporciona
+        ]);
+
+        // Actualizar los datos del usuario
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+
+        // Solo actualizar la contraseña si se proporciona una nueva
+        if (!empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+
+        $user->save(); // Guardar los cambios en la base de datos
+
+        // Redirigir de vuelta al dashboard con un mensaje de éxito
+        return redirect()->route('admin.dashboard')->with('success', 'Usuario actualizado correctamente.');
     }
 }

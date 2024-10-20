@@ -42,6 +42,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Ruta para rechazar un registro pendiente
     Route::post('/admin/registrations/{id}/reject', [AdminController::class, 'rejectRegistration'])->name('admin.registrations.reject');
+
+    // Ruta para actualizar un usuario específico
+    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.updateUser');
 });
 
 // Redirigir a la página de inicio de sesión por defecto
