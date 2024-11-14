@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
+
+
 
 // Ruta para la página de bienvenida (welcome)
 Route::get('/', function () {
@@ -29,15 +33,21 @@ Route::middleware(['auth'])->group(function () {
     // Ruta para el dashboard del administrador
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // Ruta para el dashboard del profesor
-    Route::get('/teacher/dashboard', function () {
-        return view('teacher.dashboard');
-    })->name('teacher.dashboard');
+    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::put('/teacher/updateProfile', [TeacherController::class, 'updateProfile'])->name('teacher.updateProfile');
 
-    // Ruta para el dashboard del estudiante
-    Route::get('/student/dashboard', function () {
-        return view('student.dashboard');
-    })->name('student.dashboard');
+
+
+
+    Route::middleware(['auth'])->group(function () {
+        // Ruta para el dashboard del estudiante
+        Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+
+        // Ruta para actualizar el perfil del estudiante
+        Route::put('/student/profile/update', [StudentController::class, 'updateProfile'])->name('student.updateProfile');
+    });
+
+
 
     // Ruta para actualizar los datos del administrador
     Route::put('/admin/update', [AdminController::class, 'update'])->name('admin.update');
@@ -50,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Ruta para actualizar un usuario específico
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.updateUser');
-    
+
     // Ruta para eliminar usuario
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 });
