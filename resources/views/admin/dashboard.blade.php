@@ -87,7 +87,15 @@
                     <tr>
                         <td>{{ $registration->name }}</td>
                         <td>{{ $registration->email }}</td>
-                        <td>{{ ucfirst($registration->role) }}</td>
+                        <td>
+                            @if($registration->role == 'professor')
+                                Profesor
+                            @elseif($registration->role == 'student')
+                                Estudiante
+                            @else
+                                Desconocido
+                            @endif
+                        </td>
                         <td>
                             <form action="{{ route('admin.registrations.approve', $registration->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -143,44 +151,43 @@
                             </td>
                         </tr>
 
-<!-- Modal para editar usuario -->
-<div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1" aria-labelledby="editUserModalLabel{{ $user->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel{{ $user->id }}">Editar Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('admin.updateUser', $user->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="mb-3">
-                        <label for="name{{ $user->id }}" class="form-label">Nombre:</label>
-                        <input type="text" id="name{{ $user->id }}" name="name" value="{{ $user->name }}" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email{{ $user->id }}" class="form-label">Correo Electrónico:</label>
-                        <input type="email" id="email{{ $user->id }}" name="email" value="{{ $user->email }}" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password{{ $user->id }}" class="form-label">Nueva Contraseña (opcional):</label>
-                        <input type="password" id="password{{ $user->id }}" name="password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password_confirmation{{ $user->id }}" class="form-label">Confirmar Nueva Contraseña:</label>
-                        <input type="password" id="password_confirmation{{ $user->id }}" name="password_confirmation" class="form-control" placeholder="Confirmar nueva contraseña">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+                        <!-- Modal para editar usuario -->
+                        <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1" aria-labelledby="editUserModalLabel{{ $user->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editUserModalLabel{{ $user->id }}">Editar Usuario</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ route('admin.updateUser', $user->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="mb-3">
+                                                <label for="name{{ $user->id }}" class="form-label">Nombre:</label>
+                                                <input type="text" id="name{{ $user->id }}" name="name" value="{{ $user->name }}" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="email{{ $user->id }}" class="form-label">Correo Electrónico:</label>
+                                                <input type="email" id="email{{ $user->id }}" name="email" value="{{ $user->email }}" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="password{{ $user->id }}" class="form-label">Nueva Contraseña (opcional):</label>
+                                                <input type="password" id="password{{ $user->id }}" name="password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="password_confirmation{{ $user->id }}" class="form-label">Confirmar Nueva Contraseña:</label>
+                                                <input type="password" id="password_confirmation{{ $user->id }}" name="password_confirmation" class="form-control" placeholder="Confirmar nueva contraseña">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endif
                 @endforeach
             </tbody>
