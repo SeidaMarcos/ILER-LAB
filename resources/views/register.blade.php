@@ -53,7 +53,7 @@
             </form>
 
             <p class="text-center mt-3" style="color: #010407;">¿Ya tienes una cuenta? 
-                <a href="{{ url('/') }}" style="color: #7dd3fc;">Inicia sesión aquí</a>
+                <a href="{{ url('/login') }}" style="color: #7dd3fc;">Inicia sesión aquí</a>
             </p>
         </div>
     </div>

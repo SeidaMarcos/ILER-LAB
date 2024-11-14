@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 
+// Ruta para la página de bienvenida (welcome)
+Route::get('/', function () {
+    return view('welcome'); // Cambia la ruta inicial a la vista welcome
+})->name('welcome');
+
 // Ruta para mostrar el formulario de inicio de sesión
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
@@ -48,10 +53,5 @@ Route::middleware(['auth'])->group(function () {
     
     // Ruta para eliminar usuario
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
-
 });
 
-// Redirigir a la página de inicio de sesión por defecto
-Route::get('/', function () {
-    return redirect()->route('login');
-});

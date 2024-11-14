@@ -1,35 +1,16 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.full-height-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
-    }
-    .container {
-        width: 300px;
-        margin: 0 auto;
-        padding-top: 100px;
-    }
-    h2 {
-        text-align: center;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    label {
-        display: block;
-    }
-    input[type="email"],
-    input[type="password"] {
-        width: 100%;
-        padding: 8px;
-    }
-    button {
-        width: 100%;
-        padding: 10px;
-        background-color: #5bc0de;
-        border: none;
-        color: #fff;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #31b0d5;
-    }
