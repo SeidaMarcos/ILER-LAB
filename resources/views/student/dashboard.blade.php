@@ -11,7 +11,7 @@
 
 <body>
     <div class="container my-5">
-        <h1 class="text-center mb-4">Bienvenido, {{ $user->name }}</h1>
+        <h1 class="text-center mb-4">Bienvenido/a, {{ $user->name }}</h1>
 
         <!-- Menú desplegable de perfil -->
         <div class="dropdown text-end mb-4">
