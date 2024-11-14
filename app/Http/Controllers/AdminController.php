@@ -33,8 +33,8 @@ class AdminController extends Controller
         // Obtener el usuario autenticado
         $user = Auth::user();
 
-        // Actualizar los datos del administrador
-        $user->name = $request->input('name');
+        // Actualizar los datos del administrador con el nombre en mayúsculas
+        $user->name = strtoupper($request->input('name'));
         $user->email = $request->input('email');
 
         // Solo actualizar la contraseña si se proporciona una nueva
@@ -54,9 +54,9 @@ class AdminController extends Controller
         $registration = DB::table('pending_registrations')->find($id);
 
         if ($registration) {
-            // Crear el usuario en la tabla users con el rol correspondiente
+            // Crear el usuario en la tabla users con el nombre en mayúsculas y el rol correspondiente
             User::create([
-                'name' => $registration->name,
+                'name' => strtoupper($registration->name),
                 'email' => $registration->email,
                 'password' => $registration->password, // La contraseña ya está encriptada
                 'id_rol' => $registration->role == 'professor' ? 2 : 3, // Asignar el rol: 2 para profesor, 3 para estudiante
@@ -80,7 +80,7 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard')->with('success', 'Registro rechazado y eliminado.');
     }
 
-    // Actualizar los datos de un usuario específico
+    // Actualizar los datos de un usuario específico, incluyendo el rol
     public function updateUser(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -90,11 +90,13 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'], // Validar la nueva contraseña si se proporciona
+            'role' => ['required', 'in:2,3'], // Validar que el rol sea profesor (2) o estudiante (3)
         ]);
 
-        // Actualizar los datos del usuario
-        $user->name = $data['name'];
+        // Actualizar los datos del usuario con el nombre en mayúsculas
+        $user->name = strtoupper($data['name']);
         $user->email = $data['email'];
+        $user->id_rol = $data['role']; // Actualizar el rol del usuario
 
         // Solo actualizar la contraseña si se proporciona una nueva
         if (!empty($data['password'])) {
@@ -121,5 +123,4 @@ class AdminController extends Controller
 
         return redirect()->route('admin.dashboard')->with('success', 'Usuario eliminado correctamente.');
     }
-
 }
