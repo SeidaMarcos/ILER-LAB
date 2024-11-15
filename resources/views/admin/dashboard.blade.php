@@ -18,7 +18,7 @@
             <div class="dropdown">
                 <a class="btn dropdown-toggle text-white" href="#" role="button" id="dropdownMenuLink"
                     data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #14b8a6;">
-                    <i class="fas fa-user"></i> Perfil
+                    <i class="fas fa-user"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li>
@@ -37,9 +37,10 @@
                 </ul>
             </div>
 
-            <!-- Botón Ver Lista de Tareas -->
-            <a href="{{ route('tasks.index') }}" class="btn text-white" style="background-color: #14b8a6;">Ver Lista de
-                Tareas</a>
+            <!-- Botón Ver Lista de Tareas con ícono -->
+            <a href="{{ route('tasks.index') }}" class="btn text-white" style="background-color: #14b8a6;">
+                <i class="fas fa-tasks"></i> Tareas
+            </a>
         </div>
 
         <!-- Modal para editar perfil -->

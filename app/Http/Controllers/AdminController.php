@@ -17,7 +17,7 @@ class AdminController extends Controller
         $registrations = DB::table('pending_registrations')->get();
         $users = User::all();
 
-        return view('admin.dashboard', compact('registrations', 'users'));
+        return view('admin.dashboard', compact('registrations', 'users', ));
     }
 
     // Actualizar los datos del administrador
