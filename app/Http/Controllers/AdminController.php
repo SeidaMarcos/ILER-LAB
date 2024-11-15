@@ -29,26 +29,26 @@ class AdminController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . Auth::id()],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'], // Validar la nueva contraseña si se proporciona
         ]);
-    
+
         // Obtener el usuario autenticado
         $user = Auth::user();
-    
+
         // Actualizar los datos del administrador con el nombre en mayúsculas
         $user->name = strtoupper($request->input('name'));
         $user->email = $request->input('email');
-    
+
         // Solo actualizar la contraseña si se proporciona una nueva
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
-    
+
         $user->save(); // Guardar los cambios en la base de datos
-    
+
         // Redirigir de vuelta a la página en la que estaba el usuario, o al dashboard como fallback
         return redirect($request->input('redirect_to', route('admin.dashboard')))
             ->with('success', 'Datos actualizados correctamente.');
     }
-    
+
 
     // Aprobar un registro pendiente
     public function approveRegistration($id)
