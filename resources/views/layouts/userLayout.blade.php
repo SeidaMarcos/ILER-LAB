@@ -38,8 +38,8 @@
         </div>
 
         <!-- Modal para editar perfil -->
-        <div class="modal fade @if ($errors->any()) show @endif" id="editProfileModal" tabindex="-1"
-            aria-labelledby="editProfileModalLabel" aria-hidden="true" @if ($errors->any()) style="display: block;" @endif>
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -60,8 +60,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Correo Electrónico:</label>
-                                <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email) }}"
-                                    class="form-control" required>
+                                <input type="email" id="email" name="email"
+                                    value="{{ old('email', auth()->user()->email) }}" class="form-control" required>
                                 @error('email')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -90,8 +90,20 @@
             </div>
         </div>
 
+
         @yield('content')
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Si hay errores, abre el modal
+            @if ($errors->any())
+                var editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+                editProfileModal.show();
+            @endif
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
