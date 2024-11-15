@@ -11,8 +11,10 @@
 
 <body>
     <div class="container my-5">
-        <h1 class="text-center mb-4">Bienvenido, Administrador</h1>
-
+        
+    <h1 class="text-center mb-4">Bienvenido, Administrador</h1>
+        
+    <a href="{{ route('tasks.index') }}" class="btn btn-primary">Ver Lista de Tareas</a>
         <!-- Menú desplegable de perfil -->
         <div class="dropdown text-end mb-4">
             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"

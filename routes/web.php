@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TaskController;
 
 
 
@@ -65,3 +66,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 });
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('tasks', TaskController::class);
+});
+;
