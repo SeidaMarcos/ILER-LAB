@@ -13,31 +13,38 @@
     <div class="container my-5">
         <h1 class="text-center mb-4">Bienvenido, {{ auth()->user()->name }}</h1>
 
-        <!-- Menú desplegable de perfil -->
-        <div class="dropdown text-end mb-4">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user"></i> Perfil
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                        <i class="fas fa-edit"></i> Editar Perfil
-                    </a>
-                </li>
-                <li>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="dropdown-item">
-                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                        </button>
-                    </form>
-                </li>
-            </ul>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Menú desplegable de perfil -->
+            <div class="dropdown">
+                <a class="btn dropdown-toggle text-white" href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #14b8a6;">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </a>
+                    </li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Botón Ver Lista de Tareas -->
+            <a href="{{ route('tasks.index') }}" class="btn text-white" style="background-color: #14b8a6;">Ver Lista de
+                Tareas</a>
         </div>
 
         <!-- Modal para editar perfil -->
-        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -50,19 +57,24 @@
                             @method('PUT')
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nombre:</label>
-                                <input type="text" id="name" name="name" value="{{ auth()->user()->name }}" class="form-control" required>
+                                <input type="text" id="name" name="name" value="{{ auth()->user()->name }}"
+                                    class="form-control" required>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Correo Electrónico:</label>
-                                <input type="email" id="email" name="email" value="{{ auth()->user()->email }}" class="form-control" required>
+                                <input type="email" id="email" name="email" value="{{ auth()->user()->email }}"
+                                    class="form-control" required>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Nueva Contraseña (opcional):</label>
-                                <input type="password" id="password" name="password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
+                                <input type="password" id="password" name="password" class="form-control"
+                                    placeholder="Dejar en blanco para mantener la actual">
                             </div>
                             <div class="mb-3">
-                                <label for="password_confirmation" class="form-label">Confirmar Nueva Contraseña:</label>
-                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirmar nueva contraseña">
+                                <label for="password_confirmation" class="form-label">Confirmar Nueva
+                                    Contraseña:</label>
+                                <input type="password" id="password_confirmation" name="password_confirmation"
+                                    class="form-control" placeholder="Confirmar nueva contraseña">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -73,8 +85,6 @@
                 </div>
             </div>
         </div>
-
-        <a href="{{ route('tasks.index') }}" class="btn btn-primary mb-4">Ver Lista de Tareas</a>
 
         <!-- Sección de registros pendientes -->
         <h2 class="mt-4">Registros Pendientes</h2>
@@ -108,11 +118,13 @@
                             @endif
                         </td>
                         <td>
-                            <form action="{{ route('admin.registrations.approve', $registration->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('admin.registrations.approve', $registration->id) }}" method="POST"
+                                class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
                             </form>
-                            <form action="{{ route('admin.registrations.reject', $registration->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('admin.registrations.reject', $registration->id) }}" method="POST"
+                                class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-times"></i></button>
                             </form>
@@ -153,10 +165,12 @@
                                 @endif
                             </td>
                             <td>
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}">
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#editUserModal{{ $user->id }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" class="d-inline"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
@@ -165,12 +179,14 @@
                         </tr>
 
                         <!-- Modal para editar usuario -->
-                        <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1" aria-labelledby="editUserModalLabel{{ $user->id }}" aria-hidden="true">
+                        <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1"
+                            aria-labelledby="editUserModalLabel{{ $user->id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="editUserModalLabel{{ $user->id }}">Editar Usuario</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <form action="{{ route('admin.updateUser', $user->id) }}" method="POST">
@@ -178,29 +194,38 @@
                                             @method('PUT')
                                             <div class="mb-3">
                                                 <label for="name{{ $user->id }}" class="form-label">Nombre:</label>
-                                                <input type="text" id="name{{ $user->id }}" name="name" value="{{ $user->name }}" class="form-control" required>
+                                                <input type="text" id="name{{ $user->id }}" name="name"
+                                                    value="{{ $user->name }}" class="form-control" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="email{{ $user->id }}" class="form-label">Correo Electrónico:</label>
-                                                <input type="email" id="email{{ $user->id }}" name="email" value="{{ $user->email }}" class="form-control" required>
+                                                <input type="email" id="email{{ $user->id }}" name="email"
+                                                    value="{{ $user->email }}" class="form-control" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="password{{ $user->id }}" class="form-label">Nueva Contraseña (opcional):</label>
-                                                <input type="password" id="password{{ $user->id }}" name="password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
+                                                <label for="password{{ $user->id }}" class="form-label">Nueva Contraseña
+                                                    (opcional):</label>
+                                                <input type="password" id="password{{ $user->id }}" name="password"
+                                                    class="form-control" placeholder="Dejar en blanco para mantener la actual">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="password_confirmation{{ $user->id }}" class="form-label">Confirmar Nueva Contraseña:</label>
-                                                <input type="password" id="password_confirmation{{ $user->id }}" name="password_confirmation" class="form-control" placeholder="Confirmar nueva contraseña">
+                                                <label for="password_confirmation{{ $user->id }}" class="form-label">Confirmar
+                                                    Nueva Contraseña:</label>
+                                                <input type="password" id="password_confirmation{{ $user->id }}"
+                                                    name="password_confirmation" class="form-control"
+                                                    placeholder="Confirmar nueva contraseña">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="role{{ $user->id }}" class="form-label">Rol:</label>
                                                 <select id="role{{ $user->id }}" name="role" class="form-select" required>
                                                     <option value="2" {{ $user->id_rol == 2 ? 'selected' : '' }}>Profesor</option>
-                                                    <option value="3" {{ $user->id_rol == 3 ? 'selected' : '' }}>Estudiante</option>
+                                                    <option value="3" {{ $user->id_rol == 3 ? 'selected' : '' }}>Estudiante
+                                                    </option>
                                                 </select>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Cerrar</button>
                                                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                                             </div>
                                         </form>
