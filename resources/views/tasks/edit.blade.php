@@ -24,6 +24,16 @@
             <option value="urgente" {{ $task->priority == 'urgente' ? 'selected' : '' }}>Urgente</option>
         </select>
     </div>
+    <div class="mb-3">
+        <label for="progress" class="form-label">Progreso</label>
+        <select name="progress" id="progress" class="form-select" required>
+            <option value="0" {{ $task->progress == '0' ? 'selected' : '' }}>0</option>
+            <option value="25" {{ $task->progress == '25' ? 'selected' : '' }}>25</option>
+            <option value="50" {{ $task->progress == '50' ? 'selected' : '' }}>50</option>
+            <option value="75" {{ $task->progress == '75' ? 'selected' : '' }}>75</option>
+            <option value="100" {{ $task->progress == '100' ? 'selected' : '' }}>100</option>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
 @endsection

@@ -23,6 +23,16 @@
             <option value="urgente">Urgente</option>
         </select>
     </div>
+    <div class="mb-3">
+        <label for="progress" class="form-label">Progreso</label>
+        <select name="progress" id="progress" class="form-select" required>
+            <option value="0">0</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
 @endsection

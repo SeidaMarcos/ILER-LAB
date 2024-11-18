@@ -17,6 +17,7 @@
             <th>Nombre</th>
             <th>Descripción</th>
             <th>Prioridad</th>
+            <th>Progreso</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -27,6 +28,7 @@
                 <td>{{ $task->name }}</td>
                 <td>{{ $task->description }}</td>
                 <td>{{ ucfirst($task->priority) }}</td>
+                <td>{{ ucfirst($task->progress) }}</td>
                 <td>
                     <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                     <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="d-inline">

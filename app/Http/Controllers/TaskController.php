@@ -23,7 +23,8 @@ class TaskController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'priority' => 'required|in:baja,media,alta,urgente', 
+            'priority' => 'required|in:baja,media,alta,urgente',
+            'progress' => 'required|in:0,25,50,75,100',  
         ]);
 
         Task::create($request->all());
@@ -42,6 +43,7 @@ class TaskController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'priority' => 'required|in:baja,media,alta,urgente', 
+            'progress' => 'required|in:0,25,50,75,100',  
         ]);
 
         $task->update($request->all());
