@@ -71,3 +71,4 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('tasks', TaskController::class);
 });
 ;
+Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');

@@ -5,14 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Task; // Importar el modelo Task
 
 class StudentController extends Controller
 {
-    // Muestra el dashboard del estudiante con sus datos
+    // Muestra el dashboard del estudiante con sus datos y las tareas
     public function dashboard()
     {
         $user = Auth::user(); // Obtener el usuario autenticado
-        return view('student.dashboard', compact('user'));
+        
+        // Obtener todas las tareas disponibles para los estudiantes
+        $tasks = Task::all();
+        
+        // Devuelve la vista del dashboard del estudiante con los datos y las tareas
+        return view('student.dashboard', compact('user', 'tasks'));
     }
 
     // Actualizar el perfil del estudiante
@@ -43,5 +49,4 @@ class StudentController extends Controller
 
         return redirect()->route('student.dashboard')->with('success', 'Perfil actualizado correctamente.');
     }
-
 }
