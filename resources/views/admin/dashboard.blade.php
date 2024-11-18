@@ -89,17 +89,19 @@
             </div>
         </div>
 
+        <!-- Alerta de ediciones -->
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+        
         <!-- Contenido principal -->
         <div class="row">
             <!-- Tabla de Registros Pendientes -->
             <div class="col-lg-6 col-md-12 mb-4">
                 <h2>Registros Pendientes</h2>
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
