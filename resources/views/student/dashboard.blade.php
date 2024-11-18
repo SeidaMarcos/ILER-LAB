@@ -16,23 +16,19 @@
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Prioridad</th>
-                    <th>Progreso</th>
-                    <th>Fecha de Entrega</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($tasks as $task)
                     <tr>
-                        <td>{{ $task->id }}</td>
                         <td>{{ $task->name }}</td>
-                        <td>{{ $task->description }}</td>
-                        <td>{{ ucfirst($task->priority) }}</td>
-                        <td>{{ ucfirst($task->progress) }}%</td>
-                        <td>{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d-m-Y') : 'No asignada' }}</td>
+                        <td>
+                            <a href="{{ route('student.tasks.show', $task->id) }}" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

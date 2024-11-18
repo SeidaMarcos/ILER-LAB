@@ -49,4 +49,10 @@ class StudentController extends Controller
 
         return redirect()->route('student.dashboard')->with('success', 'Perfil actualizado correctamente.');
     }
+
+    public function showTask(Task $task)
+{
+    return view('student.tasks.show', compact('task'));
+}
+
 }

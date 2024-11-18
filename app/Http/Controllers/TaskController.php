@@ -59,4 +59,5 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index')->with('success', 'Tarea eliminada exitosamente.');
     }
+
 }

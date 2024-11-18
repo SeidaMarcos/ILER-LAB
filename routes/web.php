@@ -72,3 +72,5 @@ Route::middleware(['auth'])->group(function () {
 });
 ;
 Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+
+Route::get('/student/tasks/{task}', [StudentController::class, 'showTask'])->name('student.tasks.show');
