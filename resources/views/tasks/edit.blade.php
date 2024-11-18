@@ -25,6 +25,10 @@
         </select>
     </div>
     <div class="mb-3">
+        <label for="due_date" class="form-label">Fecha de Entrega</label>
+        <input type="date" name="due_date" id="due_date" class="form-control" value="{{ $task->due_date }}">
+    </div>
+    <div class="mb-3">
         <label for="progress" class="form-label">Progreso</label>
         <select name="progress" id="progress" class="form-select" required>
             <option value="0" {{ $task->progress == '0' ? 'selected' : '' }}>0</option>

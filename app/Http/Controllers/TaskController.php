@@ -24,7 +24,8 @@ class TaskController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'priority' => 'required|in:baja,media,alta,urgente',
-            'progress' => 'required|in:0,25,50,75,100',  
+            'progress' => 'required|in:0,25,50,75,100',
+            'due_date' => 'nullable|date|after_or_equal:today',
         ]);
 
         Task::create($request->all());
@@ -42,8 +43,9 @@ class TaskController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'priority' => 'required|in:baja,media,alta,urgente', 
-            'progress' => 'required|in:0,25,50,75,100',  
+            'priority' => 'required|in:baja,media,alta,urgente',
+            'progress' => 'required|in:0,25,50,75,100',
+            'due_date' => 'nullable|date|after_or_equal:today',
         ]);
 
         $task->update($request->all());

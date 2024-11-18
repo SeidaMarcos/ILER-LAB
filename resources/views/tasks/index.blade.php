@@ -18,6 +18,7 @@
             <th>Descripción</th>
             <th>Prioridad</th>
             <th>Progreso</th>
+            <th>Fecha de Entrega</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -29,6 +30,7 @@
                 <td>{{ $task->description }}</td>
                 <td>{{ ucfirst($task->priority) }}</td>
                 <td>{{ ucfirst($task->progress) }}</td>
+                <td>{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d-m-Y') : 'No asignada' }}</td>
                 <td>
                     <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                     <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="d-inline">
@@ -40,7 +42,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="5" class="text-center">No hay tareas disponibles.</td>
+                <td colspan="7" class="text-center">No hay tareas disponibles.</td>
             </tr>
         @endforelse
     </tbody>

@@ -15,6 +15,10 @@
         <textarea name="description" id="description" class="form-control"></textarea>
     </div>
     <div class="mb-3">
+        <label for="due_date" class="form-label">Fecha de Entrega</label>
+        <input type="date" name="due_date" id="due_date" class="form-control">
+    </div>
+    <div class="mb-3">
         <label for="priority" class="form-label">Prioridad</label>
         <select name="priority" id="priority" class="form-select" required>
             <option value="baja">Baja</option>
