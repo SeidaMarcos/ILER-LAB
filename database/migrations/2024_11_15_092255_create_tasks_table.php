@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name'); // Nombre de la tarea
             $table->text('description')->nullable(); // Descripción de la tarea
+            $table->enum('priority', ['baja', 'media', 'alta', 'urgente'])->default('media'); // Urgencia de la tarea
             $table->timestamps();
         });
     }

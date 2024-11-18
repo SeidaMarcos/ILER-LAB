@@ -16,6 +16,7 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Prioridad</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -25,6 +26,7 @@
                 <td>{{ $task->id }}</td>
                 <td>{{ $task->name }}</td>
                 <td>{{ $task->description }}</td>
+                <td>{{ ucfirst($task->priority) }}</td>
                 <td>
                     <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                     <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="d-inline">
@@ -36,7 +38,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="4" class="text-center">No hay tareas disponibles.</td>
+                <td colspan="5" class="text-center">No hay tareas disponibles.</td>
             </tr>
         @endforelse
     </tbody>
