@@ -36,7 +36,7 @@
                 </a>
             @else
                 <a href="{{ route('tasks.index') }}" class="btn btn-custom">
-                    <i class="fas fa-tasks"></i> Tareas
+                    <i class="fas fa-arrow-left"></i> 
                 </a>
             @endif
 

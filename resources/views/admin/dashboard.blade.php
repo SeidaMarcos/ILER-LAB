@@ -96,7 +96,7 @@
         @if(session('error'))
                     <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
-        
+
         <!-- Contenido principal -->
         <div class="row">
             <!-- Tabla de Registros Pendientes -->
@@ -180,7 +180,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                                     data-bs-target="#editUserModal{{ $user->id }}">
                                                 <i class="fas fa-edit"></i>
                                             </button>

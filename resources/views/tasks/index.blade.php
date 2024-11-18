@@ -4,7 +4,7 @@
 
 @section('content')
 <h1 class="text-center">Lista de Tareas</h1>
-<a href="{{ route('tasks.create') }}" class="btn btn-success mb-3">Crear Nueva Tarea</a>
+<a href="{{ route('tasks.create') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i></a>
 
 @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
@@ -26,11 +26,11 @@
                 <td>{{ $task->name }}</td>
                 <td>{{ $task->description }}</td>
                 <td>
-                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                     <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                     </form>
                 </td>
             </tr>
