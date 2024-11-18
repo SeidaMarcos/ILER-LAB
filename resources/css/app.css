@@ -14,3 +14,38 @@ html, body {
     justify-content: center;
 }
 
+/* Estilo base para ambos botones */
+.btn-custom-shared {
+    padding: 10px 20px;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+/* Estilo específico para el botón Iniciar Sesión */
+.btn-login-custom {
+    background-color: #14b8a6;
+    color: white;
+    border: none;
+}
+
+.btn-login-custom:hover {
+    background-color: #13a292;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Estilo específico para el botón Registrarse */
+.btn-register-custom {
+    color: #010407;
+    border: 2px solid #7dd3fc;
+    background-color: transparent;
+}
+
+.btn-register-custom:hover {
+    background-color: #7dd3fc;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+

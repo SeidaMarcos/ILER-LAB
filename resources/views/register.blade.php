@@ -49,7 +49,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-block" style="background-color: #14b8a6; color: #efefef;">Registrarse</button>
+                <button type="submit" class="btn btn-custom-shared btn-login-custom btn-block">Registrarse</button>
             </form>
 
             <p class="text-center mt-3" style="color: #010407;">¿Ya tienes una cuenta? 

@@ -29,7 +29,7 @@
                     <input type="password" id="password" name="password" class="form-control" placeholder="Ingresa tu contraseña" required>
                 </div>
 
-                <button type="submit" class="btn btn-block" style="background-color: #14b8a6; color: #efefef;">Ingresar</button>
+                <button type="submit" class="btn btn-custom-shared btn-login-custom btn-block">Ingresar</button>
             </form>
 
             <p class="text-center mt-3" style="color: #010407;">¿No tienes una cuenta? 
