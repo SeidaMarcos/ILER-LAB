@@ -7,23 +7,7 @@
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .btn-custom {
-            background-color: #14b8a6;
-            color: white;
-        }
-
-        .btn-custom:hover {
-            background-color: #13a292;
-            color: white;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-    </style>
+    @vite('resources/css/app2.css') 
 </head>
 
 <body>
