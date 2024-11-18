@@ -7,6 +7,7 @@
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    @vite('resources/css/app2.css') 
 </head>
 
 <body>
@@ -16,8 +17,8 @@
 
         <!-- Menú desplegable de perfil -->
         <div class="dropdown text-end mb-4">
-        <a class="btn dropdown-toggle text-white" href="#" role="button" id="dropdownMenuLink"
-                data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #14b8a6;">
+        <a class="btn btn-custom dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-user"></i> 
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
