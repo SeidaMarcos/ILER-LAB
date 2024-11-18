@@ -1,0 +1,15 @@
+.btn-custom {
+    background-color: #14b8a6;
+    color: white;
+}
+
+.btn-custom:hover {
+    background-color: #13a292;
+    color: white;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
