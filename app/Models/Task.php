@@ -15,5 +15,6 @@ class Task extends Model
         'priority', 
         'progress',
         'due_date',
+        'pdf_path',
     ];
 }
