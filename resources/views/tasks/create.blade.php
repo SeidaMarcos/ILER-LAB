@@ -4,6 +4,7 @@
 
 @section('content')
 <h1 class="text-center">Crear Tarea</h1>
+<!-- enctype="multipart/form-data sin esto no procesa un archivo pdf -->
 <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="mb-3">
