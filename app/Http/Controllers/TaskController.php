@@ -57,16 +57,20 @@ class TaskController extends Controller
             'pdf' => 'nullable|mimes:pdf|max:2048',
         ]);
 
+        // Actualizar los campos básicos
         $task->name = $request->input('name');
         $task->description = $request->input('description');
         $task->priority = $request->input('priority');
         $task->due_date = $request->input('due_date');
 
+        // Verificar si hay un archivo PDF nuevo
         if ($request->hasFile('pdf')) {
+            // Eliminar el PDF actual si existe
             if ($task->pdf_path) {
-                Storage::delete('public/' . $task->pdf_path);
+                Storage::disk('public')->delete($task->pdf_path);
             }
 
+            // Guardar el nuevo archivo PDF
             $filePath = $request->file('pdf')->store('tasks', 'public');
             $task->pdf_path = $filePath;
         }
@@ -76,14 +80,16 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Tarea actualizada correctamente.');
     }
 
+
     public function destroy(Task $task)
     {
         if ($task->pdf_path) {
-            Storage::delete('public/' . $task->pdf_path);
+            Storage::disk('public')->delete($task->pdf_path);
         }
 
         $task->delete();
 
         return redirect()->route('tasks.index')->with('success', 'Tarea eliminada exitosamente.');
     }
+
 }
