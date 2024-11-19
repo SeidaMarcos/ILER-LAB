@@ -42,7 +42,9 @@
         <label for="pdf" class="form-label">Archivo PDF</label>
         <input type="file" name="pdf" id="pdf" class="form-control" accept=".pdf">
     </div>
-    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-plus"></i>
+    </button>
 </form>
 
 @endsection
