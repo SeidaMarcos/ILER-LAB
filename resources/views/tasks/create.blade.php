@@ -41,10 +41,31 @@
     <div class="mb-3">
         <label for="pdf" class="form-label">Archivo PDF</label>
         <input type="file" name="pdf" id="pdf" class="form-control" accept=".pdf">
+        <button type="button" id="remove-pdf" class="btn btn-danger mt-2" style="display: none;">Quitar PDF</button>
     </div>
     <button type="submit" class="btn btn-success">
         <i class="fas fa-plus"></i>
     </button>
 </form>
 
+<script>
+    // Referencia al campo de archivo y botón de eliminar
+    const pdfInput = document.getElementById('pdf');
+    const removeButton = document.getElementById('remove-pdf');
+
+    // Mostrar el botón de eliminar si hay un archivo seleccionado
+    pdfInput.addEventListener('change', function () {
+        if (pdfInput.files.length > 0) {
+            removeButton.style.display = 'inline-block';
+        } else {
+            removeButton.style.display = 'none';
+        }
+    });
+
+    // Eliminar el archivo seleccionado
+    removeButton.addEventListener('click', function () {
+        pdfInput.value = ''; // Limpiar el valor del campo
+        removeButton.style.display = 'none'; // Ocultar el botón de eliminar
+    });
+</script>
 @endsection
