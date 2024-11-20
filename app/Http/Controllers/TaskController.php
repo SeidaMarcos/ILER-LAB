@@ -63,7 +63,15 @@ class TaskController extends Controller
         $task->priority = $request->input('priority');
         $task->due_date = $request->input('due_date');
 
-        // Verificar si hay un archivo PDF nuevo
+        // Verificar si el PDF debe eliminarse
+        if ($request->input('remove_pdf') == '1') {
+            if ($task->pdf_path) {
+                Storage::disk('public')->delete($task->pdf_path);
+                $task->pdf_path = null; // Eliminar el registro en la base de datos
+            }
+        }
+
+        // Verificar si hay un nuevo PDF
         if ($request->hasFile('pdf')) {
             // Eliminar el PDF actual si existe
             if ($task->pdf_path) {

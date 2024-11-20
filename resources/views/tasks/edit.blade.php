@@ -30,14 +30,19 @@
     </div>
     <div class="mb-3">
         <label for="pdf" class="form-label">PDF Actual</label>
-        @if ($task->pdf_path) <!-- Asegúrate de que este sea el nombre correcto del campo en tu base de datos -->
-            <p>
-                <a href="{{ Storage::url($task->pdf_path) }}" target="_blank" class="btn btn-warning">
-                    <i class="fas fa-eye"></i> </a>
-            </p>
-        @else
-            <p>No hay un PDF asignado.</p>
-        @endif
+        <div id="pdf-info">
+            @if ($task->pdf_path)
+                <p>
+                    <a href="{{ Storage::url($task->pdf_path) }}" target="_blank" class="btn btn-warning">
+                        <i class="fas fa-eye"></i> Ver PDF Actual
+                    </a>
+                    <button type="button" id="remove-current-pdf" class="btn btn-danger">Eliminar PDF Actual</button>
+                </p>
+            @else
+                <p>No hay un PDF asignado.</p>
+            @endif
+        </div>
+        <input type="hidden" name="remove_pdf" id="remove_pdf" value="0"> <!-- Campo oculto -->
         <label for="pdf" class="form-label">Cambiar PDF</label>
         <input type="file" name="pdf" id="pdf" class="form-control">
     </div>
@@ -46,4 +51,17 @@
         <i class="fas fa-save"></i>
     </button>
 </form>
+
+<script>
+    const currentPdfButton = document.getElementById('remove-current-pdf');
+    const removePdfInput = document.getElementById('remove_pdf');
+    const pdfInfo = document.getElementById('pdf-info');
+
+    if (currentPdfButton) {
+        currentPdfButton.addEventListener('click', function () {
+            pdfInfo.innerHTML = '<p>No hay un PDF asignado.</p>';
+            removePdfInput.value = '1'; // Marcar para eliminar el PDF
+        });
+    }
+</script>
 @endsection
