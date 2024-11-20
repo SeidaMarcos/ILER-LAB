@@ -41,7 +41,12 @@
     <div class="mb-3">
         <label for="pdf" class="form-label">Archivo PDF</label>
         <input type="file" name="pdf" id="pdf" class="form-control" accept=".pdf">
-        <button type="button" id="remove-pdf" class="btn btn-danger mt-2" style="display: none;">Quitar PDF</button>
+        <div id="pdf-error" class="text-danger mt-2" style="display: none;">
+            El archivo debe ser un PDF.
+        </div>
+        <button type="button" id="remove-pdf" class="btn btn-danger mt-2" style="display: none;">
+            <i class="fas fa-trash"></i>
+        </button>
     </div>
     <button type="submit" class="btn btn-success">
         <i class="fas fa-plus"></i>
@@ -49,23 +54,34 @@
 </form>
 
 <script>
-    // Referencia al campo de archivo y botón de eliminar
+    // Referencia al campo de archivo, botón de eliminar y mensaje de error
     const pdfInput = document.getElementById('pdf');
     const removeButton = document.getElementById('remove-pdf');
+    const pdfError = document.getElementById('pdf-error');
 
     // Mostrar el botón de eliminar si hay un archivo seleccionado
     pdfInput.addEventListener('change', function () {
-        if (pdfInput.files.length > 0) {
-            removeButton.style.display = 'inline-block';
+        const file = pdfInput.files[0];
+        if (file && file.type !== 'application/pdf') {
+            pdfError.style.display = 'block'; 
+            pdfInput.value = ''; 
+            removeButton.style.display = 'none'; /
         } else {
-            removeButton.style.display = 'none';
+            pdfError.style.display = 'none'; 
+            if (pdfInput.files.length > 0) {
+                removeButton.style.display = 'inline-block';
+            } else {
+                removeButton.style.display = 'none';
+            }
         }
     });
 
     // Eliminar el archivo seleccionado
     removeButton.addEventListener('click', function () {
-        pdfInput.value = ''; // Limpiar el valor del campo
-        removeButton.style.display = 'none'; // Ocultar el botón de eliminar
+        pdfInput.value = ''; 
+        removeButton.style.display = 'none'; 
+        pdfError.style.display = 'none'; 
     });
+
 </script>
 @endsection
