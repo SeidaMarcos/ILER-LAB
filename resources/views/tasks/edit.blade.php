@@ -36,7 +36,8 @@
                     <a href="{{ Storage::url($task->pdf_path) }}" target="_blank" class="btn btn-warning">
                         <i class="fas fa-eye"></i>
                     </a>
-                    <button type="button" id="remove-current-pdf" class="btn btn-danger"> <i class="fas fa-trash"></i>
+                    <button type="button" id="remove-current-pdf" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
                     </button>
                 </p>
             @else
@@ -45,11 +46,13 @@
         </div>
         <input type="hidden" name="remove_pdf" id="remove_pdf" value="0"> <!-- Campo oculto -->
         <label for="pdf" class="form-label">Cambiar PDF</label>
-        <input type="file" name="pdf" id="pdf" class="form-control">
+        <input type="file" name="pdf" id="pdf" class="form-control" accept=".pdf">
+        <div id="pdf-error" class="text-danger mt-2" style="display: none;">El archivo debe ser un PDF.</div>
         <button type="button" id="remove-new-pdf" class="btn btn-danger mt-2" style="display: none;">
             <i class="fas fa-trash"></i>
         </button>
     </div>
+
 
     <button type="submit" class="btn btn-success">
         <i class="fas fa-save"></i>
@@ -61,29 +64,40 @@
     const removePdfInput = document.getElementById('remove_pdf');
     const pdfInput = document.getElementById('pdf');
     const removeNewPdfButton = document.getElementById('remove-new-pdf');
+    const pdfError = document.getElementById('pdf-error');
     const pdfInfo = document.getElementById('pdf-info');
 
     // Eliminar PDF actual
     if (currentPdfButton) {
         currentPdfButton.addEventListener('click', function () {
             pdfInfo.innerHTML = '<p>No hay un PDF asignado.</p>';
-            removePdfInput.value = '1'; // Marcar para eliminar el PDF
+            removePdfInput.value = '1';
         });
     }
 
-    // Mostrar botón para eliminar nuevo PDF
+    // Verificar si el archivo es un PDF y mostrar botón para eliminar nuevo PDF
     pdfInput.addEventListener('change', function () {
-        if (pdfInput.files.length > 0) {
-            removeNewPdfButton.style.display = 'inline-block';
-        } else {
+        const file = pdfInput.files[0];
+        if (file && file.type !== 'application/pdf') {
+            pdfError.style.display = 'block';
+            pdfInput.value = '';
             removeNewPdfButton.style.display = 'none';
+        } else {
+            pdfError.style.display = 'none';
+            if (pdfInput.files.length > 0) {
+                removeNewPdfButton.style.display = 'inline-block';
+            } else {
+                removeNewPdfButton.style.display = 'none';
+            }
         }
     });
 
     // Eliminar el nuevo PDF seleccionado
     removeNewPdfButton.addEventListener('click', function () {
-        pdfInput.value = ''; // Limpiar el archivo seleccionado
+        pdfInput.value = '';
         removeNewPdfButton.style.display = 'none';
+        pdfError.style.display = 'none';
     });
+
 </script>
 @endsection
