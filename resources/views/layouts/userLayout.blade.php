@@ -7,19 +7,21 @@
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    @vite('resources/css/app2.css') 
+    @vite('resources/css/app2.css')
 </head>
 
 <body>
     <div class="container my-5">
         <!-- Mensaje de bienvenida dinámico -->
-        <h1 class="text-center mb-4">Bienvenido/a, {{ auth()->user()->name }}</h1>
+        @if (!isset($hideWelcome) || !$hideWelcome)
+            <h1 class="text-center mb-4">Bienvenido/a, {{ auth()->user()->name }}</h1>
+        @endif
 
         <!-- Menú desplegable de perfil -->
         <div class="dropdown text-end mb-4">
-        <a class="btn btn-custom dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+            <a class="btn btn-custom dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user"></i> 
+                <i class="fas fa-user"></i>
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>

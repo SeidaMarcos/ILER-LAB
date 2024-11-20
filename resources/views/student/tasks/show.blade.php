@@ -1,4 +1,4 @@
-@extends('layouts.userLayout')
+@extends('layouts.userLayout', ['hideWelcome' => true])
 
 @section('title', 'Detalles de la Tarea')
 
