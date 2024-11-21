@@ -7,70 +7,78 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TaskController;
 
+/*
+|--------------------------------------------------------------------------
+| Rutas Públicas
+|--------------------------------------------------------------------------
+*/
 
-
-// Ruta para la página de bienvenida (welcome)
+// Página de bienvenida
 Route::get('/', function () {
-    return view('welcome'); // Cambia la ruta inicial a la vista welcome
+    return view('welcome');
 })->name('welcome');
 
-// Ruta para mostrar el formulario de inicio de sesión
+// Autenticación
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-
-// Ruta para procesar el formulario de inicio de sesión (POST)
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-
-// Ruta para cerrar sesión (POST)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Ruta para mostrar el formulario de registro
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-
-// Ruta para procesar el formulario de registro
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 
-// Rutas protegidas con middleware de autenticación
+/*
+|--------------------------------------------------------------------------
+| Rutas Protegidas
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware(['auth'])->group(function () {
-    // Ruta para el dashboard del administrador
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
-    Route::put('/teacher/updateProfile', [TeacherController::class, 'updateProfile'])->name('teacher.updateProfile');
+    /*
+    |--------------------------------------------------------------------------
+    | Rutas del Administrador
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')->name('admin.')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
+        // Gestión de registros pendientes
+        Route::post('/registrations/{id}/approve', [AdminController::class, 'approveRegistration'])->name('registrations.approve');
+        Route::post('/registrations/{id}/reject', [AdminController::class, 'rejectRegistration'])->name('registrations.reject');
 
+        // Gestión de usuarios
+        Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('updateUser');
+        Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
 
-
-    Route::middleware(['auth'])->group(function () {
-        // Ruta para el dashboard del estudiante
-        Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
-
-        // Ruta para actualizar el perfil del estudiante
-        Route::put('/student/profile/update', [StudentController::class, 'updateProfile'])->name('student.updateProfile');
+        // Perfil del administrador
+        Route::put('/update', [AdminController::class, 'update'])->name('update');
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Rutas de Profesores
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('teacher')->name('teacher.')->group(function () {
+        Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
+        Route::put('/updateProfile', [TeacherController::class, 'updateProfile'])->name('updateProfile');
+    });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Rutas de Estudiantes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('student')->name('student.')->group(function () {
+        Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
+        Route::put('/profile/update', [StudentController::class, 'updateProfile'])->name('updateProfile');
+        Route::get('/tasks/{task}', [StudentController::class, 'showTask'])->name('tasks.show');
+    });
 
-    // Ruta para actualizar los datos del administrador
-    Route::put('/admin/update', [AdminController::class, 'update'])->name('admin.update');
-
-    // Ruta para aprobar un registro pendiente
-    Route::post('/admin/registrations/{id}/approve', [AdminController::class, 'approveRegistration'])->name('admin.registrations.approve');
-
-    // Ruta para rechazar un registro pendiente
-    Route::post('/admin/registrations/{id}/reject', [AdminController::class, 'rejectRegistration'])->name('admin.registrations.reject');
-
-    // Ruta para actualizar un usuario específico
-    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.updateUser');
-
-    // Ruta para eliminar usuario
-    Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
-});
-
-
-Route::middleware(['auth'])->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Rutas de Tareas
+    |--------------------------------------------------------------------------
+    */
     Route::resource('tasks', TaskController::class);
 });
-;
-Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
-
-Route::get('/student/tasks/{task}', [StudentController::class, 'showTask'])->name('student.tasks.show');
