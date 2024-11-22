@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 
@@ -8,8 +8,8 @@ use App\Http\Controllers\LoginController;
 Route::view('/', 'welcome')->name('welcome');
 
 // Registro
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register.form');
+Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
 // Admin Dashboard
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth');

@@ -6,39 +6,94 @@
     <title>Registro</title>
 </head>
 <body>
-<form action="{{ route('register') }}" method="POST">
-    @csrf
-    <input type="text" name="name" placeholder="Nombre completo" required>
-    <input type="email" name="email" placeholder="Correo electrónico" required>
-    <input type="password" name="password" placeholder="Contraseña" required>
-    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required>
-    <select name="role" onchange="toggleStudentFields()" required>
-        <option value="student">Estudiante</option>
-        <option value="professor">Profesor</option>
-    </select>
-    <div id="student-fields" style="display: none;">
-        <select name="ciclo">
-            <option value="anatomia">Anatomía</option>
-            <option value="laboratorio">Laboratorio</option>
-        </select>
-        <select name="curso">
-            <option value="1º">1º</option>
-            <option value="2º">2º</option>
-        </select>
-    </div>
-    <button type="submit">Registrarse</button>
-</form>
+    @if ($errors->any())
+        <div style="color: red;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('register') }}" method="POST">
+        @csrf
+        <div>
+            <label for="name">Nombre Completo:</label>
+            <input type="text" name="name" id="name" placeholder="Nombre y Apellidos" value="{{ old('name') }}" required>
+            @error('name')
+                <span style="color: red;">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" name="email" id="email" placeholder="Correo Electrónico" value="{{ old('email') }}" required>
+            @error('email')
+                <span style="color: red;">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label for="password">Contraseña:</label>
+            <input type="password" name="password" id="password" placeholder="Contraseña" required>
+            @error('password')
+                <span style="color: red;">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label for="password_confirmation">Confirmar Contraseña:</label>
+            <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirmar Contraseña" required>
+        </div>
+
+        <div>
+            <label for="role">Selecciona tu Rol:</label>
+            <select name="role" id="role" onchange="toggleStudentFields()" required>
+                <option value="" disabled {{ old('role') === null ? 'selected' : '' }}>Seleccionar Rol</option>
+                <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>Estudiante</option>
+                <option value="professor" {{ old('role') == 'professor' ? 'selected' : '' }}>Profesor</option>
+            </select>
+            @error('role')
+                <span style="color: red;">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div id="student-fields" style="display: {{ old('role') == 'student' ? 'block' : 'none' }};">
+            <label for="ciclo">Ciclo:</label>
+            <select name="ciclo" id="ciclo">
+                <option value="" disabled {{ old('ciclo') === null ? 'selected' : '' }}>Seleccionar Ciclo</option>
+                <option value="anatomia" {{ old('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
+                <option value="laboratorio" {{ old('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio</option>
+            </select>
+            @error('ciclo')
+                <span style="color: red;">{{ $message }}</span>
+            @enderror
+
+            <label for="curso">Curso:</label>
+            <select name="curso" id="curso">
+                <option value="" disabled {{ old('curso') === null ? 'selected' : '' }}>Seleccionar Curso</option>
+                <option value="1º" {{ old('curso') == '1º' ? 'selected' : '' }}>1º</option>
+                <option value="2º" {{ old('curso') == '2º' ? 'selected' : '' }}>2º</option>
+            </select>
+            @error('curso')
+                <span style="color: red;">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <button type="submit">Registrarse</button>
+    </form>
 </body>
 <script>
-        // Mostrar u ocultar campos dependiendo del rol seleccionado
-        function toggleStudentFields() {
-            const role = document.querySelector('select[name="role"]').value;
-            const studentFields = document.getElementById('student-fields');
-            if (role === 'student') {
-                studentFields.style.display = 'block';
-            } else {
-                studentFields.style.display = 'none';
-            }
+    // Mostrar u ocultar campos dependiendo del rol seleccionado
+    function toggleStudentFields() {
+        const role = document.querySelector('select[name="role"]').value;
+        const studentFields = document.getElementById('student-fields');
+        if (role === 'student') {
+            studentFields.style.display = 'block';
+        } else {
+            studentFields.style.display = 'none';
         }
-    </script>
+    }
+</script>
 </html>
