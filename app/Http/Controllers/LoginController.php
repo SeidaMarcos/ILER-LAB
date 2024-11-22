@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PendingRegistration;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -17,22 +19,29 @@ class LoginController extends Controller
     // Procesar el login
     public function login(Request $request)
     {
-        // Validar los datos del formulario
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
+        ], [
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser válido.',
+            'password.required' => 'La contraseña es obligatoria.',
         ]);
 
-        // Verificar las credenciales
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $user = Auth::user();
+        // Verificar si el correo está en pendientes
+        $pending = PendingRegistration::where('email', $request->email)->first();
+        if ($pending) {
+            return back()->withErrors(['email' => 'Tu cuenta está pendiente de aprobación por el administrador.']);
+        }
 
-            // Validar si el usuario está activo (aprobado por el admin)
-            if (!$user->active) {
-                Auth::logout();
-                return back()->withErrors(['error' => 'Tu cuenta aún no ha sido aprobada por el administrador.']);
-            }
+        // Verificar si el correo está registrado en la tabla de usuarios
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withErrors(['email' => 'El correo electrónico no está registrado.']);
+        }
 
+        // Intentar autenticar al usuario
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // Redirigir según el rol del usuario
             if ($user->role->name === 'admin') {
                 return redirect()->route('admin.dashboard');
@@ -42,13 +51,13 @@ class LoginController extends Controller
                 return redirect()->route('student.dashboard');
             }
 
-            // Si el rol no es válido
+            // Si el rol no es reconocido
             Auth::logout();
-            return back()->withErrors(['error' => 'Rol no reconocido. Contacta al administrador.']);
+            return back()->withErrors(['email' => 'Rol no reconocido. Contacta al administrador.']);
         }
 
-        // Si las credenciales no son válidas
-        return back()->withErrors(['error' => 'Credenciales incorrectas.']);
+        // Contraseña incorrecta
+        return back()->withErrors(['password' => 'La contraseña no es correcta.']);
     }
 
     // Cerrar sesión
