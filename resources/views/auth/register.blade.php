@@ -8,83 +8,104 @@
     @vite('resources/css/app.css') 
 </head>
 <body>
-    @if ($errors->any())
-        <div style="color: red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    <div class="full-height-container">
+        <form action="{{ route('register') }}" method="POST">
+            @csrf
 
-    <form action="{{ route('register') }}" method="POST">
-        @csrf
-        <div>
-            <label for="name">Nombre Completo:</label>
-            <input type="text" name="name" id="name" placeholder="Nombre y Apellidos" value="{{ old('name') }}" required>
-            @error('name')
-                <span style="color: red;">{{ $message }}</span>
-            @enderror
-        </div>
+            <!-- Mensajes de error generales -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        <div>
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" name="email" id="email" placeholder="Correo Electrónico" value="{{ old('email') }}" required>
-            @error('email')
-                <span style="color: red;">{{ $message }}</span>
-            @enderror
-        </div>
+            <!-- Nombre -->
+            <div class="form-group">
+                <label for="name">Nombre Completo:</label>
+                <input type="text" class="form-control" name="name" id="name" placeholder="Nombre y Apellidos" value="{{ old('name') }}" required>
+                @error('name')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label for="password">Contraseña:</label>
-            <input type="password" name="password" id="password" placeholder="Contraseña" required>
-            @error('password')
-                <span style="color: red;">{{ $message }}</span>
-            @enderror
-        </div>
+            <!-- Correo -->
+            <div class="form-group">
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Correo Electrónico" value="{{ old('email') }}" required>
+                @error('email')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label for="password_confirmation">Confirmar Contraseña:</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirmar Contraseña" required>
-        </div>
+            <!-- Contraseña -->
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña" required>
+                @error('password')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label for="role">Selecciona tu Rol:</label>
-            <select name="role" id="role" onchange="toggleStudentFields()" required>
-                <option value="" disabled {{ old('role') === null ? 'selected' : '' }}>Seleccionar Rol</option>
-                <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>Estudiante</option>
-                <option value="professor" {{ old('role') == 'professor' ? 'selected' : '' }}>Profesor</option>
-            </select>
-            @error('role')
-                <span style="color: red;">{{ $message }}</span>
-            @enderror
-        </div>
+            <!-- Confirmación de contraseña -->
+            <div class="form-group">
+                <label for="password_confirmation">Confirmar Contraseña:</label>
+                <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" placeholder="Confirmar Contraseña" required>
+            </div>
 
-        <div id="student-fields" style="display: {{ old('role') == 'student' ? 'block' : 'none' }};">
-            <label for="ciclo">Ciclo:</label>
-            <select name="ciclo" id="ciclo">
-                <option value="" disabled {{ old('ciclo') === null ? 'selected' : '' }}>Seleccionar Ciclo</option>
-                <option value="anatomia" {{ old('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
-                <option value="laboratorio" {{ old('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio</option>
-            </select>
-            @error('ciclo')
-                <span style="color: red;">{{ $message }}</span>
-            @enderror
+            <!-- Selección de rol -->
+            <div class="form-group">
+                <label for="role">Selecciona tu Rol:</label>
+                <select name="role" id="role" class="form-control" onchange="toggleStudentFields()" required>
+                    <option value="" disabled {{ old('role') === null ? 'selected' : '' }}>Seleccionar Rol</option>
+                    <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>Estudiante</option>
+                    <option value="professor" {{ old('role') == 'professor' ? 'selected' : '' }}>Profesor</option>
+                </select>
+                @error('role')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
 
-            <label for="curso">Curso:</label>
-            <select name="curso" id="curso">
-                <option value="" disabled {{ old('curso') === null ? 'selected' : '' }}>Seleccionar Curso</option>
-                <option value="1º" {{ old('curso') == '1º' ? 'selected' : '' }}>1º</option>
-                <option value="2º" {{ old('curso') == '2º' ? 'selected' : '' }}>2º</option>
-            </select>
-            @error('curso')
-                <span style="color: red;">{{ $message }}</span>
-            @enderror
-        </div>
+            <!-- Campos específicos de estudiante -->
+            <div id="student-fields" style="display: {{ old('role') == 'student' ? 'block' : 'none' }};">
+                <div class="form-group">
+                    <label for="ciclo">Ciclo:</label>
+                    <select name="ciclo" id="ciclo" class="form-control">
+                        <option value="" disabled {{ old('ciclo') === null ? 'selected' : '' }}>Seleccionar Ciclo</option>
+                        <option value="anatomia" {{ old('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
+                        <option value="laboratorio" {{ old('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio</option>
+                    </select>
+                    @error('ciclo')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
 
-        <button type="submit">Registrarse</button>
-    </form>
+                <div class="form-group">
+                    <label for="curso">Curso:</label>
+                    <select name="curso" id="curso" class="form-control">
+                        <option value="" disabled {{ old('curso') === null ? 'selected' : '' }}>Seleccionar Curso</option>
+                        <option value="1º" {{ old('curso') == '1º' ? 'selected' : '' }}>1º</option>
+                        <option value="2º" {{ old('curso') == '2º' ? 'selected' : '' }}>2º</option>
+                    </select>
+                    @error('curso')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Botón de registro -->
+            <button type="submit" class="btn btn-custom-shared btn-login-custom">Registrarse</button>
+
+            <!-- Enlace al Inicio de Sesión -->
+            <p class="text-center mt-3">
+                ¿Ya tienes una cuenta? 
+                <a href="{{ route('login') }}" class="btn-register-link">Inicia sesión aquí</a>
+            </p>
+        </form>
+    </div>
 </body>
 <script>
     // Mostrar u ocultar campos dependiendo del rol seleccionado
@@ -98,5 +119,4 @@
         }
     }
 </script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </html>
