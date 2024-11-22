@@ -17,30 +17,32 @@ class AdminController extends Controller
 
     // Aprobar una solicitud
     public function approveRegistration($id)
-{
-    $registration = PendingRegistration::findOrFail($id);
+    {
+        $registration = PendingRegistration::findOrFail($id);
 
-    // Crear el usuario en la tabla users
-    $user = User::create([
-        'name' => $registration->name,
-        'email' => $registration->email,
-        'password' => $registration->password, // Ya está encriptada
-        'role_id' => $registration->role == 'student' ? 3 : 2, // 3: student, 2: professor
-    ]);
-
-    // Si el rol es student, crear el registro en la tabla students
-    if ($registration->role == 'student') {
-        $user->student()->create([
-            'ciclo' => $registration->ciclo,
-            'curso' => $registration->curso,
+        // Crear el usuario en la tabla users
+        $user = User::create([
+            'name' => $registration->name,
+            'email' => $registration->email,
+            'password' => $registration->password, // Ya está encriptada
+            'role_id' => $registration->role == 'student' ? 3 : 2, // 3: student, 2: professor
         ]);
+
+        // Crear registros adicionales dependiendo del rol
+        if ($registration->role == 'student') {
+            $user->student()->create([
+                'ciclo' => $registration->ciclo,
+                'curso' => $registration->curso,
+            ]);
+        } elseif ($registration->role == 'professor') {
+            $user->professor()->create([]);
+        }
+
+        // Eliminar el registro pendiente
+        $registration->delete();
+
+        return redirect()->route('admin.dashboard')->with('success', 'Registro aprobado.');
     }
-
-    // Eliminar el registro pendiente
-    $registration->delete();
-
-    return redirect()->route('admin.dashboard')->with('success', 'Registro aprobado.');
-}
 
 
     // Rechazar una solicitud
