@@ -62,10 +62,17 @@ class AdminController extends Controller
             });
         }
 
-        $filteredStudents = $query->get();
+        // Ordenar siempre por curso y luego por ciclo
+        $filteredStudents = $query
+            ->join('students', 'users.id', '=', 'students.user_id')
+            ->orderBy('students.curso', 'asc')
+            ->orderBy('students.ciclo', 'asc')
+            ->select('users.*') // Asegúrate de seleccionar las columnas de 'users'
+            ->get();
 
         return view('admin.students', compact('pendingStudents', 'filteredStudents'));
     }
+
 
 
 
@@ -144,50 +151,50 @@ class AdminController extends Controller
     }
 
     public function updateStudent(Request $request, $id)
-{
-    $student = User::findOrFail($id);
+    {
+        $student = User::findOrFail($id);
 
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $id],
-        'ciclo' => ['required', 'in:anatomia,laboratorio'],
-        'curso' => ['required', 'in:1º,2º'],
-        'password' => ['nullable', 'string', 'min:5', 'confirmed'], // Validar confirmación
-    ]);
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $id],
+            'ciclo' => ['required', 'in:anatomia,laboratorio'],
+            'curso' => ['required', 'in:1º,2º'],
+            'password' => ['nullable', 'string', 'min:5', 'confirmed'], // Validar confirmación
+        ]);
 
-    // Actualizar los datos del estudiante
-    $student->name = strtoupper($request->name);
-    $student->email = $request->email;
+        // Actualizar los datos del estudiante
+        $student->name = strtoupper($request->name);
+        $student->email = $request->email;
 
-    // Actualizar ciclo y curso en la tabla 'students'
-    $student->student->update([
-        'ciclo' => $request->ciclo,
-        'curso' => $request->curso,
-    ]);
+        // Actualizar ciclo y curso en la tabla 'students'
+        $student->student->update([
+            'ciclo' => $request->ciclo,
+            'curso' => $request->curso,
+        ]);
 
-    // Cambiar la contraseña solo si se proporciona
-    if ($request->filled('password')) {
-        $student->password = Hash::make($request->password);
+        // Cambiar la contraseña solo si se proporciona
+        if ($request->filled('password')) {
+            $student->password = Hash::make($request->password);
+        }
+
+        $student->save();
+
+        return redirect()->back()->with('success', 'Estudiante actualizado correctamente.');
     }
 
-    $student->save();
 
-    return redirect()->back()->with('success', 'Estudiante actualizado correctamente.');
-}
+    public function deleteStudent($id)
+    {
+        $student = User::findOrFail($id);
 
+        // Eliminar el registro relacionado en la tabla 'students'
+        if ($student->student) {
+            $student->student->delete();
+        }
 
-public function deleteStudent($id)
-{
-    $student = User::findOrFail($id);
+        $student->delete();
 
-    // Eliminar el registro relacionado en la tabla 'students'
-    if ($student->student) {
-        $student->student->delete();
+        return redirect()->back()->with('success', 'Estudiante eliminado correctamente.');
     }
-
-    $student->delete();
-
-    return redirect()->back()->with('success', 'Estudiante eliminado correctamente.');
-}
 
 }

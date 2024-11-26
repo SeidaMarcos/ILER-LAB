@@ -49,8 +49,8 @@
     <!-- Resultado de la Búsqueda -->
     @if($filteredStudents->isEmpty() && request()->hasAny(['name', 'email', 'curso', 'ciclo']))
         <p class="text-danger text-center">No se encontraron estudiantes que coincidan con el filtro.</p>
-    @elseif(!$filteredStudents->isEmpty())
-        <h2 class="mt-4">Resultados de la Búsqueda</h2>
+    @else
+        <h2 class="mt-4">Estudiantes Registrados</h2>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -114,14 +114,15 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-group mb-3">
-    <label for="password">Nueva Contraseña</label>
-    <input type="password" name="password" class="form-control" placeholder="Dejar vacío para no cambiar">
-</div>
-<div class="form-group mb-3">
-    <label for="password_confirmation">Confirmar Nueva Contraseña</label>
-    <input type="password" name="password_confirmation" class="form-control" placeholder="Confirmar Contraseña">
-</div>
-
+                                                    <label for="password">Nueva Contraseña</label>
+                                                    <input type="password" name="password" class="form-control"
+                                                        placeholder="Dejar vacío para no cambiar">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="password_confirmation">Confirmar Nueva Contraseña</label>
+                                                    <input type="password" name="password_confirmation" class="form-control"
+                                                        placeholder="Confirmar Contraseña">
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
@@ -141,12 +142,12 @@
                                     onclick="return confirm('¿Estás seguro de eliminar este estudiante?')">Eliminar</button>
                             </form>
                         </td>
-
                     </tr>
                 @endforeach
             </tbody>
         </table>
     @endif
+
 
     <!-- Estudiantes Pendientes -->
     <h2 class="mt-5">Pendientes de Aprobación</h2>
