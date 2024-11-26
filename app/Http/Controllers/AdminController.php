@@ -20,16 +20,59 @@ class AdminController extends Controller
     // Mostrar vista de estudiantes pendientes
     public function students()
     {
+        // Obtener estudiantes pendientes
         $pendingStudents = PendingRegistration::where('role', 'student')->get();
-        return view('admin.students', compact('pendingStudents'));
+
+        // Obtener estudiantes registrados filtrados por ciclo y curso
+        $anatomiaPrimero = User::where('role_id', 3)
+            ->whereHas('student', function ($query) {
+                $query->where('ciclo', 'anatomia')->where('curso', '1º');
+            })
+            ->with('student')
+            ->get();
+
+        $anatomiaSegundo = User::where('role_id', 3)
+            ->whereHas('student', function ($query) {
+                $query->where('ciclo', 'anatomia')->where('curso', '2º');
+            })
+            ->with('student')
+            ->get();
+
+        $laboratorioPrimero = User::where('role_id', 3)
+            ->whereHas('student', function ($query) {
+                $query->where('ciclo', 'laboratorio')->where('curso', '1º');
+            })
+            ->with('student')
+            ->get();
+
+        $laboratorioSegundo = User::where('role_id', 3)
+            ->whereHas('student', function ($query) {
+                $query->where('ciclo', 'laboratorio')->where('curso', '2º');
+            })
+            ->with('student')
+            ->get();
+
+        return view('admin.students', compact(
+            'pendingStudents',
+            'anatomiaPrimero',
+            'anatomiaSegundo',
+            'laboratorioPrimero',
+            'laboratorioSegundo'
+        ));
     }
 
-    // Mostrar vista de profesores pendientes
+
     public function professors()
     {
+        // Obtener profesores registrados
+        $registeredProfessors = User::where('role_id', 2)->get();
+
+        // Obtener profesores pendientes
         $pendingProfessors = PendingRegistration::where('role', 'professor')->get();
-        return view('admin.professors', compact('pendingProfessors'));
+
+        return view('admin.professors', compact('registeredProfessors', 'pendingProfessors'));
     }
+
 
     // Aprobar una solicitud
     public function approveRegistration($id)
