@@ -197,4 +197,35 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Estudiante eliminado correctamente.');
     }
 
+
+    public function updateProfessor(Request $request, $id)
+    {
+        $professor = User::findOrFail($id);
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email,' . $id],
+            'password' => ['nullable', 'string', 'min:5', 'confirmed'],
+        ]);
+
+        $professor->name = strtoupper($request->name);
+        $professor->email = $request->email;
+
+        if ($request->filled('password')) {
+            $professor->password = bcrypt($request->password);
+        }
+
+        $professor->save();
+
+        return redirect()->back()->with('success', 'Profesor actualizado correctamente.');
+    }
+
+    public function deleteProfessor($id)
+    {
+        $professor = User::findOrFail($id);
+        $professor->delete();
+
+        return redirect()->back()->with('success', 'Profesor eliminado correctamente.');
+    }
+
 }

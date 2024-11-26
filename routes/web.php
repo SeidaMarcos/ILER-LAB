@@ -51,3 +51,6 @@ Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('a
 
 Route::put('/admin/student/{id}', [AdminController::class, 'updateStudent'])->name('admin.updateStudent');
 Route::delete('/admin/student/{id}', [AdminController::class, 'deleteStudent'])->name('admin.deleteStudent');
+
+Route::put('/admin/update-professor/{id}', [AdminController::class, 'updateProfessor'])->name('admin.updateProfessor');
+Route::delete('/admin/delete-professor/{id}', [AdminController::class, 'deleteProfessor'])->name('admin.deleteProfessor');
