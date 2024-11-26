@@ -1,70 +1,63 @@
 <?php
 
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TaskController;
 
-// Vista Welcome
+// Rutas públicas
 Route::view('/', 'welcome')->name('welcome');
 
 // Registro
-Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register.form');
-Route::post('/register', [RegisterController::class, 'register'])->name('register');
+Route::prefix('register')->group(function () {
+    Route::get('/', [RegisterController::class, 'showRegisterForm'])->name('register.form');
+    Route::post('/', [RegisterController::class, 'register'])->name('register');
+});
 
-// Admin Dashboard
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
-    ->name('admin.dashboard')
-    ->middleware('auth');
-
-// Vistas de estudiantes y profesores pendientes
-Route::get('/admin/students', [AdminController::class, 'students'])
-    ->name('admin.students')
-    ->middleware('auth');
-Route::get('/admin/professors', [AdminController::class, 'professors'])
-    ->name('admin.professors')
-    ->middleware('auth');
-
-// Aprobación y rechazo de registros
-Route::get('/admin/approve/{id}', [AdminController::class, 'approveRegistration'])
-    ->name('admin.approve')
-    ->middleware('auth');
-Route::get('/admin/reject/{id}', [AdminController::class, 'rejectRegistration'])
-    ->name('admin.reject')
-    ->middleware('auth');
-
-// Login
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+// Login y Logout
+Route::prefix('login')->group(function () {
+    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/', [LoginController::class, 'login'])->name('login.submit');
+});
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Dashboards para otros roles
-Route::get('/professor', function () {
-    return view('professor.dashboard');
-})->name('professor.dashboard')->middleware('auth');
+// Rutas del administrador (Protegidas con Middleware Auth)
+Route::middleware('auth')->prefix('admin')->group(function () {
+    // Dashboard principal
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-Route::get('/student', function () {
-    return view('student.dashboard');
-})->name('student.dashboard')->middleware('auth');
+    // Gestión de estudiantes
+    Route::prefix('students')->group(function () {
+        Route::get('/', [AdminController::class, 'students'])->name('admin.students');
+        Route::put('/{id}', [AdminController::class, 'updateStudent'])->name('admin.updateStudent');
+        Route::delete('/{id}', [AdminController::class, 'deleteStudent'])->name('admin.deleteStudent');
+    });
 
-// Edit perfil admin
-Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.update.profile')->middleware('auth');
+    // Gestión de profesores
+    Route::prefix('professors')->group(function () {
+        Route::get('/', [AdminController::class, 'professors'])->name('admin.professors');
+        Route::put('/{id}', [AdminController::class, 'updateProfessor'])->name('admin.updateProfessor');
+        Route::delete('/{id}', [AdminController::class, 'deleteProfessor'])->name('admin.deleteProfessor');
+    });
 
-Route::put('/admin/student/{id}', [AdminController::class, 'updateStudent'])->name('admin.updateStudent');
-Route::delete('/admin/student/{id}', [AdminController::class, 'deleteStudent'])->name('admin.deleteStudent');
+    // Aprobación y rechazo de registros pendientes
+    Route::get('/approve/{id}', [AdminController::class, 'approveRegistration'])->name('admin.approve');
+    Route::get('/reject/{id}', [AdminController::class, 'rejectRegistration'])->name('admin.reject');
 
-Route::put('/admin/update-professor/{id}', [AdminController::class, 'updateProfessor'])->name('admin.updateProfessor');
-Route::delete('/admin/delete-professor/{id}', [AdminController::class, 'deleteProfessor'])->name('admin.deleteProfessor');
+    // Actualizar perfil del administrador
+    Route::put('/profile', [AdminController::class, 'updateProfile'])->name('admin.update.profile');
 
-use App\Http\Controllers\TaskController;
+    // Gestión de tareas
+    Route::prefix('tasks')->group(function () {
+        Route::get('/', [TaskController::class, 'index'])->name('admin.tasks.panel'); // Panel de tareas
+        Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create'); // Crear tarea
+        Route::post('/', [TaskController::class, 'store'])->name('admin.tasks.store'); // Guardar tarea
+        Route::delete('/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy'); // Eliminar tarea
+    });
+});
 
-// Panel de tareas
-Route::get('/admin/tasks', [TaskController::class, 'index'])->name('admin.tasks.panel')->middleware('auth');
-
-// Vista para crear una nueva tarea
-Route::get('/admin/tasks/create', [TaskController::class, 'create'])->name('admin.tasks.create')->middleware('auth');
-
-// Guardar una nueva tarea
-Route::post('/admin/tasks', [TaskController::class, 'store'])->name('admin.tasks.store')->middleware('auth');
-
-// Eliminar una tarea
-Route::delete('/admin/tasks/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy')->middleware('auth');
+// Dashboards para otros roles (Protegidas con Middleware Auth)
+Route::middleware('auth')->group(function () {
+    Route::get('/professor', fn () => view('professor.dashboard'))->name('professor.dashboard');
+    Route::get('/student', fn () => view('student.dashboard'))->name('student.dashboard');
+});

@@ -14,9 +14,10 @@
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">Panel de Administración</h1>
-        <div class="row">
+        <div class="row gy-4"> <!-- Agregado "gy-4" para espaciado vertical entre filas -->
+
             <!-- Card Estudiantes -->
-            <div class="col-md-6">
+            <div class="col-lg-4 col-md-6">
                 <div class="card text-center">
                     <div class="card-body">
                         <h3>{{ $approvedStudentsCount }}</h3>
@@ -29,7 +30,7 @@
             </div>
 
             <!-- Card Profesores -->
-            <div class="col-md-6">
+            <div class="col-lg-4 col-md-6">
                 <div class="card text-center">
                     <div class="card-body">
                         <h3>{{ $approvedProfessorsCount }}</h3>
@@ -40,20 +41,19 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Card Tareas -->
-    <div class="col-md-6">
-        <div class="card text-center">
-            <div class="card-body">
-                <h3>{{ $tasksCount }}</h3>
-                <p>Tareas Creadas</p>
-                <a href="{{ route('admin.tasks.panel') }}" class="btn btn-primary">Ver Tareas</a>
+            <!-- Card Tareas -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3>{{ $tasksCount }}</h3>
+                        <p>Tareas Creadas</p>
+                        <a href="{{ route('admin.tasks.panel') }}" class="btn btn-primary">Ver Tareas</a>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
-
-</div>
 </div>
 @endsection
