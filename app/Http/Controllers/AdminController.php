@@ -6,6 +6,8 @@ use App\Models\PendingRegistration;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Task;
+
 
 class AdminController extends Controller
 {
@@ -24,11 +26,16 @@ class AdminController extends Controller
         // Contar profesores pendientes
         $pendingProfessorsCount = PendingRegistration::where('role', 'professor')->count();
 
+        // Contar tareas creadas
+        $tasksCount = Task::count();
+
+        // Pasar las estadísticas a la vista
         return view('admin.dashboard', compact(
             'approvedStudentsCount',
             'approvedProfessorsCount',
             'pendingStudentsCount',
-            'pendingProfessorsCount'
+            'pendingProfessorsCount',
+            'tasksCount'
         ));
     }
 

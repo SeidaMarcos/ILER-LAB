@@ -54,3 +54,17 @@ Route::delete('/admin/student/{id}', [AdminController::class, 'deleteStudent'])-
 
 Route::put('/admin/update-professor/{id}', [AdminController::class, 'updateProfessor'])->name('admin.updateProfessor');
 Route::delete('/admin/delete-professor/{id}', [AdminController::class, 'deleteProfessor'])->name('admin.deleteProfessor');
+
+use App\Http\Controllers\TaskController;
+
+// Panel de tareas
+Route::get('/admin/tasks', [TaskController::class, 'index'])->name('admin.tasks.panel')->middleware('auth');
+
+// Vista para crear una nueva tarea
+Route::get('/admin/tasks/create', [TaskController::class, 'create'])->name('admin.tasks.create')->middleware('auth');
+
+// Guardar una nueva tarea
+Route::post('/admin/tasks', [TaskController::class, 'store'])->name('admin.tasks.store')->middleware('auth');
+
+// Eliminar una tarea
+Route::delete('/admin/tasks/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy')->middleware('auth');
