@@ -61,4 +61,41 @@ class TaskController extends Controller
 
         return redirect()->route('admin.tasks.panel')->with('success', 'Tarea eliminada correctamente.');
     }
+
+    public function edit($id)
+    {
+        $task = Task::findOrFail($id);
+        return view('admin.tasks.edit', compact('task'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $task = Task::findOrFail($id);
+
+        $request->validate([
+            'description' => 'required|string|max:255',
+            'priority' => 'required|in:baja,media,alta,urgente',
+            'progress' => 'required|in:0,25,50,75,100',
+            'date' => 'required|date',
+            'pdf' => 'nullable|file|mimes:pdf|max:2048',
+        ]);
+
+        $task->description = $request->description;
+        $task->priority = $request->priority;
+        $task->progress = $request->progress;
+        $task->date = $request->date;
+
+        if ($request->hasFile('pdf')) {
+            if ($task->pdf) {
+                Storage::delete($task->pdf);
+            }
+            $task->pdf = $request->file('pdf')->store('pdfs', 'public');
+        }
+
+        $task->save();
+
+        return redirect()->route('admin.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
+    }
+
+
 }

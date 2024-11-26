@@ -53,11 +53,16 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create'); // Crear tarea
         Route::post('/', [TaskController::class, 'store'])->name('admin.tasks.store'); // Guardar tarea
         Route::delete('/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy'); // Eliminar tarea
+        // Ruta para mostrar el formulario de edición
+        Route::get('/admin/tasks/{id}/edit', [TaskController::class, 'edit'])->name('admin.tasks.edit')->middleware('auth');
+        // Ruta para actualizar la tarea
+        Route::put('/admin/tasks/{id}', [TaskController::class, 'update'])->name('admin.tasks.update')->middleware('auth');
+
     });
 });
 
 // Dashboards para otros roles (Protegidas con Middleware Auth)
 Route::middleware('auth')->group(function () {
-    Route::get('/professor', fn () => view('professor.dashboard'))->name('professor.dashboard');
-    Route::get('/student', fn () => view('student.dashboard'))->name('student.dashboard');
+    Route::get('/professor', fn() => view('professor.dashboard'))->name('professor.dashboard');
+    Route::get('/student', fn() => view('student.dashboard'))->name('student.dashboard');
 });

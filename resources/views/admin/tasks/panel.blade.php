@@ -52,15 +52,18 @@
                             @endif
                         </td>
                         <td>
-                            <form action="{{ route('admin.tasks.destroy', $task->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('¿Estás seguro de eliminar esta tarea?')">
-                                    <i class="fas fa-trash-alt"></i> 
-                                </button>
-                            </form>
-                        </td>
+    <a href="{{ route('admin.tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">
+        <i class="fas fa-edit"></i>
+    </a>
+    <form action="{{ route('admin.tasks.destroy', $task->id) }}" method="POST" class="d-inline">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta tarea?')">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </form>
+</td>
+
                     </tr>
                 @endforeach
             </tbody>

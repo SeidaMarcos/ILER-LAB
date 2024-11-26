@@ -22,3 +22,11 @@
     transform: scale(1.05);
     text-decoration: none;
 }
+
+/* Deshabilitar color azul de :focus y :active solo en el desplegable */
+.navbar .dropdown-item:focus, 
+.navbar .dropdown-item:active {
+    background-color: transparent;
+    color: inherit;
+    outline: none; 
+}
