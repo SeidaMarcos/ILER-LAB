@@ -3,37 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Registros Pendientes</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Ciclo</th>
-            <th>Curso</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($registrations as $registration)
-        <tr>
-            <td>{{ $registration->name }}</td>
-            <td>{{ $registration->email }}</td>
-            <td>{{ $registration->role }}</td>
-            <td>{{ $registration->ciclo }}</td>
-            <td>{{ $registration->curso }}</td>
-            <td>
-                <a href="{{ route('admin.approve', $registration->id) }}">Aprobar</a>
-                <a href="{{ route('admin.reject', $registration->id) }}">Rechazar</a>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Panel de Administración</h1>
+        <div class="row">
+            <!-- Card Estudiantes -->
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3>{{ $studentsCount }}</h3>
+                        <p>Estudiantes</p>
+                        <a href="{{ route('admin.students') }}" class="btn btn-primary">Ver Estudiantes</a>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Card Profesores -->
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3>{{ $professorsCount }}</h3>
+                        <p>Profesores</p>
+                        <a href="{{ route('admin.professors') }}" class="btn btn-primary">Ver Profesores</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

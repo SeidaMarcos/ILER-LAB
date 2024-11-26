@@ -12,9 +12,25 @@ Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
 // Admin Dashboard
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth');
-Route::get('/admin/approve/{id}', [AdminController::class, 'approveRegistration'])->name('admin.approve')->middleware('auth');
-Route::get('/admin/reject/{id}', [AdminController::class, 'rejectRegistration'])->name('admin.reject')->middleware('auth');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
+    ->name('admin.dashboard')
+    ->middleware('auth');
+
+// Vistas de estudiantes y profesores pendientes
+Route::get('/admin/students', [AdminController::class, 'students'])
+    ->name('admin.students')
+    ->middleware('auth');
+Route::get('/admin/professors', [AdminController::class, 'professors'])
+    ->name('admin.professors')
+    ->middleware('auth');
+
+// Aprobación y rechazo de registros
+Route::get('/admin/approve/{id}', [AdminController::class, 'approveRegistration'])
+    ->name('admin.approve')
+    ->middleware('auth');
+Route::get('/admin/reject/{id}', [AdminController::class, 'rejectRegistration'])
+    ->name('admin.reject')
+    ->middleware('auth');
 
 // Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

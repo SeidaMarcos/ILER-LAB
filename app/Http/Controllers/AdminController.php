@@ -8,11 +8,27 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    // Mostrar el dashboard con las solicitudes pendientes
+    // Mostrar el dashboard con contadores de registros
     public function dashboard()
     {
-        $registrations = PendingRegistration::all(); // Obtener registros pendientes
-        return view('admin.dashboard', compact('registrations')); // Pasar la variable a la vista
+        $studentsCount = User::where('role_id', 3)->count(); // Contar estudiantes
+        $professorsCount = User::where('role_id', 2)->count(); // Contar profesores
+
+        return view('admin.dashboard', compact('studentsCount', 'professorsCount'));
+    }
+
+    // Mostrar vista de estudiantes pendientes
+    public function students()
+    {
+        $pendingStudents = PendingRegistration::where('role', 'student')->get();
+        return view('admin.students', compact('pendingStudents'));
+    }
+
+    // Mostrar vista de profesores pendientes
+    public function professors()
+    {
+        $pendingProfessors = PendingRegistration::where('role', 'professor')->get();
+        return view('admin.professors', compact('pendingProfessors'));
     }
 
     // Aprobar una solicitud
@@ -43,7 +59,6 @@ class AdminController extends Controller
 
         return redirect()->route('admin.dashboard')->with('success', 'Registro aprobado.');
     }
-
 
     // Rechazar una solicitud
     public function rejectRegistration($id)
