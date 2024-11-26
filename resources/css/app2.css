@@ -1,28 +1,24 @@
-.action-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.btn-custom {
-    background-color: #14b8a6;
-    color: white;
+/* Estilo base para ambos botones */
+.btn-custom-shared {
     padding: 10px 20px;
     font-size: 18px;
     text-align: center;
-    border: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+    width: auto;
+    text-decoration: none;
 }
 
-/* Efecto hover */
-.btn-custom:hover {
-    background-color: #13a292;
+/* Estilo específico para el botón tipo login */
+.btn-login-custom {
+    background-color: #14b8a6;
     color: white;
-    transform: scale(1.05);
+    border: none;
 }
 
-
-
-
-
+.btn-login-custom:hover {
+    background-color: #13a292;
+    transform: scale(1.05);
+    text-decoration: none;
+}

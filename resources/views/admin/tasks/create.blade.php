@@ -42,10 +42,19 @@
 
         <div class="form-group mb-3">
             <label for="pdf">Archivo PDF (opcional)</label>
-            <input type="file" name="pdf" id="pdf" class="form-control">
+            <div class="input-group">
+                <input type="file" name="pdf" id="pdf" class="form-control">
+                <button type="button" id="clearPdf" class="btn btn-danger fas fa-trash-alt"></button>
+                </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Crear Tarea</button>
+        <button type="submit" class="btn-custom-shared btn-login-custom fas fa-plus"></button>
     </form>
 </div>
+
+<script>
+    document.getElementById('clearPdf').addEventListener('click', function () {
+        document.getElementById('pdf').value = '';
+    });
+</script>
 @endsection

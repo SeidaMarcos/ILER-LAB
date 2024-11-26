@@ -15,8 +15,8 @@
 
     <!-- Botón para crear nueva tarea -->
     <div class="mb-4 text-end">
-        <a href="{{ route('admin.tasks.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Crear Nueva Tarea
+        <a href="{{ route('admin.tasks.create') }}" class="btn-custom-shared btn-login-custom">
+            <i class="fas fa-plus"></i>
         </a>
     </div>
 
@@ -57,7 +57,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm"
                                     onclick="return confirm('¿Estás seguro de eliminar esta tarea?')">
-                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                    <i class="fas fa-trash-alt"></i> 
                                 </button>
                             </form>
                         </td>

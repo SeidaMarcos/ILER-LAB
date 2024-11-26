@@ -24,7 +24,7 @@
                         <p>Estudiantes Aprobados</p>
                         <h5>{{ $pendingStudentsCount }}</h5>
                         <p>Estudiantes Pendientes</p>
-                        <a href="{{ route('admin.students') }}" class="btn btn-primary">Ver Estudiantes</a>
+                        <a href="{{ route('admin.students') }}" class="btn-custom-shared btn-login-custom">Ver Estudiantes</a>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         <p>Profesores Aprobados</p>
                         <h5>{{ $pendingProfessorsCount }}</h5>
                         <p>Profesores Pendientes</p>
-                        <a href="{{ route('admin.professors') }}" class="btn btn-primary">Ver Profesores</a>
+                        <a href="{{ route('admin.professors') }}" class="btn-custom-shared btn-login-custom">Ver Profesores</a>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                     <div class="card-body">
                         <h3>{{ $tasksCount }}</h3>
                         <p>Tareas Creadas</p>
-                        <a href="{{ route('admin.tasks.panel') }}" class="btn btn-primary">Ver Tareas</a>
+                        <a href="{{ route('admin.tasks.panel') }}" class="btn-custom-shared btn-login-custom">Ver Tareas</a>
                     </div>
                 </div>
             </div>

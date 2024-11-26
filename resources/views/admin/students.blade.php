@@ -41,7 +41,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i></button>
+                <button type="submit" class="btn btn-block btn-custom-shared btn-login-custom"><i class="fas fa-search"></i></button>
             </div>
         </div>
     </form>
