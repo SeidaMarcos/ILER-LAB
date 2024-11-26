@@ -18,31 +18,39 @@ class AdminController extends Controller
     }
 
     // Mostrar vista de estudiantes pendientes
-    public function students()
-    {
-        // Obtener estudiantes pendientes
-        $pendingStudents = PendingRegistration::where('role', 'student')->get();
+    public function students(Request $request)
+{
+    // Obtener estudiantes pendientes
+    $pendingStudents = PendingRegistration::where('role', 'student')->get();
 
-        // Ciclos y cursos disponibles
-        $ciclos = ['anatomia', 'laboratorio'];
-        $cursos = ['1º', '2º'];
+    // Obtener todos los estudiantes registrados
+    $query = User::where('role_id', 3)->with('student');
 
-        // Estudiantes registrados organizados por ciclo y curso
-        $registeredStudents = [];
-
-        foreach ($ciclos as $ciclo) {
-            foreach ($cursos as $curso) {
-                $registeredStudents[$ciclo][$curso] = User::where('role_id', 3)
-                    ->whereHas('student', function ($query) use ($ciclo, $curso) {
-                        $query->where('ciclo', $ciclo)->where('curso', $curso);
-                    })
-                    ->with('student')
-                    ->get();
-            }
-        }
-
-        return view('admin.students', compact('pendingStudents', 'registeredStudents'));
+    // Aplicar filtro si se proporciona
+    if ($request->filled('name')) {
+        $query->where('name', 'like', '%' . $request->name . '%');
     }
+
+    if ($request->filled('email')) {
+        $query->where('email', 'like', '%' . $request->email . '%');
+    }
+
+    if ($request->filled('curso')) {
+        $query->whereHas('student', function ($q) use ($request) {
+            $q->where('curso', $request->curso);
+        });
+    }
+
+    if ($request->filled('ciclo')) {
+        $query->whereHas('student', function ($q) use ($request) {
+            $q->where('ciclo', $request->ciclo);
+        });
+    }
+
+    $filteredStudents = $query->get();
+
+    return view('admin.students', compact('pendingStudents', 'filteredStudents'));
+}
 
 
 
