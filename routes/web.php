@@ -48,3 +48,6 @@ Route::get('/student', function () {
 
 // Edit perfil admin
 Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.update.profile')->middleware('auth');
+
+Route::put('/admin/student/{id}', [AdminController::class, 'updateStudent'])->name('admin.updateStudent');
+Route::delete('/admin/student/{id}', [AdminController::class, 'deleteStudent'])->name('admin.deleteStudent');
