@@ -14,8 +14,10 @@
             <div class="col-md-6">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h3>{{ $studentsCount }}</h3>
-                        <p>Estudiantes</p>
+                        <h3>{{ $approvedStudentsCount }}</h3>
+                        <p>Estudiantes Aprobados</p>
+                        <h5>{{ $pendingStudentsCount }}</h5>
+                        <p>Estudiantes Pendientes</p>
                         <a href="{{ route('admin.students') }}" class="btn btn-primary">Ver Estudiantes</a>
                     </div>
                 </div>
@@ -25,8 +27,10 @@
             <div class="col-md-6">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h3>{{ $professorsCount }}</h3>
-                        <p>Profesores</p>
+                        <h3>{{ $approvedProfessorsCount }}</h3>
+                        <p>Profesores Aprobados</p>
+                        <h5>{{ $pendingProfessorsCount }}</h5>
+                        <p>Profesores Pendientes</p>
                         <a href="{{ route('admin.professors') }}" class="btn btn-primary">Ver Profesores</a>
                     </div>
                 </div>

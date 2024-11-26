@@ -11,12 +11,26 @@ class AdminController extends Controller
     // Mostrar el dashboard con contadores de registros
     public function dashboard()
     {
-        $studentsCount = User::where('role_id', 3)->count(); // Contar estudiantes
-        $professorsCount = User::where('role_id', 2)->count(); // Contar profesores
-
-        return view('admin.dashboard', compact('studentsCount', 'professorsCount'));
+        // Contar estudiantes aprobados
+        $approvedStudentsCount = User::where('role_id', 3)->count();
+    
+        // Contar profesores aprobados
+        $approvedProfessorsCount = User::where('role_id', 2)->count();
+    
+        // Contar estudiantes pendientes
+        $pendingStudentsCount = PendingRegistration::where('role', 'student')->count();
+    
+        // Contar profesores pendientes
+        $pendingProfessorsCount = PendingRegistration::where('role', 'professor')->count();
+    
+        return view('admin.dashboard', compact(
+            'approvedStudentsCount',
+            'approvedProfessorsCount',
+            'pendingStudentsCount',
+            'pendingProfessorsCount'
+        ));
     }
-
+    
     // Mostrar vista de estudiantes pendientes
     public function students(Request $request)
 {
