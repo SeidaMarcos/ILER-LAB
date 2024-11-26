@@ -41,7 +41,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary btn-block">Buscar</button>
+                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i></button>
             </div>
         </div>
     </form>
@@ -72,7 +72,7 @@
                             <!-- Botón Editar -->
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#editStudentModal-{{ $student->id }}">
-                                Editar
+                                <i class="fas fa-edit"></i>
                             </button>
 
                             <!-- Modal para editar estudiante -->
@@ -126,8 +126,8 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                                    data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i></button>
                                             </div>
                                         </form>
                                     </div>
@@ -139,7 +139,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('¿Estás seguro de eliminar este estudiante?')">Eliminar</button>
+                                    onclick="return confirm('¿Estás seguro de eliminar este estudiante?')"><i class="fas fa-trash-alt"></i></button>
                             </form>
                         </td>
                     </tr>
