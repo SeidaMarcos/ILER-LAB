@@ -57,7 +57,7 @@ class AdminController extends Controller
         // Eliminar el registro pendiente
         $registration->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Registro aprobado.');
+        return back()->with('success', 'Usuario aprobado correctamente.');
     }
 
     // Rechazar una solicitud
@@ -66,6 +66,6 @@ class AdminController extends Controller
         $registration = PendingRegistration::findOrFail($id);
         $registration->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Registro rechazado.');
+        return back()->with('success', 'Solicitud rechazada correctamente.');
     }
 }

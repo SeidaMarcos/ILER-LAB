@@ -9,6 +9,13 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Profesores Pendientes</h1>
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
         @if($pendingProfessors->isEmpty())
             <p class="text-center">No hay solicitudes pendientes para profesores.</p>
         @else
