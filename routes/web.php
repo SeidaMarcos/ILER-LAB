@@ -45,3 +45,6 @@ Route::get('/professor', function () {
 Route::get('/student', function () {
     return view('student.dashboard');
 })->name('student.dashboard')->middleware('auth');
+
+// Edit perfil admin
+Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.update.profile')->middleware('auth');

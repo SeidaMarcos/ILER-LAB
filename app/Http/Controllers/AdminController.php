@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PendingRegistration;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -13,16 +14,16 @@ class AdminController extends Controller
     {
         // Contar estudiantes aprobados
         $approvedStudentsCount = User::where('role_id', 3)->count();
-    
+
         // Contar profesores aprobados
         $approvedProfessorsCount = User::where('role_id', 2)->count();
-    
+
         // Contar estudiantes pendientes
         $pendingStudentsCount = PendingRegistration::where('role', 'student')->count();
-    
+
         // Contar profesores pendientes
         $pendingProfessorsCount = PendingRegistration::where('role', 'professor')->count();
-    
+
         return view('admin.dashboard', compact(
             'approvedStudentsCount',
             'approvedProfessorsCount',
@@ -30,41 +31,41 @@ class AdminController extends Controller
             'pendingProfessorsCount'
         ));
     }
-    
+
     // Mostrar vista de estudiantes pendientes
     public function students(Request $request)
-{
-    // Obtener estudiantes pendientes
-    $pendingStudents = PendingRegistration::where('role', 'student')->get();
+    {
+        // Obtener estudiantes pendientes
+        $pendingStudents = PendingRegistration::where('role', 'student')->get();
 
-    // Obtener todos los estudiantes registrados
-    $query = User::where('role_id', 3)->with('student');
+        // Obtener todos los estudiantes registrados
+        $query = User::where('role_id', 3)->with('student');
 
-    // Aplicar filtro si se proporciona
-    if ($request->filled('name')) {
-        $query->where('name', 'like', '%' . $request->name . '%');
+        // Aplicar filtro si se proporciona
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        if ($request->filled('curso')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('curso', $request->curso);
+            });
+        }
+
+        if ($request->filled('ciclo')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('ciclo', $request->ciclo);
+            });
+        }
+
+        $filteredStudents = $query->get();
+
+        return view('admin.students', compact('pendingStudents', 'filteredStudents'));
     }
-
-    if ($request->filled('email')) {
-        $query->where('email', 'like', '%' . $request->email . '%');
-    }
-
-    if ($request->filled('curso')) {
-        $query->whereHas('student', function ($q) use ($request) {
-            $q->where('curso', $request->curso);
-        });
-    }
-
-    if ($request->filled('ciclo')) {
-        $query->whereHas('student', function ($q) use ($request) {
-            $q->where('ciclo', $request->ciclo);
-        });
-    }
-
-    $filteredStudents = $query->get();
-
-    return view('admin.students', compact('pendingStudents', 'filteredStudents'));
-}
 
 
 
@@ -117,4 +118,29 @@ class AdminController extends Controller
 
         return back()->with('success', 'Solicitud rechazada correctamente.');
     }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validar los datos del formulario
+        $request->validate([
+            'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s]+$/'],
+            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'string', 'min:5', 'confirmed'],
+        ]);
+
+        // Actualizar los datos del usuario
+        $user->name = strtoupper($request->name);
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'Perfil Admin actualizado correctamente.');
+    }
+
 }
