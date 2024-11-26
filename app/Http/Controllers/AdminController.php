@@ -23,43 +23,27 @@ class AdminController extends Controller
         // Obtener estudiantes pendientes
         $pendingStudents = PendingRegistration::where('role', 'student')->get();
 
-        // Obtener estudiantes registrados filtrados por ciclo y curso
-        $anatomiaPrimero = User::where('role_id', 3)
-            ->whereHas('student', function ($query) {
-                $query->where('ciclo', 'anatomia')->where('curso', '1º');
-            })
-            ->with('student')
-            ->get();
+        // Ciclos y cursos disponibles
+        $ciclos = ['anatomia', 'laboratorio'];
+        $cursos = ['1º', '2º'];
 
-        $anatomiaSegundo = User::where('role_id', 3)
-            ->whereHas('student', function ($query) {
-                $query->where('ciclo', 'anatomia')->where('curso', '2º');
-            })
-            ->with('student')
-            ->get();
+        // Estudiantes registrados organizados por ciclo y curso
+        $registeredStudents = [];
 
-        $laboratorioPrimero = User::where('role_id', 3)
-            ->whereHas('student', function ($query) {
-                $query->where('ciclo', 'laboratorio')->where('curso', '1º');
-            })
-            ->with('student')
-            ->get();
+        foreach ($ciclos as $ciclo) {
+            foreach ($cursos as $curso) {
+                $registeredStudents[$ciclo][$curso] = User::where('role_id', 3)
+                    ->whereHas('student', function ($query) use ($ciclo, $curso) {
+                        $query->where('ciclo', $ciclo)->where('curso', $curso);
+                    })
+                    ->with('student')
+                    ->get();
+            }
+        }
 
-        $laboratorioSegundo = User::where('role_id', 3)
-            ->whereHas('student', function ($query) {
-                $query->where('ciclo', 'laboratorio')->where('curso', '2º');
-            })
-            ->with('student')
-            ->get();
-
-        return view('admin.students', compact(
-            'pendingStudents',
-            'anatomiaPrimero',
-            'anatomiaSegundo',
-            'laboratorioPrimero',
-            'laboratorioSegundo'
-        ));
+        return view('admin.students', compact('pendingStudents', 'registeredStudents'));
     }
+
 
 
     public function professors()
