@@ -24,13 +24,23 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         // Validar los datos
-        $request->validate([
-            'description' => ['required', 'string', 'max:255'],
-            'priority' => ['required', 'in:baja,media,alta,urgente'],
-            'progress' => ['required', 'in:0,25,50,75,100'],
-            'date' => ['required', 'date'],
-            'pdf' => ['nullable', 'file', 'mimes:pdf', 'max:2048'], // Validación para PDF
-        ]);
+        $request->validate(
+            [
+                'description' => 'required|string|max:255',
+                'priority' => 'required|in:baja,media,alta,urgente',
+                'progress' => 'required|in:0,25,50,75,100',
+                'date' => ['required', 'date', 'after_or_equal:today'],
+                'pdf' => 'nullable|file|mimes:pdf|max:2048',
+            ],
+            [
+                'pdf.mimes' => 'Solo se pueden adjuntar archivos en formato PDF.',
+                'pdf.max' => 'El archivo PDF no debe exceder los 2 MB.',
+                'date.required' => 'La fecha es obligatoria.',
+                'date.date' => 'El valor ingresado debe ser una fecha válida.',
+                'date.after_or_equal' => 'La fecha debe ser igual o posterior a hoy.',
+            ]
+        );
+
 
         // Subir archivo PDF si está presente
         $pdfPath = $request->file('pdf') ? $request->file('pdf')->store('tasks', 'public') : null;
@@ -51,18 +61,18 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
-    
+
         // Verificar y eliminar el archivo PDF asociado
         if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
             \Storage::disk('public')->delete($task->pdf);
         }
-    
+
         // Eliminar la tarea
         $task->delete();
-    
+
         return redirect()->route('admin.tasks.panel')->with('success', 'Tarea eliminada correctamente.');
     }
-    
+
 
 
     public function edit($id)
@@ -75,13 +85,23 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        $request->validate([
-            'description' => 'required|string|max:255',
-            'priority' => 'required|in:baja,media,alta,urgente',
-            'progress' => 'required|in:0,25,50,75,100',
-            'date' => 'required|date',
-            'pdf' => 'nullable|file|mimes:pdf|max:2048',
-        ]);
+        $request->validate(
+            [
+                'description' => 'required|string|max:255',
+                'priority' => 'required|in:baja,media,alta,urgente',
+                'progress' => 'required|in:0,25,50,75,100',
+                'date' => ['required', 'date', 'after_or_equal:today'],
+                'pdf' => 'nullable|file|mimes:pdf|max:2048',
+            ],
+            [
+                'pdf.mimes' => 'Solo se pueden adjuntar archivos en formato PDF.',
+                'pdf.max' => 'El archivo PDF no debe exceder los 2 MB.',
+                'date.required' => 'La fecha es obligatoria.',
+                'date.date' => 'El valor ingresado debe ser una fecha válida.',
+                'date.after_or_equal' => 'La fecha debe ser igual o posterior a hoy.',
+            ]
+        );
+
 
         $task->description = $request->description;
         $task->priority = $request->priority;

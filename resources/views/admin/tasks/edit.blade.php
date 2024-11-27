@@ -39,6 +39,9 @@
         <div class="form-group mb-3">
             <label for="date">Fecha de Entrega</label>
             <input type="date" name="date" id="date" class="form-control" value="{{ $task->date }}" required>
+            @error('date')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group mb-3">
@@ -47,6 +50,9 @@
             @if ($task->pdf)
                 <p class="mt-2">Archivo actual: <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank">Ver PDF</a></p>
             @endif
+            @error('pdf')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <button type="submit" class="btn btn-primary">Actualizar Tarea</button>
