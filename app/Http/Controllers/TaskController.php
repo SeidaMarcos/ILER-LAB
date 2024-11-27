@@ -102,17 +102,25 @@ class TaskController extends Controller
             ]
         );
 
-
+        // Actualizar datos de la tarea
         $task->description = $request->description;
         $task->priority = $request->priority;
         $task->progress = $request->progress;
         $task->date = $request->date;
 
-        if ($request->hasFile('pdf')) {
-            if ($task->pdf) {
-                Storage::delete($task->pdf);
+        // Si se marca "Guardar sin archivo PDF"
+        if ($request->has('remove_pdf')) {
+            // Eliminar archivo PDF actual si existe
+            if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
+                \Storage::disk('public')->delete($task->pdf);
             }
-            $task->pdf = $request->file('pdf')->store('pdfs', 'public');
+            $task->pdf = null; // Eliminar referencia en la base de datos
+        } elseif ($request->hasFile('pdf')) {
+            // Subir un nuevo archivo PDF si no está marcada la opción de "Guardar sin archivo PDF"
+            if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
+                \Storage::disk('public')->delete($task->pdf); // Eliminar archivo anterior
+            }
+            $task->pdf = $request->file('pdf')->store('tasks', 'public'); // Guardar nuevo archivo
         }
 
         $task->save();

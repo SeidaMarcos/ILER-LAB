@@ -13,7 +13,8 @@
 
         <div class="form-group mb-3">
             <label for="description">Descripción</label>
-            <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}" required>
+            <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}"
+                required>
         </div>
 
         <div class="form-group mb-3">
@@ -53,7 +54,7 @@
             @enderror
         </div>
 
-        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Tarea</button>
+        <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-plus"></i></button>
     </form>
 </div>
 
