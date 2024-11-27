@@ -15,10 +15,10 @@ class AdminSeeder extends Seeder
 
         // Crear el administrador
         User::updateOrCreate(
-            ['email' => 'dani@gmail.com'], // Verificar por correo electrónico
+            ['email' => 'dani@gmail.com'],
             [
                 'name' => 'Dani',
-                'password' => bcrypt('password123'), // Cambia esto por una contraseña segura
+                'password' => bcrypt('password123'),
                 'role_id' => $adminRole->id,
                 'active' => true,
             ]
