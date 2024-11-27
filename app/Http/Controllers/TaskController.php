@@ -51,16 +51,19 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
-
-        // Eliminar archivo PDF asociado
-        if ($task->pdf) {
-            \Storage::delete('public/' . $task->pdf);
+    
+        // Verificar y eliminar el archivo PDF asociado
+        if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
+            \Storage::disk('public')->delete($task->pdf);
         }
-
+    
+        // Eliminar la tarea
         $task->delete();
-
+    
         return redirect()->route('admin.tasks.panel')->with('success', 'Tarea eliminada correctamente.');
     }
+    
+
 
     public function edit($id)
     {
