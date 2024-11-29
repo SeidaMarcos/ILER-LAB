@@ -5,6 +5,34 @@
 @section('content')
 <div class="container mt-5">
     <h1 class="text-center mb-4">Crear Nueva Tarea</h1>
+<!-- Formulario de filtrado -->
+<form action="{{ route('admin.tasks.create') }}" method="GET" class="mb-4">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" name="name" class="form-control" placeholder="Buscar por Nombre" value="{{ request('name') }}">
+            </div>
+            <div class="col-md-3">
+                <input type="email" name="email" class="form-control" placeholder="Buscar por Correo" value="{{ request('email') }}">
+            </div>
+            <div class="col-md-2">
+                <select name="ciclo" class="form-control">
+                    <option value="">Seleccionar Ciclo</option>
+                    <option value="anatomia" {{ request('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
+                    <option value="laboratorio" {{ request('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="curso" class="form-control">
+                    <option value="">Seleccionar Curso</option>
+                    <option value="1º" {{ request('curso') == '1º' ? 'selected' : '' }}>1º</option>
+                    <option value="2º" {{ request('curso') == '2º' ? 'selected' : '' }}>2º</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Filtrar</button>
+            </div>
+        </div>
+    </form>
 
     <form action="{{ route('admin.tasks.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
