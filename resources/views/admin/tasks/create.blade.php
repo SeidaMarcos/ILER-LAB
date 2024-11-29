@@ -16,20 +16,20 @@
             </div>
             <div class="col-md-2">
                 <select name="ciclo" class="form-control">
-                    <option value="">Seleccionar Ciclo</option>
+                    <option value="">Filtrar Ciclo (Todos)</option>
                     <option value="anatomia" {{ request('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
                     <option value="laboratorio" {{ request('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <select name="curso" class="form-control">
-                    <option value="">Seleccionar Curso</option>
+                    <option value="">Filtrar Curso (Todos)</option>
                     <option value="1º" {{ request('curso') == '1º' ? 'selected' : '' }}>1º</option>
                     <option value="2º" {{ request('curso') == '2º' ? 'selected' : '' }}>2º</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary btn-block">Filtrar</button>
+            <button type="submit" class="btn btn-block btn-custom-shared btn-login-custom"><i class="fas fa-search"></i></button>
             </div>
         </div>
     </form>
