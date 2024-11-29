@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    use HasFactory;
-
     protected $fillable = ['user_id', 'ciclo', 'curso'];
 
-    public function user()
+    public function tasks()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(Task::class, 'student_task', 'student_id', 'task_id');
     }
 }
+

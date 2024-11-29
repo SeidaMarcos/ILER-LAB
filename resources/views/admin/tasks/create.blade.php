@@ -6,8 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Crear Nueva Tarea</h1>
 
-
-
     <form action="{{ route('admin.tasks.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
@@ -54,13 +52,55 @@
             @enderror
         </div>
 
+        <!-- Checkbox "Seleccionar todos" -->
+        <div class="form-check">
+            <input type="checkbox" id="selectAll" class="form-check-input">
+            <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
+        </div>
+
+        <!-- Checkboxes para estudiantes -->
+        @foreach ($students as $student)
+            <div class="form-check">
+                <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
+                    id="student-{{ $student->student->id }}" class="form-check-input">
+
+                <label for="student-{{ $student->student->id }}" class="form-check-label">
+                    {{ $student->name }} ({{ $student->email }})
+                </label>
+            </div>
+        @endforeach
+
         <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-plus"></i></button>
     </form>
 </div>
 
 <script>
-    document.getElementById('clearPdf').addEventListener('click', function () {
-        document.getElementById('pdf').value = '';
+    //document.addEventListener('DOMContentLoaded', function () {
+    // Limpiar el input de PDF
+    //const clearPdfButton = document.getElementById('clearPdf');
+    //if (clearPdfButton) {
+    // clearPdfButton.addEventListener('click', function () {
+    //  const pdfInput = document.getElementById('pdf');
+    // if (pdfInput) {
+    //     pdfInput.value = ''; // Limpiar el input
+    //   }
+    // });
+    // }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Comprobar que el checkbox "selectAll" existe
+        const selectAllCheckbox = document.getElementById('selectAll');
+        if (selectAllCheckbox) {
+            // Añadir evento de clic al checkbox "Seleccionar todos"
+            selectAllCheckbox.addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('input[name="students[]"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAllCheckbox.checked; // Sincroniza el estado
+                });
+            });
+        }
     });
+
 </script>
+
 @endsection
