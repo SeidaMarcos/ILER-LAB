@@ -114,11 +114,35 @@ class TaskController extends Controller
 
 
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $task = Task::findOrFail($id);
-        return view('admin.tasks.edit', compact('task'));
+        $task = Task::with('students')->findOrFail($id);
+    
+        $query = User::where('role_id', 3); // Filtrar estudiantes (role_id = 3)
+    
+        // Aplicar filtros si existen
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+        if ($request->filled('ciclo')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('ciclo', $request->ciclo);
+            });
+        }
+        if ($request->filled('curso')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('curso', $request->curso);
+            });
+        }
+    
+        $students = $query->get();
+    
+        return view('admin.tasks.edit', compact('task', 'students'));
     }
+    
 
 
 
@@ -126,7 +150,7 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
-
+    
         $request->validate(
             [
                 'description' => 'required|string|max:255',
@@ -134,6 +158,7 @@ class TaskController extends Controller
                 'progress' => 'required|in:0,25,50,75,100',
                 'date' => ['required', 'date', 'after_or_equal:today'],
                 'pdf' => 'nullable|file|mimes:pdf|max:2048',
+                'students' => ['nullable', 'array'], // Validar estudiantes seleccionados (puede ser null)
             ],
             [
                 'pdf.mimes' => 'Solo se pueden adjuntar archivos en formato PDF.',
@@ -143,14 +168,14 @@ class TaskController extends Controller
                 'date.after_or_equal' => 'La fecha debe ser igual o posterior a hoy.',
             ]
         );
-
+    
         // Actualizar datos de la tarea
         $task->description = $request->description;
         $task->priority = $request->priority;
         $task->progress = $request->progress;
         $task->date = $request->date;
-
-        // Si se marca "Guardar sin archivo PDF"
+    
+        // Manejo del PDF
         if ($request->has('remove_pdf')) {
             // Eliminar archivo PDF actual si existe
             if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
@@ -164,9 +189,19 @@ class TaskController extends Controller
             }
             $task->pdf = $request->file('pdf')->store('tasks', 'public'); // Guardar nuevo archivo
         }
-
+    
         $task->save();
-
+    
+        // Actualizar los estudiantes asociados
+        if ($request->has('students')) {
+            // Obtener IDs válidos de estudiantes
+            $validStudentIds = Student::whereIn('id', $request->students)->pluck('id')->toArray();
+            $task->students()->sync($validStudentIds); // Sincronizar estudiantes
+        } else {
+            $task->students()->detach(); // Si no se seleccionaron estudiantes, elimina todos
+        }
+    
         return redirect()->route('admin.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
     }
+    
 }
