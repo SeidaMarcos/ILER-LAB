@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Student;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -58,13 +59,24 @@ class TaskController extends Controller
             'progress' => 'required|in:0,25,50,75,100',
             'date' => ['required', 'date', 'after_or_equal:today'],
             'pdf' => 'nullable|file|mimes:pdf|max:2048',
-            'students' => ['required', 'array'], // Validar que se seleccionen estudiantes
+            'students' => ['required', 'array'], // Validar estudiantes seleccionados
+        ], [
+            'description.required' => 'La descripción es obligatoria.',
+            'description.max' => 'La descripción no debe exceder los 255 caracteres.',
+            'priority.required' => 'Debes seleccionar una prioridad.',
+            'priority.in' => 'La prioridad seleccionada no es válida.',
+            'progress.required' => 'Debes indicar el progreso.',
+            'progress.in' => 'El progreso debe ser uno de los valores permitidos.',
+            'date.required' => 'La fecha de entrega es obligatoria.',
+            'date.date' => 'La fecha de entrega debe ser una fecha válida.',
+            'date.after_or_equal' => 'La fecha de entrega debe ser hoy o una fecha futura.',
+            'pdf.mimes' => 'El archivo debe estar en formato PDF.',
+            'pdf.max' => 'El tamaño del archivo no debe exceder los 2 MB.',
+            'students.required' => 'Debes asignar al menos un estudiante.',
         ]);
 
-        // 1. Subir archivo PDF si existe
         $pdfPath = $request->file('pdf') ? $request->file('pdf')->store('tasks', 'public') : null;
 
-        // 2. Crear la tarea en la base de datos
         $task = Task::create([
             'description' => $request->description,
             'priority' => $request->priority,
@@ -73,12 +85,12 @@ class TaskController extends Controller
             'pdf' => $pdfPath,
         ]);
 
-        // 3. Verificar y asociar estudiantes
         $validStudentIds = Student::whereIn('id', $request->students)->pluck('id')->toArray();
         $task->students()->sync($validStudentIds);
 
         return redirect()->route('admin.tasks.panel')->with('success', 'Tarea creada correctamente.');
     }
+
 
 
 

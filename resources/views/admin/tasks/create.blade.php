@@ -41,6 +41,9 @@
             <label for="description">Descripción</label>
             <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}"
                 required>
+                @error('description')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group mb-3">
@@ -67,6 +70,9 @@
         <div class="form-group mb-3">
             <label for="date">Fecha de Entrega</label>
             <input type="date" name="date" id="date" class="form-control" value="{{ old('date') }}" required>
+            @error('date')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group mb-3">
@@ -95,6 +101,9 @@
                 <label for="student-{{ $student->student->id }}" class="form-check-label">
                     {{ $student->name }} ({{ $student->email }})
                 </label>
+                @error('students')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
         @endforeach
 
