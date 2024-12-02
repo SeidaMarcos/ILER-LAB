@@ -70,3 +70,4 @@ Route::middleware('auth')->group(function () {
 
 
 
+Route::get('/student/task/{id}', [StudentController::class, 'taskDetails'])->name('student.details');

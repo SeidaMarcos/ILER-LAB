@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
+use App\Models\Task;
 
 class StudentController extends Controller
 {
@@ -23,4 +24,11 @@ class StudentController extends Controller
 
         return view('student.dashboard', compact('tasks'));
     }
+
+    public function taskDetails($id)
+{
+    $task = Task::with('students')->findOrFail($id);
+    return view('student.details', compact('task'));
+}
+
 }
