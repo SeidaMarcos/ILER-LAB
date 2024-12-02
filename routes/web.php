@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\StudentController;
 
 // Rutas públicas
 Route::view('/', 'welcome')->name('welcome');
@@ -62,8 +63,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     });
 });
 
-// Dashboards para otros roles (Protegidas con Middleware Auth)
 Route::middleware('auth')->group(function () {
-    Route::get('/professor', fn() => view('professor.dashboard'))->name('professor.dashboard');
-    Route::get('/student', fn() => view('student.dashboard'))->name('student.dashboard');
+    Route::get('/student', [StudentController::class, 'dashboard'])->name('student.dashboard');
 });
+
+
+
+
