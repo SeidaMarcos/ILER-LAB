@@ -172,8 +172,8 @@
                         <td>{{ $student->ciclo }}</td>
                         <td>{{ $student->curso }}</td>
                         <td>
-                            <a href="{{ route('admin.approve', $student->id) }}" class="btn btn-success btn-sm">Aprobar</a>
-                            <a href="{{ route('admin.reject', $student->id) }}" class="btn btn-danger btn-sm">Rechazar</a>
+                            <a href="{{ route('admin.approve', $student->id) }}" class="btn btn-success btn-sm"> <i class="fas fa-check"></i></a>
+                            <a href="{{ route('admin.reject', $student->id) }}" class="btn btn-danger btn-sm"><i class="fas fa-times"></i> </a>
                         </td>
                     </tr>
                 @endforeach
