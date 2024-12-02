@@ -22,10 +22,32 @@
             <p><strong>Progreso:</strong> {{ $task->progress }}%</p>
             <p><strong>Fecha de Entrega:</strong> {{ \Carbon\Carbon::parse($task->date)->format('d/m/Y') }}</p>
             @if ($task->pdf)
-                <p><strong>Archivo:</strong> <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank">Descargar PDF</a></p>
+                <p><strong>Archivo:</strong> <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank">Ver/Descargar PDF</a></p>
             @else
                 <p><strong>Archivo:</strong> Sin archivo adjunto</p>
             @endif
+
+            <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-3">
+                    <label for="student_pdf" class="form-label">Entregar Archivo (PDF)</label>
+                    <input type="file" name="student_pdf" id="student_pdf" class="form-control" required>
+                    @error('student_pdf')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                @if ($task->student_pdf)
+                <p class="text-success mt-3"><i class="fas fa-check-circle"></i> Tarea ya entregada.</p>
+                <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-file-pdf"></i> Ver Última Entrega 
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-upload"></i> {{ $task->student_pdf ? 'Entregar de Nuevo' : 'Entregar' }}
+                </button>
+            @endif
+            </form>
+
         </div>
     </div>
 </div>
