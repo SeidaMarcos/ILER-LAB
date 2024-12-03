@@ -38,14 +38,15 @@
                 </div>
 
                 @if ($task->student_pdf)
-                <p class="text-success mt-3"><i class="fas fa-check-circle"></i> Tarea ya entregada.</p>
-                <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-primary">
-                    <i class="fas fa-file-pdf"></i> Ver Última Entrega 
-                </a>
+                    <p class="text-success mt-3"><i class="fas fa-check-circle"></i> Tarea ya entregada.</p>
+                    <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Ver Última Entrega 
+                    </a>
+                @endif
+
                 <button type="submit" class="btn btn-success">
                     <i class="fas fa-upload"></i> {{ $task->student_pdf ? 'Entregar de Nuevo' : 'Entregar' }}
                 </button>
-            @endif
             </form>
 
         </div>
