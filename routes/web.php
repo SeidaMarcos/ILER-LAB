@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ProfessorController;
 
 // Rutas públicas
 Route::view('/', 'welcome')->name('welcome');
@@ -72,3 +73,19 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/student/task/{id}', [StudentController::class, 'taskDetails'])->name('student.details');
 Route::post('/student/tasks/{id}/upload', [StudentController::class, 'uploadTask'])->name('student.tasks.upload');
+
+
+Route::middleware('auth')->prefix('professor')->group(function () {
+    Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
+    
+    // Reutilizamos el CRUD del admin
+    Route::get('/tasks/panel', [ProfessorController::class, 'panelTasks'])->name('professor.tasks.panel');
+    Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
+
+    // Opcional: vincular crear/editar tareas del admin
+    Route::get('/tasks/create', [TaskController::class, 'create'])->name('professor.tasks.create');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('professor.tasks.store');
+    Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('professor.tasks.edit');
+    Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('professor.tasks.update');
+    Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('professor.tasks.destroy');
+});

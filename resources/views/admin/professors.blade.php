@@ -124,10 +124,10 @@
                         <td>{{ $professor->email }}</td>
                         <td>
                             <a href="{{ route('admin.approve', $professor->id) }}" class="btn btn-success btn-sm">
-                                <i class="fas fa-check"></i> Aprobar
+                                <i class="fas fa-check"></i> 
                             </a>
                             <a href="{{ route('admin.reject', $professor->id) }}" class="btn btn-danger btn-sm">
-                                <i class="fas fa-times"></i> Rechazar
+                                <i class="fas fa-times"></i> 
                             </a>
                         </td>
                     </tr>
