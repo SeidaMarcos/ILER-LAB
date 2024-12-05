@@ -28,6 +28,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Prioridad</th>
                     <th>Progreso</th>
@@ -40,6 +41,7 @@
                 @foreach ($tasks as $task)
                     <tr>
                         <td>{{ $task->id }}</td>
+                        <td>{{ $task->name }}</td>
                         <td>{{ $task->description }}</td>
                         <td>{{ ucfirst($task->priority) }}</td>
                         <td>{{ $task->progress }}%</td>

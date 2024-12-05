@@ -77,6 +77,7 @@ class TaskController extends Controller
         $pdfPath = $request->file('pdf') ? $request->file('pdf')->store('tasks', 'public') : null;
 
         $task = Task::create([
+            'name' => $request->name,
             'description' => $request->description,
             'priority' => $request->priority,
             'progress' => $request->progress,
@@ -173,6 +174,7 @@ public function destroy($id)
         );
     
         // Actualizar datos de la tarea
+        $task->name = $request->name;
         $task->description = $request->description;
         $task->priority = $request->priority;
         $task->progress = $request->progress;

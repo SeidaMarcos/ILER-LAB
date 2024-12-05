@@ -5,20 +5,23 @@
 @section('content')
 <div class="container mt-5">
     <h1 class="text-center mb-4">Crear Nueva Tarea</h1>
-<!-- Formulario de filtrado -->
-<form action="{{ route('admin.tasks.create') }}" method="GET" class="mb-4">
+    <!-- Formulario de filtrado -->
+    <form action="{{ route('admin.tasks.create') }}" method="GET" class="mb-4">
         <div class="row">
             <div class="col-md-3">
-                <input type="text" name="name" class="form-control" placeholder="Buscar por Nombre" value="{{ request('name') }}">
+                <input type="text" name="name" class="form-control" placeholder="Buscar por Nombre"
+                    value="{{ request('name') }}">
             </div>
             <div class="col-md-3">
-                <input type="email" name="email" class="form-control" placeholder="Buscar por Correo" value="{{ request('email') }}">
+                <input type="email" name="email" class="form-control" placeholder="Buscar por Correo"
+                    value="{{ request('email') }}">
             </div>
             <div class="col-md-2">
                 <select name="ciclo" class="form-control">
                     <option value="">Filtrar Ciclo (Todos)</option>
                     <option value="anatomia" {{ request('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
-                    <option value="laboratorio" {{ request('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio</option>
+                    <option value="laboratorio" {{ request('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio
+                    </option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -29,7 +32,8 @@
                 </select>
             </div>
             <div class="col-md-2">
-            <button type="submit" class="btn btn-block btn-custom-shared btn-login-custom"><i class="fas fa-search"></i></button>
+                <button type="submit" class="btn btn-block btn-custom-shared btn-login-custom"><i
+                        class="fas fa-search"></i></button>
             </div>
         </div>
     </form>
@@ -38,10 +42,15 @@
         @csrf
 
         <div class="form-group mb-3">
+            <label for="name">Nombre de la Tarea</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+        </div>
+
+        <div class="form-group mb-3">
             <label for="description">Descripción</label>
             <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}"
                 required>
-                @error('description')
+            @error('description')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>

@@ -5,37 +5,47 @@
 @section('content')
 <div class="container mt-5">
     <h1 class="text-center mb-4">Editar Tarea</h1>
-<!-- Filtros -->
-<form action="{{ route('admin.tasks.edit', $task->id) }}" method="GET" class="mb-4">
-    <div class="row">
-        <div class="col-md-3">
-            <input type="text" name="name" class="form-control" placeholder="Buscar por Nombre" value="{{ request('name') }}">
+    <!-- Filtros -->
+    <form action="{{ route('admin.tasks.edit', $task->id) }}" method="GET" class="mb-4">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" name="name" class="form-control" placeholder="Buscar por Nombre"
+                    value="{{ request('name') }}">
+            </div>
+            <div class="col-md-3">
+                <input type="email" name="email" class="form-control" placeholder="Buscar por Correo"
+                    value="{{ request('email') }}">
+            </div>
+            <div class="col-md-2">
+                <select name="ciclo" class="form-control">
+                    <option value="">Seleccionar Ciclo</option>
+                    <option value="anatomia" {{ request('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
+                    <option value="laboratorio" {{ request('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="curso" class="form-control">
+                    <option value="">Seleccionar Curso</option>
+                    <option value="1º" {{ request('curso') == '1º' ? 'selected' : '' }}>1º</option>
+                    <option value="2º" {{ request('curso') == '2º' ? 'selected' : '' }}>2º</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-block btn-custom-shared btn-login-custom"><i
+                        class="fas fa-search"></i></button>
+            </div>
         </div>
-        <div class="col-md-3">
-            <input type="email" name="email" class="form-control" placeholder="Buscar por Correo" value="{{ request('email') }}">
-        </div>
-        <div class="col-md-2">
-            <select name="ciclo" class="form-control">
-                <option value="">Seleccionar Ciclo</option>
-                <option value="anatomia" {{ request('ciclo') == 'anatomia' ? 'selected' : '' }}>Anatomía</option>
-                <option value="laboratorio" {{ request('ciclo') == 'laboratorio' ? 'selected' : '' }}>Laboratorio</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select name="curso" class="form-control">
-                <option value="">Seleccionar Curso</option>
-                <option value="1º" {{ request('curso') == '1º' ? 'selected' : '' }}>1º</option>
-                <option value="2º" {{ request('curso') == '2º' ? 'selected' : '' }}>2º</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-block btn-custom-shared btn-login-custom"><i class="fas fa-search"></i></button>
-        </div>
-    </div>
-</form>
+    </form>
     <form action="{{ route('admin.tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+
+        <div class="form-group mb-3">
+            <label for="name">Nombre de la Tarea</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ $task->name }}" required>
+        </div>
+
 
         <div class="form-group mb-3">
             <label for="description">Descripción</label>
@@ -91,30 +101,25 @@
             @enderror
         </div>
 
-<!-- Lista de estudiantes -->
-<div class="form-group">
-    <label for="students">Estudiantes</label>
-    <div class="form-check">
-        <input type="checkbox" id="selectAll" class="form-check-input">
-        <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
-    </div>
+        <!-- Lista de estudiantes -->
+        <div class="form-group">
+            <label for="students">Estudiantes</label>
+            <div class="form-check">
+                <input type="checkbox" id="selectAll" class="form-check-input">
+                <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
+            </div>
 
-    @foreach ($students as $student)
-        <div class="form-check">
-            <input 
-                type="checkbox" 
-                name="students[]" 
-                value="{{ $student->student->id }}" 
-                id="student-{{ $student->student->id }}" 
-                class="form-check-input"
-                {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
-            <label for="student-{{ $student->student->id }}" class="form-check-label">
-                {{ $student->name }} ({{ $student->email }})
-            </label>
+            @foreach ($students as $student)
+                <div class="form-check">
+                    <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
+                        id="student-{{ $student->student->id }}" class="form-check-input" {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
+                    <label for="student-{{ $student->student->id }}" class="form-check-label">
+                        {{ $student->name }} ({{ $student->email }})
+                    </label>
+                </div>
+            @endforeach
         </div>
-    @endforeach
-</div>
-<button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-save"></i></button>
+        <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-save"></i></button>
 
     </form>
 
