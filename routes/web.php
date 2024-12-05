@@ -68,9 +68,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/student', [StudentController::class, 'dashboard'])->name('student.dashboard');
 });
 
-
-
-
 Route::get('/student/task/{id}', [StudentController::class, 'taskDetails'])->name('student.details');
 Route::post('/student/tasks/{id}/upload', [StudentController::class, 'uploadTask'])->name('student.tasks.upload');
 
@@ -88,4 +85,13 @@ Route::middleware('auth')->prefix('professor')->group(function () {
     Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('professor.tasks.edit');
     Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('professor.tasks.update');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('professor.tasks.destroy');
+});
+
+Route::prefix('professor')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
+    Route::get('/tasks/panel', [ProfessorController::class, 'panelTasks'])->name('professor.tasks.panel');
+    Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
+    Route::get('/tasks/{id}', [ProfessorController::class, 'taskDetails'])->name('professor.task.details');
+    Route::post('/tasks/{taskId}/student/{studentId}/feedback', [ProfessorController::class, 'submitFeedback'])
+        ->name('professor.task.feedback');
 });
