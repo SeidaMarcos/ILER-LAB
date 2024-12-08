@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Centrado del contenedor */
 .full-height-container {
     min-height: 100vh;
