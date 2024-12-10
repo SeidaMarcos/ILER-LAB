@@ -12,6 +12,8 @@ class CreateStudentTaskTable extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->foreignId('task_id')->constrained()->onDelete('cascade');
+            $table->foreignId('id_group')->nullable()->constrained('groups');
+            $table->unique(['id_student', 'id_task']);
             $table->timestamps();
         });
     }

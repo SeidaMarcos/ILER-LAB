@@ -20,4 +20,3 @@ class AddStudentPdfToTasksTable extends Migration
         });
     }
 }
-

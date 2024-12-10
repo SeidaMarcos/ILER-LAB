@@ -16,6 +16,8 @@ class CreateTasksTable extends Migration
             $table->enum('progress', ['0', '25', '50', '75', '100']);
             $table->date('date');
             $table->string('pdf')->nullable(); // Path del archivo PDF
+            $table->foreignId('id_task_request')->constrained('task_requests');
+            $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });
     }

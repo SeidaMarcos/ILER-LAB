@@ -16,6 +16,7 @@ return new class extends Migration
             $table->enum('role', ['student', 'professor']);
             $table->enum('ciclo', ['anatomia', 'laboratorio'])->nullable();
             $table->enum('curso', ['1º', '2º'])->nullable();
+            $table->foreignId('approved_by_admin')->nullable()->constrained('admins');
             $table->timestamps();
         });
     }
