@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('groups_studennt', function (Blueprint $table) {
-            $table->foreignId('id_group')->constrained('groups');
-            $table->foreignId('id_student')->constrained('students');
-            $table->unique(['id_group', 'id_student']);
+        Schema::create('task_tool', function (Blueprint $table) {
+            $table->foreignId('id_task')->constrained('tasks');
+            $table->foreignId('id_tool')->constrained('tools');
+            $table->unique(['id_task', 'id_tool']);
         });
     }
 
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('groups_studennt');
+        Schema::dropIfExists('task_tools');
     }
 };
