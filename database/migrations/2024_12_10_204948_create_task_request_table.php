@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('description');
             $table->text('comment');
+            $table->string('pdf');
             $table->enum('status', ['new', 'work in progress', 'completed']);
             $table->foreignId('created_by_professor')->constrained('professors');
             $table->timestamps();

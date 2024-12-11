@@ -10,10 +10,10 @@ class CreateStudentTaskTable extends Migration
     {
         Schema::create('student_task', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->foreignId('task_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
             $table->foreignId('id_group')->nullable()->constrained('groups');
-            $table->unique(['id_student', 'id_task']);
+            $table->unique(['student_id', 'task_id']);
             $table->timestamps();
         });
     }

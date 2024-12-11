@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('task_tool', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('id_task')->constrained('tasks');
             $table->foreignId('id_tool')->constrained('tools');
             $table->unique(['id_task', 'id_tool']);
