@@ -10,10 +10,10 @@ class CreateFeedbackTable extends Migration
     {
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->text('comments')->nullable(); // Comentarios del profesor
+            $table->foreignId('id_student_task')->constrained('student_task')->onDelete('cascade');
+            $table->text('comment')->nullable(); // Comentarios del profesor
             $table->enum('status', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente'); // Estado
+            $table->foreignId('created_by_professor')->constrained('professors')->onDelete('cascade'); // Relación con profesor
             $table->timestamps();
         });
     }
