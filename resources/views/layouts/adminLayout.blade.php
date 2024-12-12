@@ -13,7 +13,27 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">User Panel</a>
+            <!-- Lógica para mostrar el enlace según el tipo de usuario -->
+            <a class="navbar-brand"
+                href="
+                        @switch(Auth::user()->role->name)
+                            @case('admin')
+                                {{ route('admin.dashboard') }}
+                                @break
+                            @case('professor')
+                                {{ route('professor.dashboard') }}
+                                @break
+                            @case('student')
+                                {{ route('student.dashboard') }}
+                                @break
+                            @default
+                                #
+                        @endswitch
+                    ">
+                <img src="{{ asset('images/ilerna.jpg') }}" alt="Logo" style="height: 40px;">
+
+            </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -38,7 +58,6 @@
                                     @csrf
                                     <button type="submit" class="dropdown-item">
                                         <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-
                                     </button>
                                 </form>
                             </li>
@@ -87,7 +106,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                                class="fas fa-times"></i></button>
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i></button>
                     </div>
                 </form>
