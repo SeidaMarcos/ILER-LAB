@@ -8,7 +8,7 @@
     <div class="card shadow-lg border-0">
         <div class="card-body">
             <h5 class="card-title text-white" style="background-color: #13a292; padding: 10px; border-radius: 5px;">
-                Tarea #{{ $task->id }}
+                {{ $task->name }}
             </h5>
             <p><strong>Descripción:</strong> {{ $task->description }}</p>
             <p><strong>Prioridad:</strong> 
@@ -22,7 +22,8 @@
             <p><strong>Progreso:</strong> {{ $task->progress }}%</p>
             <p><strong>Fecha de Entrega:</strong> {{ \Carbon\Carbon::parse($task->date)->format('d/m/Y') }}</p>
             @if ($task->pdf)
-                <p><strong>Archivo:</strong> <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank">Ver/Descargar PDF</a></p>
+                <p><strong>Archivo:</strong> <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank" class="btn btn-link">
+                    <i class="fas fa-file-pdf"></i> Ver/Descargar PDF</a></p>
             @else
                 <p><strong>Archivo:</strong> Sin archivo adjunto</p>
             @endif
@@ -52,12 +53,16 @@
                 <div id="products-container">
                     <!-- Aquí se agregarán los productos dinámicamente -->
                 </div>
-                <button type="button" id="add-product" class="btn btn-secondary mt-2">Añadir Producto</button>
 
-                <!-- Botón para enviar el formulario -->
-                <button type="submit" class="btn btn-success mt-3">
-                    <i class="fas fa-upload"></i> {{ $task->student_pdf ? 'Entregar de Nuevo' : 'Entregar' }}
-                </button>
+                <!-- Botones alineados a la derecha -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="button" id="add-product" class="btn btn-secondary me-2">
+                        <i class="fas fa-plus"></i> Añadir Producto
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload"></i> {{ $task->student_pdf ? 'Entregar de Nuevo' : 'Entregar' }}
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -74,16 +79,21 @@
         newProduct.classList.add('product-item', 'mb-3');
 
         newProduct.innerHTML = `
-            <label>Nombre del Producto:</label>
-            <input type="text" name="products[${productIndex}][name]" class="form-control mb-2" required>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="flex-grow-1 me-3">
+                    <label>Nombre del Producto:</label>
+                    <input type="text" name="products[${productIndex}][name]" class="form-control mb-2" required>
 
-            <label>Densidad:</label>
-            <input type="number" step="0.01" name="products[${productIndex}][density]" class="form-control mb-2" required>
+                    <label>Densidad:</label>
+                    <input type="number" step="0.01" name="products[${productIndex}][density]" class="form-control mb-2" required>
 
-            <label>Ubicación:</label>
-            <input type="text" name="products[${productIndex}][location]" class="form-control mb-2" required>
-
-            <button type="button" class="btn btn-danger mt-2" onclick="this.parentElement.remove()">Eliminar Producto</button>
+                    <label>Ubicación:</label>
+                    <input type="text" name="products[${productIndex}][location]" class="form-control mb-2" required>
+                </div>
+                <button type="button" class="btn btn-danger align-self-start" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-trash-alt"></i> Eliminar
+                </button>
+            </div>
             <hr>
         `;
 

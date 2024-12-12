@@ -15,7 +15,7 @@
                     <div class="card task-card h-100 shadow-lg border-0">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title text-white" style="background-color: #13a292; padding: 10px; border-radius: 5px;">
-                                Tarea #{{ $task->id }}
+                                {{ $task->name }}
                             </h5>
                             <p class="card-text mt-3"><strong>Descripción:</strong> {{ \Illuminate\Support\Str::limit($task->description, 50) }}</p>
                             <p class="card-text"><strong>Prioridad:</strong> 
