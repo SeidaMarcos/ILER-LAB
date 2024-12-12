@@ -5,39 +5,56 @@
 @section('content')
 <div class="container mt-5">
     <h1 class="text-center mb-4">Detalles de Tarea</h1>
+
     <div class="card shadow-lg border-0">
         <div class="card-body">
+
+            <!-- Nombre de la Tarea -->
             <h5 class="card-title text-white" style="background-color: #13a292; padding: 10px; border-radius: 5px;">
                 {{ $task->name }}
             </h5>
-            <p><strong>Descripción:</strong> {{ $task->description }}</p>
-            <p><strong>Prioridad:</strong> 
-                <span class="badge text-white" style="background-color: 
-                    {{ $task->priority === 'baja' ? '#28a745' : 
-                       ($task->priority === 'media' ? '#ffc107' : 
-                       ($task->priority === 'alta' ? '#fd7e14' : '#dc3545')) }}">
-                    {{ ucfirst($task->priority) }}
-                </span>
-            </p>
 
-            <p><strong>Fecha de Entrega:</strong> {{ \Carbon\Carbon::parse($task->date)->format('d/m/Y') }}</p>
-            @if ($task->pdf)
-                <p><strong>Archivo:</strong> <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank" class="btn btn-link">
-                    <i class="fas fa-file-pdf"></i> Ver/Descargar PDF</a></p>
-            @else
-                <p><strong>Archivo:</strong> Sin archivo adjunto</p>
-            @endif
+            <!-- Detalles generales -->
+            <div class="mb-4">
+                <h6><strong>Descripción:</strong></h6>
+                <p>{{ $task->description }}</p>
 
-            <!-- Mostrar productos utilizados si ya se entregó la tarea -->
+                <h6><strong>Prioridad:</strong></h6>
+                <p>
+                    <span class="badge text-white" style="background-color: 
+                        {{ $task->priority === 'baja' ? '#28a745' :
+    ($task->priority === 'media' ? '#ffc107' :
+        ($task->priority === 'alta' ? '#fd7e14' : '#dc3545')) }}">
+                        {{ ucfirst($task->priority) }}
+                    </span>
+                </p>
+
+                <h6><strong>Fecha de Entrega:</strong></h6>
+                <p>{{ \Carbon\Carbon::parse($task->date)->format('d/m/Y') }}</p>
+            </div>
+
+            <!-- Archivo adjunto de la Tarea -->
+            <div class="mb-4">
+                <h6><strong>Archivo:</strong></h6>
+                @if ($task->pdf)
+                    <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Ver/Descargar PDF
+                    </a>
+                @else
+                    <p>Sin archivo adjunto</p>
+                @endif
+            </div>
+
+            <!-- Productos utilizados (si ya se entregó la tarea) -->
             @if ($task->student_pdf)
-                <div class="mt-4">
-                    <h5>Productos Utilizados</h5>
-                    @if ($task->products->isNotEmpty())
+                <div class="mb-4">
+                    <h6><strong>Productos Última Entrega:</strong></h6>
+                    @if ($task->products && $task->products->isNotEmpty())
                         <ul class="list-group">
                             @foreach ($task->products as $product)
                                 <li class="list-group-item">
-                                    <strong>Nombre:</strong> {{ $product->name }},
-                                    <strong>Densidad:</strong> {{ $product->density }} g/ml,
+                                    <strong>Nombre:</strong> {{ $product->name }}<br>
+                                    <strong>Densidad:</strong> {{ $product->density }} g/ml<br>
                                     <strong>Ubicación:</strong> {{ $product->location }}
                                 </li>
                             @endforeach
@@ -48,34 +65,37 @@
                 </div>
             @endif
 
+            <!-- Formulario para entregar la tarea -->
             <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Subir archivo PDF -->
-                <div class="mb-3">
-                    <label for="student_pdf" class="form-label">Entregar Archivo (PDF)</label>
+                <div class="mb-4">
+                    <h6><strong>Entregar Archivo (PDF):</strong></h6>
                     <input type="file" name="student_pdf" id="student_pdf" class="form-control" required>
                     @error('student_pdf')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <!-- Mostrar enlace si ya hay un archivo entregado -->
+                <!-- Enlace al último archivo entregado -->
                 @if ($task->student_pdf)
-                    <p class="text-success mt-3"><i class="fas fa-check-circle"></i> Tarea ya entregada.</p>
-                    <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-primary">
-                        <i class="fas fa-file-pdf"></i> Ver Última Entrega 
-                    </a>
+                    <p class="text-success mt-3">
+                        <i class="fas fa-check-circle"></i> Tarea ya entregada.
+                        <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-file-pdf"></i> Ver última entrega
+                        </a>
+                    </p>
                 @endif
 
-                <!-- Gestión de productos utilizados -->
-                <h5 class="mt-4">Productos utilizados</h5>
-                <div id="products-container">
-                    <!-- Aquí se agregarán los productos dinámicamente -->
+                <!-- Productos utilizados -->
+                <h6 class="mt-4"><strong>Productos Utilizados:</strong></h6>
+                <div id="products-container" class="mb-4">
+                    <!-- Contenedor para productos -->
                 </div>
 
-                <!-- Botones alineados a la derecha -->
-                <div class="d-flex justify-content-end mt-4">
+                <!-- Botones para agregar productos y entregar tarea -->
+                <div class="d-flex justify-content-end">
                     <button type="button" id="add-product" class="btn btn-secondary me-2">
                         <i class="fas fa-plus"></i> Añadir Producto
                     </button>
@@ -91,7 +111,7 @@
 <script>
     let productIndex = 0;
 
-    // Añadir productos dinámicamente
+    // Funcionalidad para agregar productos dinámicamente
     document.getElementById('add-product').addEventListener('click', () => {
         const container = document.getElementById('products-container');
 
@@ -111,7 +131,7 @@
                     <input type="text" name="products[${productIndex}][location]" class="form-control mb-2" required>
                 </div>
                 <button type="button" class="btn btn-danger align-self-start" onclick="this.parentElement.parentElement.remove()">
-                    <i class="fas fa-trash-alt"></i> Eliminar
+                    <i class="fas fa-trash-alt"></i> 
                 </button>
             </div>
             <hr>
@@ -121,5 +141,4 @@
         productIndex++;
     });
 </script>
-
 @endsection
