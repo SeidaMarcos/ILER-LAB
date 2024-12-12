@@ -49,37 +49,45 @@ class StudentController extends Controller
     
 
     public function uploadTask(Request $request, $id)
-{
-    $user = Auth::user();
-
-    // Encontrar el estudiante asociado al usuario logueado
-    $student = Student::where('user_id', $user->id)->first();
-
-    if (!$student) {
-        abort(404, 'Estudiante no encontrado');
+    {
+        $user = Auth::user();
+    
+        // Encontrar el estudiante asociado al usuario logueado
+        $student = Student::where('user_id', $user->id)->first();
+    
+        if (!$student) {
+            abort(404, 'Estudiante no encontrado');
+        }
+    
+        // Verificar si la tarea está asociada al estudiante
+        $task = $student->tasks()->where('tasks.id', $id)->first();
+    
+        if (!$task) {
+            abort(403, 'No estás autorizado para entregar esta tarea.');
+        }
+    
+        // Validar el archivo PDF con mensajes personalizados
+        $request->validate(
+            [
+                'student_pdf' => 'required|file|mimes:pdf|max:2048',
+            ],
+            [
+                'student_pdf.required' => 'Es obligatorio subir un archivo.',
+                'student_pdf.file' => 'El archivo debe ser válido.',
+                'student_pdf.mimes' => 'El archivo debe ser un PDF.',
+                'student_pdf.max' => 'El tamaño del archivo no debe exceder los 2MB.',
+            ]
+        );
+    
+        // Subir el archivo PDF
+        if ($request->hasFile('student_pdf')) {
+            $studentPdfPath = $request->file('student_pdf')->store('student_uploads', 'public'); // Subir archivo al almacenamiento público
+            $task->student_pdf = $studentPdfPath; // Guardar la ruta en la base de datos
+            $task->save(); // Guardar los cambios
+        }
+    
+        return redirect()->route('student.dashboard')->with('success', 'Tarea entregada correctamente.');
     }
-
-    // Verificar si la tarea está asociada al estudiante
-    $task = $student->tasks()->where('tasks.id', $id)->first();
-
-    if (!$task) {
-        abort(403, 'No estás autorizado para entregar esta tarea.');
-    }
-
-    // Validar el archivo PDF
-    $request->validate([
-        'student_pdf' => 'required|file|mimes:pdf|max:2048',
-    ]);
-
-    // Subir el archivo PDF
-    if ($request->hasFile('student_pdf')) {
-        $studentPdfPath = $request->file('student_pdf')->store('student_uploads', 'public'); // Subir archivo al almacenamiento público
-        $task->student_pdf = $studentPdfPath; // Guardar la ruta en la base de datos
-        $task->save(); // Guardar los cambios
-    }
-
-    return redirect()->route('student.dashboard')->with('success', 'Tarea entregada correctamente.');
-}
-
+    
 
 }

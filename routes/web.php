@@ -79,5 +79,4 @@ Route::middleware('auth')->prefix('professor')->group(function () {
     Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('professor.tasks.edit');
     Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('professor.tasks.update');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('professor.tasks.destroy');
-    Route::post('/tasks/{id}/upload', [TaskController::class, 'upload'])->name('student.tasks.upload');
 });
