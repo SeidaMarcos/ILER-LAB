@@ -95,3 +95,6 @@ Route::prefix('professor')->middleware('auth')->group(function () {
     Route::post('/tasks/{taskId}/student/{studentId}/feedback', [ProfessorController::class, 'submitFeedback'])
         ->name('professor.task.feedback');
 });
+
+// Ruta para entregar tarea
+Route::post('/tasks/{id}/upload', [TaskController::class, 'upload'])->name('student.tasks.upload');

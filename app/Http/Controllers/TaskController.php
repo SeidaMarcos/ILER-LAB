@@ -6,6 +6,7 @@ use App\Models\Student;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\Product;
 
 class TaskController extends Controller
 {
@@ -207,6 +208,42 @@ public function destroy($id)
         }
     
         return redirect()->route('admin.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
+    }
+
+    public function upload(Request $request, $taskId)
+    {
+        // Validar el archivo PDF y los productos enviados
+        $request->validate([
+            'student_pdf' => 'required|mimes:pdf|max:2048',
+            'products' => 'required|array|min:1', // Se requiere al menos un producto
+            'products.*.name' => 'required|string|max:255',
+            'products.*.density' => 'required|numeric|min:0',
+            'products.*.location' => 'required|string|max:255',
+        ]);
+    
+        // Subir el archivo PDF
+        $pdfPath = $request->file('student_pdf')->store('tasks', 'public');
+    
+        // Eliminar productos anteriores asociados a esta tarea y este estudiante
+        Product::where('id_task', $taskId)->where('id_student', auth()->id())->delete();
+    
+        // Guardar los nuevos productos en la base de datos
+        foreach ($request->products as $productData) {
+            Product::create([
+                'name' => $productData['name'],
+                'density' => $productData['density'],
+                'location' => $productData['location'],
+                'id_student' => auth()->id(),
+                'id_task' => $taskId,
+            ]);
+        }
+    
+        // Actualizar la tarea con el PDF del estudiante
+        $task = Task::findOrFail($taskId);
+        $task->student_pdf = $pdfPath;
+        $task->save();
+    
+        return redirect()->back()->with('success', 'Tarea entregada con éxito.');
     }
     
 }
