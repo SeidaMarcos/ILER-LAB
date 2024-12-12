@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite('resources/css/app.css') 
+    <title>Bienvenido</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="d-flex justify-content-center align-items-center vh-100">
+<body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="text-center">
-        <h1 class="mb-4" style="color: #010407;">Bienvenido al Panel de Gestión de IlerLab</h1>
-        <a href="{{ route('login') }}" class="btn btn-lg m-2 btn-custom-shared btn-login-custom">Iniciar sesión</a>
-        <a href="{{ route('register') }}" class="btn btn-lg m-2 btn-custom-shared btn-register-custom">Registrarse</a>
-
+        <h1 class="text-4xl font-bold text-gray-800 mb-6">Bienvenido al Panel de Gestión de IlerLab</h1>
+        <div class="space-x-4">
+            <a href="{{ route('login') }}" class="px-6 py-3 bg-teal-500 text-white rounded-lg text-lg hover:bg-teal-600">Iniciar sesión</a>
+            <a href="{{ route('register') }}" class="px-6 py-3 border-2 border-blue-300 text-blue-700 rounded-lg text-lg hover:bg-blue-300 hover:text-white">Registrarse</a>
+        </div>
     </div>
-</div>
-
 </body>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
 </html>
