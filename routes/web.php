@@ -52,49 +52,32 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     // Gestión de tareas
     Route::prefix('tasks')->group(function () {
-        Route::get('/', [TaskController::class, 'index'])->name('admin.tasks.panel'); // Panel de tareas
-        Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create'); // Crear tarea
-        Route::post('/', [TaskController::class, 'store'])->name('admin.tasks.store'); // Guardar tarea
-        Route::delete('/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy'); // Eliminar tarea
-        // Ruta para mostrar el formulario de edición
-        Route::get('/admin/tasks/{id}/edit', [TaskController::class, 'edit'])->name('admin.tasks.edit')->middleware('auth');
-        // Ruta para actualizar la tarea
-        Route::put('/admin/tasks/{id}', [TaskController::class, 'update'])->name('admin.tasks.update')->middleware('auth');
-
+        Route::get('/', [TaskController::class, 'index'])->name('admin.tasks.panel');
+        Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create');
+        Route::post('/', [TaskController::class, 'store'])->name('admin.tasks.store');
+        Route::delete('/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy');
+        Route::get('/{id}/edit', [TaskController::class, 'edit'])->name('admin.tasks.edit');
+        Route::put('/{id}', [TaskController::class, 'update'])->name('admin.tasks.update');
     });
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/student', [StudentController::class, 'dashboard'])->name('student.dashboard');
+// Rutas del estudiante
+Route::middleware('auth')->prefix('student')->group(function () {
+    Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/task/{id}', [StudentController::class, 'taskDetails'])->name('student.details');
+    Route::post('/tasks/{id}/upload', [StudentController::class, 'uploadTask'])->name('student.tasks.upload');
 });
 
-Route::get('/student/task/{id}', [StudentController::class, 'taskDetails'])->name('student.details');
-Route::post('/student/tasks/{id}/upload', [StudentController::class, 'uploadTask'])->name('student.tasks.upload');
-
-
+// Rutas del profesor
 Route::middleware('auth')->prefix('professor')->group(function () {
     Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
-    
-    // Reutilizamos el CRUD del admin
     Route::get('/tasks/panel', [ProfessorController::class, 'panelTasks'])->name('professor.tasks.panel');
     Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
-
-    // Opcional: vincular crear/editar tareas del admin
+    Route::get('/tasks/{id}', [ProfessorController::class, 'taskDetails'])->name('professor.task.details');
     Route::get('/tasks/create', [TaskController::class, 'create'])->name('professor.tasks.create');
     Route::post('/tasks', [TaskController::class, 'store'])->name('professor.tasks.store');
     Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('professor.tasks.edit');
     Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('professor.tasks.update');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('professor.tasks.destroy');
+    Route::post('/tasks/{id}/upload', [TaskController::class, 'upload'])->name('student.tasks.upload');
 });
-
-Route::prefix('professor')->middleware('auth')->group(function () {
-    Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
-    Route::get('/tasks/panel', [ProfessorController::class, 'panelTasks'])->name('professor.tasks.panel');
-    Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
-    Route::get('/tasks/{id}', [ProfessorController::class, 'taskDetails'])->name('professor.task.details');
-    Route::post('/tasks/{taskId}/student/{studentId}/feedback', [ProfessorController::class, 'submitFeedback'])
-        ->name('professor.task.feedback');
-});
-
-// Ruta para entregar tarea
-Route::post('/tasks/{id}/upload', [TaskController::class, 'upload'])->name('student.tasks.upload');

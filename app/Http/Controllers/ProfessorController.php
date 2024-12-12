@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Student;
-use App\Models\Feedback;
 
 class ProfessorController extends Controller
 {
@@ -36,32 +35,12 @@ class ProfessorController extends Controller
         $task = Task::with('students')->findOrFail($id);
 
         $students = $task->students->map(function ($student) use ($task) {
-            $feedback = Feedback::where('task_id', $task->id)
-                ->where('student_id', $student->id)
-                ->first();
             return [
                 'student' => $student,
-                'feedback' => $feedback,
                 'delivered' => $task->student_pdf ? true : false,
             ];
         });
 
         return view('professor.tasks.details', compact('task', 'students'));
-    }
-
-    // Guardar retroalimentación
-    public function submitFeedback(Request $request, $taskId, $studentId)
-    {
-        $request->validate([
-            'comments' => 'nullable|string|max:500',
-            'status' => 'required|in:pendiente,aprobado,rechazado',
-        ]);
-
-        Feedback::updateOrCreate(
-            ['task_id' => $taskId, 'student_id' => $studentId],
-            ['comments' => $request->comments, 'status' => $request->status]
-        );
-
-        return redirect()->route('professor.task.details', $taskId)->with('success', 'Feedback guardado correctamente.');
     }
 }
