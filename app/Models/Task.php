@@ -12,5 +12,9 @@ class Task extends Model
     {
         return $this->belongsToMany(Student::class, 'student_task', 'task_id', 'student_id');
     }
+    public function products()
+{
+    return $this->hasMany(Product::class, 'id_task');
+}
 }
 

@@ -28,6 +28,26 @@
                 <p><strong>Archivo:</strong> Sin archivo adjunto</p>
             @endif
 
+            <!-- Mostrar productos utilizados si ya se entregó la tarea -->
+            @if ($task->student_pdf)
+                <div class="mt-4">
+                    <h5>Productos Utilizados</h5>
+                    @if ($task->products->isNotEmpty())
+                        <ul class="list-group">
+                            @foreach ($task->products as $product)
+                                <li class="list-group-item">
+                                    <strong>Nombre:</strong> {{ $product->name }},
+                                    <strong>Densidad:</strong> {{ $product->density }} g/ml,
+                                    <strong>Ubicación:</strong> {{ $product->location }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-muted">No se registraron productos para esta tarea.</p>
+                    @endif
+                </div>
+            @endif
+
             <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
