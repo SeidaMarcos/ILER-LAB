@@ -19,7 +19,7 @@
                     {{ ucfirst($task->priority) }}
                 </span>
             </p>
-            <p><strong>Progreso:</strong> {{ $task->progress }}%</p>
+
             <p><strong>Fecha de Entrega:</strong> {{ \Carbon\Carbon::parse($task->date)->format('d/m/Y') }}</p>
             @if ($task->pdf)
                 <p><strong>Archivo:</strong> <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank" class="btn btn-link">
