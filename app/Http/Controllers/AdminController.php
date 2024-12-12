@@ -8,6 +8,9 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Machine;
+use App\Models\Product;
+use App\Models\Tool;
 
 class AdminController extends Controller
 {
@@ -29,13 +32,21 @@ class AdminController extends Controller
         // Contar tareas creadas
         $tasksCount = Task::count();
 
+        $machinesCount = Machine::count(); // Contar todas las máquinas
+        $productsCount = Product::count(); // Contar todos los productos
+        $toolsCount = Tool::count();       // Contar todas las herramientas
+
         // Pasar las estadísticas a la vista
         return view('admin.dashboard', compact(
             'approvedStudentsCount',
             'approvedProfessorsCount',
             'pendingStudentsCount',
             'pendingProfessorsCount',
-            'tasksCount'
+            'tasksCount',
+            'machinesCount',
+            'productsCount',
+            'toolsCount'
+            
         ));
     }
 

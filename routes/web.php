@@ -80,3 +80,12 @@ Route::middleware('auth')->prefix('professor')->group(function () {
     Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('professor.tasks.update');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('professor.tasks.destroy');
 });
+
+use App\Http\Controllers\InventoryController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::post('/inventory/products', [InventoryController::class, 'storeProduct'])->name('inventory.store.product');
+    Route::post('/inventory/machines', [InventoryController::class, 'storeMachine'])->name('inventory.store.machine');
+    Route::post('/inventory/tools', [InventoryController::class, 'storeTool'])->name('inventory.store.tool');
+});

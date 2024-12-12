@@ -53,6 +53,21 @@
                 </div>
             </div>
 
+            <!-- Card Inventario -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3>{{ $machinesCount }}</h3>
+                        <p>Máquinas</p>
+                        <h3>{{ $productsCount }}</h3>
+                        <p>Productos</p>
+                        <h3>{{ $toolsCount }}</h3>
+                        <p>Herramientas</p>
+                        <a href="{{ route('inventory.index') }}" class="btn-custom-shared btn-login-custom">Ver Inventario</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

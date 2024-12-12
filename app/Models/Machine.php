@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Machine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'density', 'location'];
+    protected $fillable = ['reference', 'location', 'name'];
 }
-
