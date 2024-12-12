@@ -12,17 +12,6 @@
         <form action="{{ route('login.submit') }}" method="POST">
             @csrf
 
-            <!-- Mensajes de error generales -->
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <!-- Correo Electrónico -->
             <div class="form-group">
                 <label for="email">Correo Electrónico:</label>

@@ -12,17 +12,6 @@
         <form action="{{ route('register') }}" method="POST">
             @csrf
 
-            <!-- Mensajes de error generales -->
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <!-- Nombre -->
             <div class="form-group">
                 <label for="name">Nombre Completo:</label>
