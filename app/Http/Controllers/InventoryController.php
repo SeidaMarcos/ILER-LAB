@@ -9,7 +9,7 @@ use App\Models\Tool;
 
 class InventoryController extends Controller
 {
-    // Mostrar el inventario completo
+    // Mostrar inventario
     public function index()
     {
         $products = Product::all();
@@ -19,7 +19,7 @@ class InventoryController extends Controller
         return view('admin.inventory.index', compact('products', 'machines', 'tools'));
     }
 
-    // Crear un nuevo producto
+    // Crear producto
     public function storeProduct(Request $request)
     {
         $request->validate([
@@ -33,13 +33,37 @@ class InventoryController extends Controller
         return redirect()->route('inventory.index')->with('success', 'Producto creado con éxito.');
     }
 
-    // Crear una nueva máquina
+    // Actualizar producto
+    public function updateProduct(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'density' => 'required|numeric',
+            'location' => 'required|string|max:255',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->update($request->all());
+
+        return redirect()->route('inventory.index')->with('success', 'Producto actualizado con éxito.');
+    }
+
+    // Eliminar producto
+    public function destroyProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('inventory.index')->with('success', 'Producto eliminado con éxito.');
+    }
+
+    // Crear máquina
     public function storeMachine(Request $request)
     {
         $request->validate([
             'reference' => 'required|string|max:255|unique:machines',
-            'location' => 'required|string|max:255',
             'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
         ]);
 
         Machine::create($request->all());
@@ -47,7 +71,31 @@ class InventoryController extends Controller
         return redirect()->route('inventory.index')->with('success', 'Máquina creada con éxito.');
     }
 
-    // Crear una nueva herramienta
+    // Actualizar máquina
+    public function updateMachine(Request $request, $id)
+    {
+        $request->validate([
+            'reference' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+        ]);
+
+        $machine = Machine::findOrFail($id);
+        $machine->update($request->all());
+
+        return redirect()->route('inventory.index')->with('success', 'Máquina actualizada con éxito.');
+    }
+
+    // Eliminar máquina
+    public function destroyMachine($id)
+    {
+        $machine = Machine::findOrFail($id);
+        $machine->delete();
+
+        return redirect()->route('inventory.index')->with('success', 'Máquina eliminada con éxito.');
+    }
+
+    // Crear herramienta
     public function storeTool(Request $request)
     {
         $request->validate([
@@ -62,71 +110,7 @@ class InventoryController extends Controller
         return redirect()->route('inventory.index')->with('success', 'Herramienta creada con éxito.');
     }
 
-// Editar un producto
-    public function editProduct($id)
-    {
-        $product = Product::findOrFail($id);
-        return view('admin.inventory.edit-product', compact('product'));
-    }
-
-    public function updateProduct(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'date' => 'required|date',
-            'density' => 'required|numeric',
-            'location' => 'required|string|max:255',
-        ]);
-
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
-
-        return redirect()->route('inventory.index')->with('success', 'Producto actualizado con éxito.');
-    }
-
-    public function destroyProduct($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete();
-
-        return redirect()->route('inventory.index')->with('success', 'Producto eliminado con éxito.');
-    }
-
-    // Métodos similares para máquinas y herramientas
-    public function editMachine($id)
-    {
-        $machine = Machine::findOrFail($id);
-        return view('admin.inventory.edit-machine', compact('machine'));
-    }
-
-    public function updateMachine(Request $request, $id)
-    {
-        $request->validate([
-            'reference' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-        ]);
-
-        $machine = Machine::findOrFail($id);
-        $machine->update($request->all());
-
-        return redirect()->route('inventory.index')->with('success', 'Máquina actualizada con éxito.');
-    }
-
-    public function destroyMachine($id)
-    {
-        $machine = Machine::findOrFail($id);
-        $machine->delete();
-
-        return redirect()->route('inventory.index')->with('success', 'Máquina eliminada con éxito.');
-    }
-
-    public function editTool($id)
-    {
-        $tool = Tool::findOrFail($id);
-        return view('admin.inventory.edit-tool', compact('tool'));
-    }
-
+    // Actualizar herramienta
     public function updateTool(Request $request, $id)
     {
         $request->validate([
@@ -142,10 +126,12 @@ class InventoryController extends Controller
         return redirect()->route('inventory.index')->with('success', 'Herramienta actualizada con éxito.');
     }
 
+    // Eliminar herramienta
     public function destroyTool($id)
     {
         $tool = Tool::findOrFail($id);
         $tool->delete();
 
         return redirect()->route('inventory.index')->with('success', 'Herramienta eliminada con éxito.');
-    }}
+    }
+}

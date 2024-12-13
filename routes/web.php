@@ -89,3 +89,23 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/inventory/machines', [InventoryController::class, 'storeMachine'])->name('inventory.store.machine');
     Route::post('/inventory/tools', [InventoryController::class, 'storeTool'])->name('inventory.store.tool');
 });
+
+
+
+// Productos
+Route::post('/inventory/products', [InventoryController::class, 'storeProduct'])->name('inventory.store.product');
+Route::put('/inventory/products/{id}', [InventoryController::class, 'updateProduct'])->name('inventory.update.product');
+Route::delete('/inventory/products/{id}', [InventoryController::class, 'destroyProduct'])->name('inventory.destroy.product');
+
+// Máquinas
+Route::post('/inventory/machines', [InventoryController::class, 'storeMachine'])->name('inventory.store.machine');
+Route::put('/inventory/machines/{id}', [InventoryController::class, 'updateMachine'])->name('inventory.update.machine');
+Route::delete('/inventory/machines/{id}', [InventoryController::class, 'destroyMachine'])->name('inventory.destroy.machine');
+
+// Herramientas
+Route::post('/inventory/tools', [InventoryController::class, 'storeTool'])->name('inventory.store.tool');
+Route::put('/inventory/tools/{id}', [InventoryController::class, 'updateTool'])->name('inventory.update.tool');
+Route::delete('/inventory/tools/{id}', [InventoryController::class, 'destroyTool'])->name('inventory.destroy.tool');
+
+// Página principal del inventario
+Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
