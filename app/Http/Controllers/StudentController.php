@@ -37,8 +37,11 @@ class StudentController extends Controller
             abort(404, 'Estudiante no encontrado');
         }
     
-        // Verificar si la tarea está asociada al estudiante
-        $task = $student->tasks()->where('tasks.id', $id)->first();
+        // Verificar si la tarea está asociada al estudiante y cargar relaciones
+        $task = $student->tasks()
+            ->with(['tools', 'machines', 'products']) // Cargar herramientas, máquinas y productos
+            ->where('tasks.id', $id)
+            ->first();
     
         if (!$task) {
             abort(403, 'No estás autorizado para ver esta tarea.');
@@ -47,7 +50,6 @@ class StudentController extends Controller
         return view('student.details', compact('task'));
     }
     
-
     public function uploadTask(Request $request, $id)
     {
         $user = Auth::user();

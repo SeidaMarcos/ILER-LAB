@@ -10,4 +10,9 @@ class Machine extends Model
     use HasFactory;
 
     protected $fillable = ['reference', 'location', 'name'];
+    public function tasks()
+{
+    return $this->belongsToMany(Task::class);
+}
+
 }

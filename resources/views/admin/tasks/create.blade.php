@@ -116,6 +116,42 @@
             </div>
         @endforeach
 
+        <!-- Selección de herramientas, máquinas y productos -->
+        <h4 class="mt-4">Recursos Requeridos</h4>
+
+        <!-- Herramientas -->
+        <h5>Herramientas</h5>
+        @foreach ($tools as $tool)
+            <div class="form-check">
+                <input type="checkbox" name="tools[]" value="{{ $tool->id }}" id="tool-{{ $tool->id }}" class="form-check-input">
+                <label for="tool-{{ $tool->id }}" class="form-check-label">
+                    {{ $tool->name }} ({{ $tool->material }}) - Stock: {{ $tool->stock }}
+                </label>
+            </div>
+        @endforeach
+
+        <!-- Máquinas -->
+        <h5 class="mt-3">Máquinas</h5>
+        @foreach ($machines as $machine)
+            <div class="form-check">
+                <input type="checkbox" name="machines[]" value="{{ $machine->id }}" id="machine-{{ $machine->id }}" class="form-check-input">
+                <label for="machine-{{ $machine->id }}" class="form-check-label">
+                    {{ $machine->name }} - Ubicación: {{ $machine->location }}
+                </label>
+            </div>
+        @endforeach
+
+        <!-- Productos -->
+        <h5 class="mt-3">Productos</h5>
+        @foreach ($products as $product)
+            <div class="form-check">
+                <input type="checkbox" name="products[]" value="{{ $product->id }}" id="product-{{ $product->id }}" class="form-check-input">
+                <label for="product-{{ $product->id }}" class="form-check-label">
+                    {{ $product->name }} - Ubicación: {{ $product->location }} - Densidad: {{ $product->density }} g/ml
+                </label>
+            </div>
+        @endforeach
+
         <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-plus"></i></button>
     </form>
 </div>

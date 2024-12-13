@@ -45,35 +45,58 @@
                 @endif
             </div>
 
-            <!-- Enlace al último archivo entregado -->
-            @if ($task->student_pdf)
-                <p class="text-success mt-3">
-                    <i class="fas fa-check-circle"></i> Tarea ya entregada.
-                    <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-primary">
-                        <i class="fas fa-file-pdf"></i> Ver última entrega
-                    </a>
-                </p>
+            <!-- Recursos requeridos -->
+            <h4 class="mt-4">Recursos Requeridos</h4>
+
+            <!-- Herramientas -->
+            @if ($task->tools->isNotEmpty())
+                <h5>Herramientas:</h5>
+                <ul>
+                    @foreach ($task->tools as $tool)
+                        <li>{{ $tool->name }} ({{ $tool->material }}) - Stock: {{ $tool->stock }}</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No se requieren herramientas.</p>
+            @endif
+
+            <!-- Máquinas -->
+            @if ($task->machines->isNotEmpty())
+                <h5>Máquinas:</h5>
+                <ul>
+                    @foreach ($task->machines as $machine)
+                        <li>{{ $machine->name }} - Ubicación: {{ $machine->location }}</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No se requieren máquinas.</p>
+            @endif
+
+            <!-- Productos -->
+            @if ($task->products->isNotEmpty())
+                <h5>Productos:</h5>
+                <ul>
+                    @foreach ($task->products as $product)
+                        <li>{{ $product->name }} - Ubicación: {{ $product->location }} - Densidad: {{ $product->density }} g/ml</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No se requieren productos.</p>
             @endif
 
             <!-- Formulario para entregar la tarea -->
-            <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="mt-4">
                 @csrf
-
-                <!-- Subir archivo PDF -->
-                <div class="mb-4">
-                    <h6><strong>Entregar Archivo (PDF):</strong></h6>
+                <h5>Entrega de Tarea</h5>
+                <div class="mb-3">
                     <input type="file" name="student_pdf" id="student_pdf" class="form-control" required>
                     @error('student_pdf')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-
-                <!-- Botón para entregar tarea -->
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-upload"></i> {{ $task->student_pdf ? 'Entregar de Nuevo' : 'Entregar' }}
-                    </button>
-                </div>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-upload"></i> {{ $task->student_pdf ? 'Entregar de Nuevo' : 'Entregar' }}
+                </button>
             </form>
         </div>
     </div>

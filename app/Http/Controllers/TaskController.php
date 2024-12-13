@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Product;
+use App\Models\Tool;
+use App\Models\Machine;
 
 class TaskController extends Controller
 {
@@ -44,7 +46,11 @@ class TaskController extends Controller
         }
 
         $students = $query->get(); // Obtener resultados filtrados
-        return view('admin.tasks.create', compact('students'));
+        $tools = Tool::all();
+        $machines = Machine::all();
+        $products = Product::all();
+
+        return view('admin.tasks.create', compact('students', 'tools', 'machines', 'products'));
     }
 
 
@@ -60,6 +66,9 @@ class TaskController extends Controller
             'date' => ['required', 'date', 'after_or_equal:today'],
             'pdf' => 'nullable|file|mimes:pdf|max:2048',
             'students' => ['required', 'array'], // Validar estudiantes seleccionados
+            'tools' => ['nullable', 'array'], // Validar herramientas seleccionadas
+            'machines' => ['nullable', 'array'], // Validar máquinas seleccionadas
+            'products' => ['nullable', 'array'], // Validar productos seleccionados
         ], [
             'description.required' => 'La descripción es obligatoria.',
             'description.max' => 'La descripción no debe exceder los 255 caracteres.',
@@ -85,6 +94,11 @@ class TaskController extends Controller
             'date' => $request->date,
             'pdf' => $pdfPath,
         ]);
+
+        // Asociar recursos
+        $task->tools()->sync($request->tools ?? []);
+        $task->machines()->sync($request->machines ?? []);
+        $task->products()->sync($request->products ?? []);
 
         $validStudentIds = Student::whereIn('id', $request->students)->pluck('id')->toArray();
         $task->students()->sync($validStudentIds);

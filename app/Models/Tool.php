@@ -10,4 +10,10 @@ class Tool extends Model
     use HasFactory;
 
     protected $fillable = ['reference', 'name', 'stock', 'material'];
+
+    public function tasks()
+{
+    return $this->belongsToMany(Task::class);
+}
+
 }

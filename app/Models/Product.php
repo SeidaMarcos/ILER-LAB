@@ -10,5 +10,11 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'density', 'location'];
+
+    public function tasks()
+{
+    return $this->belongsToMany(Task::class);
+}
+
 }
 
