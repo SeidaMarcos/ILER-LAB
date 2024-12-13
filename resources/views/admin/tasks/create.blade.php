@@ -3,7 +3,12 @@
 @section('title', 'Crear Nueva Tarea')
 
 @section('content')
-<div class="container mt-5">
+
+<a href="{{ route('admin.tasks.panel') }}" class="btn" style="color: #14b8a6; border: 1px solid #14b8a6;">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<div class="container mt-5 mb-5">
     <h1 class="text-center mb-4">Crear Nueva Tarea</h1>
     <!-- Formulario de filtrado -->
     <form action="{{ route('admin.tasks.create') }}" method="GET" class="mb-4">

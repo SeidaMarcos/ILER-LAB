@@ -3,7 +3,13 @@
 @section('title', 'Detalles de Tarea')
 
 @section('content')
-<div class="container mt-5">
+
+<a href="{{ route('student.dashboard') }}" class="btn btn-light">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+
+<div class="container mt-5 mb-5">
     <h1 class="text-center mb-4">Detalles de Tarea</h1>
 
     <div class="card shadow-lg border-0">

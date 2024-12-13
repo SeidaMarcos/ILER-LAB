@@ -3,7 +3,12 @@
 @section('title', 'Gestión de Inventario')
 
 @section('content')
-<div class="container mt-5">
+
+<a href="{{ route('admin.dashboard') }}" class="btn btn-light">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<div class="container mt-5 mb-5">
     <div class="card border-0 shadow-sm">
         <div class="card-header" style="background-color: #14b8a6; color: white;">
             <h1 class="text-center mb-0">Gestión de Inventario</h1>

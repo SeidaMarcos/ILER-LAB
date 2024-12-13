@@ -13,7 +13,20 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">User Panel</a>
+            <!-- Enlace dinámico según el rol del usuario -->
+            <a class="navbar-brand" href="
+                @if (Auth::user()->isAdmin())
+                    {{ route('admin.dashboard') }}
+                @elseif (Auth::user()->isStudent())
+                    {{ route('student.dashboard') }}
+                @elseif (Auth::user()->isProfessor())
+                    {{ route('professor.dashboard') }}
+                @else
+                    {{ route('home') }}
+                @endif
+            ">
+                User Panel
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -38,7 +51,6 @@
                                     @csrf
                                     <button type="submit" class="dropdown-item">
                                         <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-
                                     </button>
                                 </form>
                             </li>

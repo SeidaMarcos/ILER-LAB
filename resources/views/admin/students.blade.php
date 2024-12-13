@@ -3,6 +3,12 @@
 @section('title', 'Dashboard de Administración')
 
 @section('content')
+
+<a href="{{ route('admin.dashboard') }}" class="btn btn-light">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+
 <div class="container mt-5">
     <h1 class="text-center mb-4 text-dark">Gestión de Estudiantes</h1>
 

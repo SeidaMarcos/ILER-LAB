@@ -3,7 +3,12 @@
 @section('title', 'Editar Tarea')
 
 @section('content')
-<div class="container mt-5">
+
+<a href="{{ route('admin.tasks.panel') }}" class="btn btn-light">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<div class="container mt-5 mb-5">
     <h1 class="text-center mb-4">Editar Tarea</h1>
     <!-- Filtros -->
     <form action="{{ route('admin.tasks.edit', $task->id) }}" method="GET" class="mb-4">
