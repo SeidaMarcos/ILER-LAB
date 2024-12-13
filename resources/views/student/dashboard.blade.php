@@ -26,7 +26,6 @@
                                     {{ ucfirst($task->priority) }}
                                 </span>
                             </p>
-                            <p class="card-text"><strong>Progreso:</strong> {{ $task->progress }}%</p>
                             <p class="card-text"><strong>Fecha de Entrega:</strong> {{ \Carbon\Carbon::parse($task->date)->format('d/m/Y') }}</p>
                         </div>
                         <div class="card-footer d-flex justify-content-between align-items-center" style="background-color: #e8f5f5;">

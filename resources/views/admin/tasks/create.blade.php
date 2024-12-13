@@ -41,6 +41,27 @@
     <form action="{{ route('admin.tasks.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
+         <!-- Checkbox "Seleccionar todos" -->
+         <div class="form-check">
+            <input type="checkbox" id="selectAll" class="form-check-input">
+            <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
+        </div>
+
+        <!-- Checkboxes para estudiantes -->
+        @foreach ($students as $student)
+            <div class="form-check">
+                <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
+                    id="student-{{ $student->student->id }}" class="form-check-input">
+
+                <label for="student-{{ $student->student->id }}" class="form-check-label">
+                    {{ $student->name }} ({{ $student->email }})
+                </label>
+                @error('students')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        @endforeach
+
         <div class="form-group mb-3">
             <label for="name">Nombre de la Tarea</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
@@ -66,17 +87,6 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="progress">Progreso</label>
-            <select name="progress" id="progress" class="form-control" required>
-                <option value="0" {{ old('progress') == '0' ? 'selected' : '' }}>0%</option>
-                <option value="25" {{ old('progress') == '25' ? 'selected' : '' }}>25%</option>
-                <option value="50" {{ old('progress') == '50' ? 'selected' : '' }}>50%</option>
-                <option value="75" {{ old('progress') == '75' ? 'selected' : '' }}>75%</option>
-                <option value="100" {{ old('progress') == '100' ? 'selected' : '' }}>100%</option>
-            </select>
-        </div>
-
-        <div class="form-group mb-3">
             <label for="date">Fecha de Entrega</label>
             <input type="date" name="date" id="date" class="form-control" value="{{ old('date') }}" required>
             @error('date')
@@ -94,27 +104,6 @@
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
-
-        <!-- Checkbox "Seleccionar todos" -->
-        <div class="form-check">
-            <input type="checkbox" id="selectAll" class="form-check-input">
-            <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
-        </div>
-
-        <!-- Checkboxes para estudiantes -->
-        @foreach ($students as $student)
-            <div class="form-check">
-                <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
-                    id="student-{{ $student->student->id }}" class="form-check-input">
-
-                <label for="student-{{ $student->student->id }}" class="form-check-label">
-                    {{ $student->name }} ({{ $student->email }})
-                </label>
-                @error('students')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-        @endforeach
 
         <!-- Selección de herramientas, máquinas y productos -->
         <h4 class="mt-4">Recursos Requeridos</h4>
@@ -157,17 +146,16 @@
 </div>
 
 <script>
-    //document.addEventListener('DOMContentLoaded', function () {
-    // Limpiar el input de PDF
-    //const clearPdfButton = document.getElementById('clearPdf');
-    //if (clearPdfButton) {
-    // clearPdfButton.addEventListener('click', function () {
-    //  const pdfInput = document.getElementById('pdf');
-    // if (pdfInput) {
-    //     pdfInput.value = ''; // Limpiar el input
-    //   }
-    // });
-    // }
+        const clearPdfButton = document.getElementById('clearPdf');
+        if (clearPdfButton) {
+            clearPdfButton.addEventListener('click', function () {
+                const pdfInput = document.getElementById('pdf');
+                if (pdfInput) {
+                    pdfInput.value = ''; // Limpia el valor del campo
+                }
+            });
+        }
+
 
     document.addEventListener('DOMContentLoaded', function () {
         // Comprobar que el checkbox "selectAll" existe

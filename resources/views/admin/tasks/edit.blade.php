@@ -41,6 +41,25 @@
         @csrf
         @method('PUT')
 
+                <!-- Lista de estudiantes -->
+                <div class="form-group">
+                    <label for="students">Estudiantes</label>
+                    <div class="form-check">
+                        <input type="checkbox" id="selectAll" class="form-check-input">
+                        <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
+                    </div>
+        
+                    @foreach ($students as $student)
+                        <div class="form-check">
+                            <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
+                                id="student-{{ $student->student->id }}" class="form-check-input" {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
+                            <label for="student-{{ $student->student->id }}" class="form-check-label">
+                                {{ $student->name }} ({{ $student->email }})
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+
         <div class="form-group mb-3">
             <label for="name">Nombre de la Tarea</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ $task->name }}" required>
@@ -60,17 +79,6 @@
                 <option value="media" {{ $task->priority == 'media' ? 'selected' : '' }}>Media</option>
                 <option value="alta" {{ $task->priority == 'alta' ? 'selected' : '' }}>Alta</option>
                 <option value="urgente" {{ $task->priority == 'urgente' ? 'selected' : '' }}>Urgente</option>
-            </select>
-        </div>
-
-        <div class="form-group mb-3">
-            <label for="progress">Progreso</label>
-            <select name="progress" id="progress" class="form-control" required>
-                <option value="0" {{ $task->progress == 0 ? 'selected' : '' }}>0%</option>
-                <option value="25" {{ $task->progress == 25 ? 'selected' : '' }}>25%</option>
-                <option value="50" {{ $task->progress == 50 ? 'selected' : '' }}>50%</option>
-                <option value="75" {{ $task->progress == 75 ? 'selected' : '' }}>75%</option>
-                <option value="100" {{ $task->progress == 100 ? 'selected' : '' }}>100%</option>
             </select>
         </div>
 
@@ -101,24 +109,6 @@
             @enderror
         </div>
 
-        <!-- Lista de estudiantes -->
-        <div class="form-group">
-            <label for="students">Estudiantes</label>
-            <div class="form-check">
-                <input type="checkbox" id="selectAll" class="form-check-input">
-                <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
-            </div>
-
-            @foreach ($students as $student)
-                <div class="form-check">
-                    <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
-                        id="student-{{ $student->student->id }}" class="form-check-input" {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
-                    <label for="student-{{ $student->student->id }}" class="form-check-label">
-                        {{ $student->name }} ({{ $student->email }})
-                    </label>
-                </div>
-            @endforeach
-        </div>
         <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-save"></i></button>
 
     </form>

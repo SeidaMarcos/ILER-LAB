@@ -62,7 +62,6 @@ class TaskController extends Controller
         $request->validate([
             'description' => 'required|string|max:255',
             'priority' => 'required|in:baja,media,alta,urgente',
-            'progress' => 'required|in:0,25,50,75,100',
             'date' => ['required', 'date', 'after_or_equal:today'],
             'pdf' => 'nullable|file|mimes:pdf|max:2048',
             'students' => ['required', 'array'], // Validar estudiantes seleccionados
@@ -74,8 +73,6 @@ class TaskController extends Controller
             'description.max' => 'La descripción no debe exceder los 255 caracteres.',
             'priority.required' => 'Debes seleccionar una prioridad.',
             'priority.in' => 'La prioridad seleccionada no es válida.',
-            'progress.required' => 'Debes indicar el progreso.',
-            'progress.in' => 'El progreso debe ser uno de los valores permitidos.',
             'date.required' => 'La fecha de entrega es obligatoria.',
             'date.date' => 'La fecha de entrega debe ser una fecha válida.',
             'date.after_or_equal' => 'La fecha de entrega debe ser hoy o una fecha futura.',
@@ -90,7 +87,6 @@ class TaskController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'priority' => $request->priority,
-            'progress' => $request->progress,
             'date' => $request->date,
             'pdf' => $pdfPath,
         ]);
@@ -174,7 +170,6 @@ public function destroy($id)
             [
                 'description' => 'required|string|max:255',
                 'priority' => 'required|in:baja,media,alta,urgente',
-                'progress' => 'required|in:0,25,50,75,100',
                 'date' => ['required', 'date', 'after_or_equal:today'],
                 'pdf' => 'nullable|file|mimes:pdf|max:2048',
                 'students' => ['nullable', 'array'], // Validar estudiantes seleccionados (puede ser null)
@@ -192,7 +187,6 @@ public function destroy($id)
         $task->name = $request->name;
         $task->description = $request->description;
         $task->priority = $request->priority;
-        $task->progress = $request->progress;
         $task->date = $request->date;
     
         // Manejo del PDF

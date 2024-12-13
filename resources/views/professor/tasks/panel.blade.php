@@ -30,7 +30,6 @@
                     <th>ID</th>
                     <th>Descripción</th>
                     <th>Prioridad</th>
-                    <th>Progreso</th>
                     <th>Fecha de Entrega</th>
                     <th>Archivo</th>
                     <th>Acciones</th>
@@ -42,7 +41,6 @@
                         <td>{{ $task->id }}</td>
                         <td>{{ $task->description }}</td>
                         <td>{{ ucfirst($task->priority) }}</td>
-                        <td>{{ $task->progress }}%</td>
                         <td>{{ $task->date }}</td>
                         <td>
                             @if($task->pdf)

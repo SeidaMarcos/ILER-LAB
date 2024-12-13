@@ -13,7 +13,6 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->text('description');
             $table->enum('priority', ['baja', 'media', 'alta', 'urgente']);
-            $table->enum('progress', ['0', '25', '50', '75', '100']);
             $table->date('date');
             $table->string('pdf')->nullable(); // Path del archivo PDF
             $table->timestamps();

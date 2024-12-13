@@ -4,73 +4,101 @@
 
 @section('content')
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Panel de Tareas</h1>
+    <h1 class="text-center mb-4 text-dark">Panel de Tareas</h1>
 
-    <!-- Mensaje de éxito -->
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- Botón para crear nueva tarea -->
-    <div class="mb-4 text-end">
-        <a href="{{ route('admin.tasks.create') }}" class="btn-custom-shared btn-login-custom">
-            <i class="fas fa-plus"></i>
-        </a>
-    </div>
-
-    <!-- Tabla de tareas -->
     @if($tasks->isEmpty())
-        <p class="text-center">No hay tareas creadas.</p>
+        <!-- No hay tareas -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header text-white" style="background-color: #14b8a6;">
+                <h2 class="mb-0">Tareas</h2>
+            </div>
+            <div class="card-body">
+                <p class="text-center text-muted">No hay tareas creadas.</p>
+                <!-- Botón para crear nueva tarea -->
+                <div class="text-end">
+                    <a href="{{ route('admin.tasks.create') }}" class="d-flex align-items-center justify-content-center btn-create-task"
+                       style="background-color: #14b8a6; color: white; width: 50px; height: 50px; border-radius: 50%; text-decoration: none; border: none; transition: transform 0.2s ease;">
+                        <i class="fas fa-plus" style="font-size: 1.2rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
     @else
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Prioridad</th>
-                    <th>Progreso</th>
-                    <th>Fecha de Entrega</th>
-                    <th>Archivo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($tasks as $task)
-                    <tr>
-                        <td>{{ $task->id }}</td>
-                        <td>{{ $task->name }}</td>
-                        <td>{{ $task->description }}</td>
-                        <td>{{ ucfirst($task->priority) }}</td>
-                        <td>{{ $task->progress }}%</td>
-                        <td>{{ $task->date }}</td>
-                        <td>
-                            @if($task->pdf)
-                                <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank">Ver PDF</a>
-                            @else
-                                No disponible
-                            @endif
-                        </td>
-                        <td>
-                            <a href="{{ route('admin.tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form action="{{ route('admin.tasks.destroy', $task->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('¿Estás seguro de eliminar esta tarea?')">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <!-- Tareas Actuales -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header text-white d-flex align-items-center justify-content-between" style="background-color: #14b8a6;">
+                <h2 class="mb-0">Tareas</h2>
+                <!-- Botón para crear nueva tarea -->
+                <a href="{{ route('admin.tasks.create') }}" class="d-flex align-items-center justify-content-center btn-create-task"
+                   style="background-color: #ffffff; color: #14b8a6; width: 50px; height: 50px; border-radius: 50%; text-decoration: none; border: none; transition: transform 0.2s ease; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);">
+                    <i class="fas fa-plus" style="font-size: 1.2rem;"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Prioridad</th>
+                                <th>Fecha de Entrega</th>
+                                <th>Archivo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($tasks as $task)
+                                <tr>
+                                    <td class="text-center">{{ $task->id }}</td>
+                                    <td>{{ $task->name }}</td>
+                                    <td>{{ $task->description }}</td>
+                                    <td class="text-center">
+                                        <span class="badge 
+                                            {{ $task->priority == 'alta' ? 'bg-danger' : ($task->priority == 'media' ? 'bg-warning text-dark' : 'bg-success') }}">
+                                            {{ ucfirst($task->priority) }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">{{ $task->date }}</td>
+                                    <td class="text-center">
+                                        @if($task->pdf)
+                                            <a href="{{ asset('storage/' . $task->pdf) }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                Ver PDF
+                                            </a>
+                                        @else
+                                            <span class="text-muted">No disponible</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- Botón Editar -->
+                                        <a href="{{ route('admin.tasks.edit', $task->id) }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <!-- Botón Eliminar -->
+                                        <form action="{{ route('admin.tasks.destroy', $task->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('¿Estás seguro de eliminar esta tarea?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     @endif
 </div>
 @endsection
+
+<style>
+    .btn-create-task:hover {
+        transform: scale(1.1); 
+        background-color: #119b90; 
+    }
+</style>
