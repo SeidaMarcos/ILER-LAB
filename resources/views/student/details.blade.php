@@ -90,6 +90,16 @@
                 <p>No se requieren productos.</p>
             @endif
 
+            <!-- Última entrega del estudiante -->
+@if ($task->student_pdf)
+<div class="mb-4">
+    <h6><strong>Tu última entrega:</strong></h6>
+    <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-info">
+        <i class="fas fa-file-pdf"></i> Ver mi Entrega
+    </a>
+</div>
+@endif
+
             <!-- Formulario para entregar la tarea -->
             <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="mt-4">
                 @csrf

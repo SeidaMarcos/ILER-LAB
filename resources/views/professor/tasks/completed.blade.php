@@ -12,16 +12,24 @@
         <div class="row">
             @foreach ($tasks as $task)
                 <div class="col-md-4 mb-4">
-                    <div class="card shadow-lg border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $task->name }}</h5>
-                            <p>{{ $task->description }}</p>
-                            <p><strong>Entregas:</strong> 
-                                {{ $task->students->where('pivot.student_pdf', '!=', null)->count() }} /
+                    <div class="card task-card h-100 shadow-lg border-0">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-white" style="background-color: #13a292; padding: 10px; border-radius: 5px;">
+                                {{ $task->name }}
+                            </h5>
+
+                            <p class="card-text"><strong>Entregas:</strong> 
+                              
+                                {{ $task->students->filter(function ($student) use ($task) {
+                                    return $task->student_pdf !== null;
+                                })->count() }} /
                                 {{ $task->students->count() }}
                             </p>
-                            <a href="{{ route('professor.task.details', $task->id) }}" class="btn btn-primary">
-                                Ver Detalles
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-between align-items-center" style="background-color: #e8f5f5;">
+                            <a href="{{ route('professor.tasks.details', $task->id) }}" class="btn btn-sm btn-outline-info">
+                                <i class="fas fa-info-circle"></i> Ver Entrega
                             </a>
                         </div>
                     </div>

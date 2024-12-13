@@ -7,6 +7,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProfessorController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ProfessorTaskController;
+
 
 // Rutas públicas
 Route::view('/', 'welcome')->name('welcome');
@@ -68,20 +71,6 @@ Route::middleware('auth')->prefix('student')->group(function () {
     Route::post('/tasks/{id}/upload', [StudentController::class, 'uploadTask'])->name('student.tasks.upload');
 });
 
-// Rutas del profesor
-Route::middleware('auth')->prefix('professor')->group(function () {
-    Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
-    Route::get('/tasks/panel', [ProfessorController::class, 'panelTasks'])->name('professor.tasks.panel');
-    Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
-    Route::get('/tasks/{id}', [ProfessorController::class, 'taskDetails'])->name('professor.task.details');
-    Route::get('/tasks/create', [TaskController::class, 'create'])->name('professor.tasks.create');
-    Route::post('/tasks', [TaskController::class, 'store'])->name('professor.tasks.store');
-    Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('professor.tasks.edit');
-    Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('professor.tasks.update');
-    Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('professor.tasks.destroy');
-});
-
-use App\Http\Controllers\InventoryController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
@@ -109,3 +98,28 @@ Route::delete('/inventory/tools/{id}', [InventoryController::class, 'destroyTool
 
 // Página principal del inventario
 Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+
+
+
+
+Route::middleware('auth')->prefix('professor')->group(function () {
+    Route::get('/tasks', [ProfessorTaskController::class, 'index'])->name('professor.tasks.index');
+    Route::get('/tasks/create', [ProfessorTaskController::class, 'create'])->name('professor.tasks.create');
+    Route::post('/tasks', [ProfessorTaskController::class, 'store'])->name('professor.tasks.store');
+    Route::get('/tasks/{id}/edit', [ProfessorTaskController::class, 'edit'])->name('professor.tasks.edit');
+    Route::put('/tasks/{id}', [ProfessorTaskController::class, 'update'])->name('professor.tasks.update');
+    Route::delete('/tasks/{id}', [ProfessorTaskController::class, 'destroy'])->name('professor.tasks.destroy');
+        Route::get('/tasks/completed', [ProfessorTaskController::class, 'completedTasks'])->name('professor.tasks.completed');
+
+        Route::get('/tasks/panel', [ProfessorTaskController::class, 'index'])->name('professor.tasks.panel');
+
+});
+
+Route::middleware('auth')->prefix('professor')->group(function () {
+    Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
+    Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
+    Route::get('/tasks/{id}', [ProfessorController::class, 'taskDetails'])->name('professor.tasks.details');
+
+    Route::get('/professor/tasks/{id}/details', [ProfessorController::class, 'taskDetails'])->name('professor.task.details');
+
+});

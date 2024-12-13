@@ -3,10 +3,15 @@
 @section('title', 'Editar Tarea')
 
 @section('content')
-<div class="container mt-5">
+
+<a href="{{ route('professor.tasks.panel') }}" class="btn btn-light">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<div class="container mt-5 mb-5">
     <h1 class="text-center mb-4">Editar Tarea</h1>
     <!-- Filtros -->
-    <form action="{{ route('admin.tasks.edit', $task->id) }}" method="GET" class="mb-4">
+    <form action="{{ route('professor.tasks.edit', $task->id) }}" method="GET" class="mb-4">
         <div class="row">
             <div class="col-md-3">
                 <input type="text" name="name" class="form-control" placeholder="Buscar por Nombre"
@@ -37,9 +42,28 @@
             </div>
         </div>
     </form>
-    <form action="{{ route('admin.tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('professor.tasks.update', $task->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+
+                <!-- Lista de estudiantes -->
+                <div class="form-group">
+                    <label for="students">Estudiantes</label>
+                    <div class="form-check">
+                        <input type="checkbox" id="selectAll" class="form-check-input">
+                        <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
+                    </div>
+        
+                    @foreach ($students as $student)
+                        <div class="form-check">
+                            <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
+                                id="student-{{ $student->student->id }}" class="form-check-input" {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
+                            <label for="student-{{ $student->student->id }}" class="form-check-label">
+                                {{ $student->name }} ({{ $student->email }})
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
 
         <div class="form-group mb-3">
             <label for="name">Nombre de la Tarea</label>
@@ -90,24 +114,6 @@
             @enderror
         </div>
 
-        <!-- Lista de estudiantes -->
-        <div class="form-group">
-            <label for="students">Estudiantes</label>
-            <div class="form-check">
-                <input type="checkbox" id="selectAll" class="form-check-input">
-                <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
-            </div>
-
-            @foreach ($students as $student)
-                <div class="form-check">
-                    <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
-                        id="student-{{ $student->student->id }}" class="form-check-input" {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
-                    <label for="student-{{ $student->student->id }}" class="form-check-label">
-                        {{ $student->name }} ({{ $student->email }})
-                    </label>
-                </div>
-            @endforeach
-        </div>
         <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-save"></i></button>
 
     </form>
