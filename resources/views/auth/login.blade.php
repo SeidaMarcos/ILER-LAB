@@ -42,8 +42,12 @@
             </div>
 
             <!-- Botón de Iniciar Sesión -->
-            <button type="submit" class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transition duration-200">Iniciar Sesión</button>
-
+            <button 
+                type="submit" 
+                    class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transform hover:scale-105 transition-transform duration-200">
+                    Iniciar Sesión
+            </button>
+        
             <!-- Enlace al Registro -->
             <p class="text-center mt-4 text-gray-700">
                 ¿No tienes cuenta? <a href="{{ route('register.form') }}" class="text-teal-500 hover:underline">Regístrate aquí</a>

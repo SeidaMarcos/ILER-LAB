@@ -109,8 +109,11 @@
                 </div>
             </div>
 
-            <!-- Botón de registro -->
-            <button type="submit" class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transition duration-200">Registrarse</button>
+            <button 
+                type="submit" 
+                    class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transform hover:scale-105 transition-transform duration-300">
+                    Registrarse
+            </button>
 
             <!-- Enlace al inicio de sesión -->
             <p class="text-center mt-4 text-gray-700">
