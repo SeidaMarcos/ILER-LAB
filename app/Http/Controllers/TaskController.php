@@ -105,61 +105,61 @@ class TaskController extends Controller
 
 
 
-// Eliminar una tarea
-public function destroy($id)
-{
-    $task = Task::findOrFail($id);
+    // Eliminar una tarea
+    public function destroy($id)
+    {
+        $task = Task::findOrFail($id);
 
-    // Verificar y eliminar el archivo PDF de la tarea
-    if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
-        \Storage::disk('public')->delete($task->pdf);
+        // Verificar y eliminar el archivo PDF de la tarea
+        if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
+            \Storage::disk('public')->delete($task->pdf);
+        }
+
+        // Verificar y eliminar los archivos PDF entregados por los estudiantes
+        if ($task->student_pdf && \Storage::disk('public')->exists($task->student_pdf)) {
+            \Storage::disk('public')->delete($task->student_pdf);
+        }
+
+        // Eliminar la tarea
+        $task->delete();
+
+        return redirect()->route('admin.tasks.panel')->with('success', 'Tarea y archivos asociados eliminados correctamente.');
     }
 
-    // Verificar y eliminar los archivos PDF entregados por los estudiantes
-    if ($task->student_pdf && \Storage::disk('public')->exists($task->student_pdf)) {
-        \Storage::disk('public')->delete($task->student_pdf);
+
+
+
+    public function edit(Request $request, $id)
+    {
+        $task = Task::with(['students', 'tools', 'machines', 'products'])->findOrFail($id);
+
+        $query = User::where('role_id', 3); // Filtrar estudiantes (role_id = 3)
+
+        // Aplicar filtros si existen
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+        if ($request->filled('ciclo')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('ciclo', $request->ciclo);
+            });
+        }
+        if ($request->filled('curso')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('curso', $request->curso);
+            });
+        }
+
+        $students = $query->get();
+        $tools = Tool::all(); // Obtener herramientas
+        $machines = Machine::all(); // Obtener máquinas
+        $products = Product::all(); // Obtener productos
+
+        return view('admin.tasks.edit', compact('task', 'students', 'tools', 'machines', 'products'));
     }
-
-    // Eliminar la tarea
-    $task->delete();
-
-    return redirect()->route('admin.tasks.panel')->with('success', 'Tarea y archivos asociados eliminados correctamente.');
-}
-
-
-
-
-public function edit(Request $request, $id)
-{
-    $task = Task::with(['students', 'tools', 'machines', 'products'])->findOrFail($id);
-
-    $query = User::where('role_id', 3); // Filtrar estudiantes (role_id = 3)
-
-    // Aplicar filtros si existen
-    if ($request->filled('name')) {
-        $query->where('name', 'like', '%' . $request->name . '%');
-    }
-    if ($request->filled('email')) {
-        $query->where('email', 'like', '%' . $request->email . '%');
-    }
-    if ($request->filled('ciclo')) {
-        $query->whereHas('student', function ($q) use ($request) {
-            $q->where('ciclo', $request->ciclo);
-        });
-    }
-    if ($request->filled('curso')) {
-        $query->whereHas('student', function ($q) use ($request) {
-            $q->where('curso', $request->curso);
-        });
-    }
-
-    $students = $query->get();
-    $tools = Tool::all(); // Obtener herramientas
-    $machines = Machine::all(); // Obtener máquinas
-    $products = Product::all(); // Obtener productos
-
-    return view('admin.tasks.edit', compact('task', 'students', 'tools', 'machines', 'products'));
-}
 
 
 
@@ -168,59 +168,73 @@ public function edit(Request $request, $id)
     public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
-    
+
         $request->validate(
             [
+                'name' => 'required|string|max:255',
                 'description' => 'required|string|max:255',
                 'priority' => 'required|in:baja,media,alta,urgente',
                 'date' => ['required', 'date', 'after_or_equal:today'],
                 'pdf' => 'nullable|file|mimes:pdf|max:2048',
-                'students' => ['nullable', 'array'], // Validar estudiantes seleccionados (puede ser null)
+                'students' => ['nullable', 'array'], // Validar estudiantes seleccionados
+                'tools' => ['nullable', 'array'], // Validar herramientas seleccionadas
+                'machines' => ['nullable', 'array'], // Validar máquinas seleccionadas
+                'products' => ['nullable', 'array'], // Validar productos seleccionados
             ],
             [
-                'pdf.mimes' => 'Solo se pueden adjuntar archivos en formato PDF.',
-                'pdf.max' => 'El archivo PDF no debe exceder los 2 MB.',
-                'date.required' => 'La fecha es obligatoria.',
-                'date.date' => 'El valor ingresado debe ser una fecha válida.',
+                'name.required' => 'El nombre de la tarea es obligatorio.',
+                'description.required' => 'La descripción de la tarea es obligatoria.',
+                'priority.required' => 'La prioridad es obligatoria.',
+                'priority.in' => 'La prioridad seleccionada no es válida.',
+                'date.required' => 'La fecha de entrega es obligatoria.',
+                'date.date' => 'La fecha debe ser válida.',
                 'date.after_or_equal' => 'La fecha debe ser igual o posterior a hoy.',
+                'pdf.mimes' => 'El archivo debe ser un PDF.',
+                'pdf.max' => 'El archivo PDF no debe exceder los 2 MB.',
             ]
         );
-    
+
         // Actualizar datos de la tarea
-        $task->name = $request->name;
-        $task->description = $request->description;
-        $task->priority = $request->priority;
-        $task->date = $request->date;
-    
+        $task->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'priority' => $request->priority,
+            'date' => $request->date,
+        ]);
+
         // Manejo del PDF
         if ($request->has('remove_pdf')) {
             // Eliminar archivo PDF actual si existe
-            if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
-                \Storage::disk('public')->delete($task->pdf);
+            if ($task->pdf && Storage::disk('public')->exists($task->pdf)) {
+                Storage::disk('public')->delete($task->pdf);
             }
             $task->pdf = null; // Eliminar referencia en la base de datos
         } elseif ($request->hasFile('pdf')) {
-            // Subir un nuevo archivo PDF si no está marcada la opción de "Guardar sin archivo PDF"
-            if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
-                \Storage::disk('public')->delete($task->pdf); // Eliminar archivo anterior
+            // Subir un nuevo archivo PDF
+            if ($task->pdf && Storage::disk('public')->exists($task->pdf)) {
+                Storage::disk('public')->delete($task->pdf); // Eliminar archivo anterior
             }
             $task->pdf = $request->file('pdf')->store('tasks', 'public'); // Guardar nuevo archivo
         }
-    
+
         $task->save();
-    
-        // Actualizar los estudiantes asociados
+
+        // Actualizar estudiantes asociados
         if ($request->has('students')) {
-            // Obtener IDs válidos de estudiantes
             $validStudentIds = Student::whereIn('id', $request->students)->pluck('id')->toArray();
-            $task->students()->sync($validStudentIds); // Sincronizar estudiantes
+            $task->students()->sync($validStudentIds);
         } else {
-            $task->students()->detach(); // Si no se seleccionaron estudiantes, elimina todos
+            $task->students()->detach(); // Eliminar todos si no se seleccionaron
         }
-    
+
+        // Actualizar herramientas, máquinas y productos
+        $task->tools()->sync($request->tools ?? []); // Actualizar herramientas
+        $task->machines()->sync($request->machines ?? []); // Actualizar máquinas
+        $task->products()->sync($request->products ?? []); // Actualizar productos
+
         return redirect()->route('admin.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
     }
 
-   
-    
+
+
 }

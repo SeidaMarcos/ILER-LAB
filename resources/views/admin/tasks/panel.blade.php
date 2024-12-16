@@ -57,8 +57,8 @@
                             @foreach ($tasks as $task)
                                 <tr>
                                     <td class="text-center">{{ $task->id }}</td>
-                                    <td>{{ $task->name }}</td>
-                                    <td>{{ $task->description }}</td>
+                                    <td class="text-center">{{ $task->name }}</td>
+                                    <td class="text-center">{{ $task->description }}</td>
                                     <td class="text-center">
                                         <span class="badge 
                                             {{ $task->priority == 'alta' ? 'bg-danger' : ($task->priority == 'media' ? 'bg-warning text-dark' : 'bg-success') }}">
