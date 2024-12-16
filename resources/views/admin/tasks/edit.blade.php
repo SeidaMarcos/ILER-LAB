@@ -46,24 +46,24 @@
         @csrf
         @method('PUT')
 
-                <!-- Lista de estudiantes -->
-                <div class="form-group">
-                    <label for="students">Estudiantes</label>
-                    <div class="form-check">
-                        <input type="checkbox" id="selectAll" class="form-check-input">
-                        <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
-                    </div>
-        
-                    @foreach ($students as $student)
-                        <div class="form-check">
-                            <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
-                                id="student-{{ $student->student->id }}" class="form-check-input" {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
-                            <label for="student-{{ $student->student->id }}" class="form-check-label">
-                                {{ $student->name }} ({{ $student->email }})
-                            </label>
-                        </div>
-                    @endforeach
+        <!-- Lista de estudiantes -->
+        <div class="form-group">
+            <label for="students">Estudiantes</label>
+            <div class="form-check">
+                <input type="checkbox" id="selectAll" class="form-check-input">
+                <label for="selectAll" class="form-check-label">Seleccionar Todos</label>
+            </div>
+
+            @foreach ($students as $student)
+                <div class="form-check">
+                    <input type="checkbox" name="students[]" value="{{ $student->student->id }}"
+                        id="student-{{ $student->student->id }}" class="form-check-input" {{ $task->students->contains('id', $student->student->id) ? 'checked' : '' }}>
+                    <label for="student-{{ $student->student->id }}" class="form-check-label">
+                        {{ $student->name }} ({{ $student->email }})
+                    </label>
                 </div>
+            @endforeach
+        </div>
 
         <div class="form-group mb-3">
             <label for="name">Nombre de la Tarea</label>
@@ -113,6 +113,44 @@
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
+        <!-- Selección de herramientas, máquinas y productos -->
+        <h4 class="mt-4">Recursos Requeridos</h4>
+
+        <!-- Herramientas -->
+        <h5>Herramientas</h5>
+        @foreach ($tools as $tool)
+            <div class="form-check">
+                <input type="checkbox" name="tools[]" value="{{ $tool->id }}" id="tool-{{ $tool->id }}"
+                    class="form-check-input" {{ $task->tools->contains($tool->id) ? 'checked' : '' }}>
+                <label for="tool-{{ $tool->id }}" class="form-check-label">
+                    {{ $tool->name }} ({{ $tool->material }}) - Stock: {{ $tool->stock }}
+                </label>
+            </div>
+        @endforeach
+
+        <!-- Máquinas -->
+        <h5 class="mt-3">Máquinas</h5>
+        @foreach ($machines as $machine)
+            <div class="form-check">
+                <input type="checkbox" name="machines[]" value="{{ $machine->id }}" id="machine-{{ $machine->id }}"
+                    class="form-check-input" {{ $task->machines->contains($machine->id) ? 'checked' : '' }}>
+                <label for="machine-{{ $machine->id }}" class="form-check-label">
+                    {{ $machine->name }} - Ubicación: {{ $machine->location }}
+                </label>
+            </div>
+        @endforeach
+
+        <!-- Productos -->
+        <h5 class="mt-3">Productos</h5>
+        @foreach ($products as $product)
+            <div class="form-check">
+                <input type="checkbox" name="products[]" value="{{ $product->id }}" id="product-{{ $product->id }}"
+                    class="form-check-input" {{ $task->products->contains($product->id) ? 'checked' : '' }}>
+                <label for="product-{{ $product->id }}" class="form-check-label">
+                    {{ $product->name }} - Ubicación: {{ $product->location }} - Densidad: {{ $product->density }} g/ml
+                </label>
+            </div>
+        @endforeach
 
         <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-save"></i></button>
 

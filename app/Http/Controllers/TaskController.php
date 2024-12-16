@@ -129,35 +129,38 @@ public function destroy($id)
 
 
 
-    public function edit(Request $request, $id)
-    {
-        $task = Task::with('students')->findOrFail($id);
-    
-        $query = User::where('role_id', 3); // Filtrar estudiantes (role_id = 3)
-    
-        // Aplicar filtros si existen
-        if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->name . '%');
-        }
-        if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->email . '%');
-        }
-        if ($request->filled('ciclo')) {
-            $query->whereHas('student', function ($q) use ($request) {
-                $q->where('ciclo', $request->ciclo);
-            });
-        }
-        if ($request->filled('curso')) {
-            $query->whereHas('student', function ($q) use ($request) {
-                $q->where('curso', $request->curso);
-            });
-        }
-    
-        $students = $query->get();
-    
-        return view('admin.tasks.edit', compact('task', 'students'));
+public function edit(Request $request, $id)
+{
+    $task = Task::with(['students', 'tools', 'machines', 'products'])->findOrFail($id);
+
+    $query = User::where('role_id', 3); // Filtrar estudiantes (role_id = 3)
+
+    // Aplicar filtros si existen
+    if ($request->filled('name')) {
+        $query->where('name', 'like', '%' . $request->name . '%');
     }
-    
+    if ($request->filled('email')) {
+        $query->where('email', 'like', '%' . $request->email . '%');
+    }
+    if ($request->filled('ciclo')) {
+        $query->whereHas('student', function ($q) use ($request) {
+            $q->where('ciclo', $request->ciclo);
+        });
+    }
+    if ($request->filled('curso')) {
+        $query->whereHas('student', function ($q) use ($request) {
+            $q->where('curso', $request->curso);
+        });
+    }
+
+    $students = $query->get();
+    $tools = Tool::all(); // Obtener herramientas
+    $machines = Machine::all(); // Obtener máquinas
+    $products = Product::all(); // Obtener productos
+
+    return view('admin.tasks.edit', compact('task', 'students', 'tools', 'machines', 'products'));
+}
+
 
 
 

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<a href="{{ route('admin.tasks.panel') }}" class="btn" style="color: #14b8a6; border: 1px solid #14b8a6;">
+<a href="{{ route('admin.tasks.panel') }}" class="btn btn-light">
     <i class="fas fa-arrow-left"></i>
 </a>
 
