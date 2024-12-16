@@ -42,7 +42,7 @@
                             <strong>{{ $product->name }}</strong> - Ubicación: {{ $product->location }}
                         </span>
                         <span>
-                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal{{ $product->id }}">
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal{{ $product->id }}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <form action="{{ route('inventory.destroy.product', $product->id) }}" method="POST" class="d-inline">
@@ -123,7 +123,7 @@
                             <strong>{{ $machine->name }}</strong> - Ubicación: {{ $machine->location }}
                         </span>
                         <span>
-                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editMachineModal{{ $machine->id }}">
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editMachineModal{{ $machine->id }}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <form action="{{ route('inventory.destroy.machine', $machine->id) }}" method="POST" class="d-inline">
@@ -212,7 +212,7 @@
                             <strong>{{ $tool->name }}</strong> - Material: {{ $tool->material }} (Stock: {{ $tool->stock }})
                         </span>
                         <span>
-                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editToolModal{{ $tool->id }}">
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editToolModal{{ $tool->id }}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <form action="{{ route('inventory.destroy.tool', $tool->id) }}" method="POST" class="d-inline">
