@@ -5,7 +5,7 @@
 @section('content')
 
 <a href="{{ route('professor.tasks.completed') }}" class="btn btn-light mb-3">
-    <i class="fas fa-arrow-left"></i> Volver
+    <i class="fas fa-arrow-left"></i> 
 </a>
 
 <div class="container mt-5">
