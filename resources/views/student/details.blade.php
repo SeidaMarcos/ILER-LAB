@@ -91,29 +91,34 @@
             @endif
 
             <!-- Última entrega del estudiante -->
-@if ($task->student_pdf)
-<div class="mb-4">
-    <h6><strong>Tu última entrega:</strong></h6>
-    <a href="{{ asset('storage/' . $task->student_pdf) }}" target="_blank" class="btn btn-info">
-        <i class="fas fa-file-pdf"></i> Ver mi Entrega
-    </a>
-</div>
+@php
+    $submission = $task->submissions->where('student_id', Auth::user()->student->id)->first();
+@endphp
+
+@if ($submission)
+    <div class="mb-4">
+        <h6><strong>Tu última entrega:</strong></h6>
+        <a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank" class="btn btn-info">
+            <i class="fas fa-file-pdf"></i> Ver mi Entrega
+        </a>
+    </div>
 @endif
 
-            <!-- Formulario para entregar la tarea -->
-            <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="mt-4">
-                @csrf
-                <h5>Entrega de Tarea</h5>
-                <div class="mb-3">
-                    <input type="file" name="student_pdf" id="student_pdf" class="form-control" required>
-                    @error('student_pdf')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-upload"></i> {{ $task->student_pdf ? 'Entregar de Nuevo' : 'Entregar' }}
-                </button>
-            </form>
+<!-- Formulario para entregar la tarea -->
+<form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="mt-4">
+    @csrf
+    <h5>Entrega de Tarea</h5>
+    <div class="mb-3">
+        <input type="file" name="student_pdf" id="student_pdf" class="form-control" required>
+        @error('student_pdf')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-upload"></i> {{ $submission ? 'Entregar de Nuevo' : 'Entregar' }}
+    </button>
+</form>
+
         </div>
     </div>
 </div>

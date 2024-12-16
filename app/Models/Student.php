@@ -22,6 +22,10 @@ class Student extends Model
     return $this->belongsToMany(Student::class, 'student_task', 'task_id', 'student_id')
                 ->withTimestamps();
 }
+public function submissions()
+{
+    return $this->hasMany(TaskSubmission::class);
+}
 
 }
 

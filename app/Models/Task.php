@@ -26,5 +26,11 @@ public function products()
 {
     return $this->belongsToMany(Product::class);
 }
+
+public function submissions()
+{
+    return $this->hasMany(TaskSubmission::class);
+}
+
 }
 
