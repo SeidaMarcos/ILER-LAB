@@ -51,7 +51,6 @@ class ProfessorTaskController extends Controller
         return view('professor.tasks.create', compact('students', 'tools', 'machines', 'products'));
     }
 
-    // Guardar nueva tarea
     public function store(Request $request)
     {
         $request->validate([
@@ -59,14 +58,16 @@ class ProfessorTaskController extends Controller
             'priority' => 'required|in:baja,media,alta,urgente',
             'date' => ['required', 'date', 'after_or_equal:today'],
             'pdf' => 'nullable|file|mimes:pdf|max:2048',
-            'students' => ['required', 'array'],
+            'students' => ['nullable', 'array'], // Permitir array o null
             'tools' => ['nullable', 'array'],
             'machines' => ['nullable', 'array'],
             'products' => ['nullable', 'array'],
         ]);
-
+    
+        // Subir archivo PDF si existe
         $pdfPath = $request->file('pdf') ? $request->file('pdf')->store('tasks', 'public') : null;
-
+    
+        // Crear la tarea
         $task = Task::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -74,16 +75,17 @@ class ProfessorTaskController extends Controller
             'date' => $request->date,
             'pdf' => $pdfPath,
         ]);
-
+    
         $task->tools()->sync($request->tools ?? []);
         $task->machines()->sync($request->machines ?? []);
         $task->products()->sync($request->products ?? []);
-
-        $validStudentIds = Student::whereIn('id', $request->students)->pluck('id')->toArray();
-        $task->students()->sync($validStudentIds);
-
+    
+        $studentIds = $request->students ?? [];
+        $task->students()->sync($studentIds);
+    
         return redirect()->route('professor.tasks.index')->with('success', 'Tarea creada correctamente.');
     }
+    
 
     // Editar tarea
     public function edit(Request $request, $id)
@@ -188,5 +190,26 @@ class ProfessorTaskController extends Controller
 
         return redirect()->route('professor.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
     }
+
+     // Eliminar una tarea
+     public function destroy($id)
+     {
+         $task = Task::findOrFail($id);
+ 
+         // Verificar y eliminar el archivo PDF de la tarea
+         if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
+             \Storage::disk('public')->delete($task->pdf);
+         }
+ 
+         // Verificar y eliminar los archivos PDF entregados por los estudiantes
+         if ($task->student_pdf && \Storage::disk('public')->exists($task->student_pdf)) {
+             \Storage::disk('public')->delete($task->student_pdf);
+         }
+ 
+         // Eliminar la tarea
+         $task->delete();
+ 
+         return redirect()->route('professor.tasks.panel')->with('success', 'Tarea y archivos asociados eliminados correctamente.');
+     }
 
 }
