@@ -186,7 +186,7 @@ class ProfessorTaskController extends Controller
         $task->machines()->sync($request->machines ?? []); // Actualizar máquinas
         $task->products()->sync($request->products ?? []); // Actualizar productos
 
-        return redirect()->route('admin.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
+        return redirect()->route('professor.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
     }
 
 }
