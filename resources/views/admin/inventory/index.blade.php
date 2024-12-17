@@ -149,12 +149,12 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label for="reference" class="form-label">Referencia</label>
-                                            <input type="text" name="reference" class="form-control" value="{{ $machine->reference }}" required>
-                                        </div>
-                                        <div class="mb-3">
                                             <label for="name" class="form-label">Nombre</label>
                                             <input type="text" name="name" class="form-control" value="{{ $machine->name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reference" class="form-label">Referencia</label>
+                                            <input type="text" name="reference" class="form-control" value="{{ $machine->reference }}" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="location" class="form-label">Ubicación</label>
@@ -238,12 +238,12 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label for="reference" class="form-label">Referencia</label>
-                                            <input type="text" name="reference" class="form-control" value="{{ $tool->reference }}" required>
-                                        </div>
-                                        <div class="mb-3">
                                             <label for="name" class="form-label">Nombre</label>
                                             <input type="text" name="name" class="form-control" value="{{ $tool->name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reference" class="form-label">Referencia</label>
+                                            <input type="text" name="reference" class="form-control" value="{{ $tool->reference }}" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="stock" class="form-label">Stock</label>
