@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTasksTable extends Migration
 {
-
     public function up()
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->string('name'); // Nombre de la tarea (opcional si necesitas)
             $table->text('description');
             $table->enum('priority', ['baja', 'media', 'alta', 'urgente']);
             $table->date('date');
