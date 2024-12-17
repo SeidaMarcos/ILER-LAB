@@ -40,8 +40,8 @@
                 </a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
+            <div class="table-responsive">
+                    <table class="table table-striped">
                         <thead class="table-light">
                             <tr class="text-center">
                                 <th>ID</th>
