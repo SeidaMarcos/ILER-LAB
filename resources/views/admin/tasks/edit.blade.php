@@ -47,7 +47,7 @@
         @method('PUT')
 
         <!-- Lista de estudiantes -->
-        <div class="form-group">
+        <div class="form-group mb-5">
             <label for="students">Estudiantes</label>
             <div class="form-check">
                 <input type="checkbox" id="selectAll" class="form-check-input">
@@ -95,7 +95,7 @@
             @enderror
         </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-5">
             <label for="pdf">Reemplaza/Añade PDF (opcional)</label>
             <input type="file" name="pdf" id="pdf" class="form-control">
 
@@ -152,7 +152,7 @@
             </div>
         @endforeach
 
-        <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-save"></i></button>
+        <button type="submit" class="btn-custom-shared btn-login-custom mt-5 mb-5"><i class="fas fa-save"></i></button>
 
     </form>
 

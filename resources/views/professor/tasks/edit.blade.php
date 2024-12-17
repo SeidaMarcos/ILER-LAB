@@ -65,7 +65,7 @@
                     @endforeach
                 </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 mt-5">
             <label for="name">Nombre de la Tarea</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ $task->name }}" required>
         </div>
@@ -116,7 +116,7 @@
 
 
         <!-- Selección de herramientas, máquinas y productos -->
-        <h4 class="mt-4">Recursos Requeridos</h4>
+        <h4 class="mt-5">Recursos Requeridos</h4>
 
         <!-- Herramientas -->
         <h5>Herramientas</h5>
@@ -154,7 +154,7 @@
             </div>
         @endforeach
         
-        <button type="submit" class="btn-custom-shared btn-login-custom"><i class="fas fa-save"></i></button>
+        <button type="submit" class="btn-custom-shared btn-login-custom mt-5 mb-5"><i class="fas fa-save"></i></button>
 
     </form>
 

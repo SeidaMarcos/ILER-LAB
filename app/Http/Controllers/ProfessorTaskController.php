@@ -115,7 +115,7 @@ class ProfessorTaskController extends Controller
         $machines = Machine::all(); // Obtener máquinas
         $products = Product::all(); // Obtener productos
 
-        return view('admin.tasks.edit', compact('task', 'students', 'tools', 'machines', 'products'));
+        return view('professor.tasks.edit', compact('task', 'students', 'tools', 'machines', 'products'));
     }
 
     // Actualizar tarea
