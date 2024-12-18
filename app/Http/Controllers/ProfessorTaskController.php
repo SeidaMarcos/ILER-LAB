@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use App\Models\Student;
 use Illuminate\Support\Facades\Storage;
@@ -10,24 +11,21 @@ use App\Models\Product;
 use App\Models\Tool;
 use App\Models\Machine;
 
-class TaskController extends Controller
+class ProfessorTaskController extends Controller
 {
-    // Mostrar el panel de tareas
+    // Mostrar el panel de tareas para el profesor
     public function index()
     {
-        $tasks = Task::orderBy('date', 'asc')->get(); // Ordenar las tareas por fecha
-        return view('admin.tasks.panel', compact('tasks')); // Pasar las tareas a la vista
+        $tasks = Task::orderBy('date', 'asc')->get(); // Cambiar lógica si es necesario para el profesor
+        return view('professor.tasks.panel', compact('tasks'));
     }
 
-
-
-
-    // Mostrar y filtrar formulario para crear una nueva tarea
+    // Crear nueva tarea
     public function create(Request $request)
     {
         $query = User::where('role_id', 3); // Filtrar estudiantes (role_id = 3)
 
-        // Aplicar filtros si existen
+        // Aplicar filtros
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
         }
@@ -45,18 +43,14 @@ class TaskController extends Controller
             });
         }
 
-        $students = $query->get(); // Obtener resultados filtrados
+        $students = $query->get();
         $tools = Tool::all();
         $machines = Machine::all();
         $products = Product::all();
 
-        return view('admin.tasks.create', compact('students', 'tools', 'machines', 'products'));
+        return view('professor.tasks.create', compact('students', 'tools', 'machines', 'products'));
     }
 
-
-
-
-    // Guardar una nueva tarea
     public function store(Request $request)
     {
         $request->validate([
@@ -64,25 +58,16 @@ class TaskController extends Controller
             'priority' => 'required|in:baja,media,alta,urgente',
             'date' => ['required', 'date', 'after_or_equal:today'],
             'pdf' => 'nullable|file|mimes:pdf|max:2048',
-            'students' => ['required', 'array'], // Validar estudiantes seleccionados
-            'tools' => ['nullable', 'array'], // Validar herramientas seleccionadas
-            'machines' => ['nullable', 'array'], // Validar máquinas seleccionadas
-            'products' => ['nullable', 'array'], // Validar productos seleccionados
-        ], [
-            'description.required' => 'La descripción es obligatoria.',
-            'description.max' => 'La descripción no debe exceder los 255 caracteres.',
-            'priority.required' => 'Debes seleccionar una prioridad.',
-            'priority.in' => 'La prioridad seleccionada no es válida.',
-            'date.required' => 'La fecha de entrega es obligatoria.',
-            'date.date' => 'La fecha de entrega debe ser una fecha válida.',
-            'date.after_or_equal' => 'La fecha de entrega debe ser hoy o una fecha futura.',
-            'pdf.mimes' => 'El archivo debe estar en formato PDF.',
-            'pdf.max' => 'El tamaño del archivo no debe exceder los 2 MB.',
-            'students.required' => 'Debes asignar al menos un estudiante.',
+            'students' => ['nullable', 'array'], // Permitir array o null
+            'tools' => ['nullable', 'array'],
+            'machines' => ['nullable', 'array'],
+            'products' => ['nullable', 'array'],
         ]);
-
+    
+        // Subir archivo PDF si existe
         $pdfPath = $request->file('pdf') ? $request->file('pdf')->store('tasks', 'public') : null;
-
+    
+        // Crear la tarea
         $task = Task::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -90,45 +75,19 @@ class TaskController extends Controller
             'date' => $request->date,
             'pdf' => $pdfPath,
         ]);
-
-        // Asociar recursos
+    
         $task->tools()->sync($request->tools ?? []);
         $task->machines()->sync($request->machines ?? []);
         $task->products()->sync($request->products ?? []);
-
-        $validStudentIds = Student::whereIn('id', $request->students)->pluck('id')->toArray();
-        $task->students()->sync($validStudentIds);
-
-        return redirect()->route('admin.tasks.panel')->with('success', 'Tarea creada correctamente.');
+    
+        $studentIds = $request->students ?? [];
+        $task->students()->sync($studentIds);
+    
+        return redirect()->route('professor.tasks.index')->with('success', 'Tarea creada correctamente.');
     }
+    
 
-
-
-
-    // Eliminar una tarea
-    public function destroy($id)
-    {
-        $task = Task::findOrFail($id);
-
-        // Verificar y eliminar el archivo PDF de la tarea
-        if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
-            \Storage::disk('public')->delete($task->pdf);
-        }
-
-        // Verificar y eliminar los archivos PDF entregados por los estudiantes
-        if ($task->student_pdf && \Storage::disk('public')->exists($task->student_pdf)) {
-            \Storage::disk('public')->delete($task->student_pdf);
-        }
-
-        // Eliminar la tarea
-        $task->delete();
-
-        return redirect()->route('admin.tasks.panel')->with('success', 'Tarea y archivos asociados eliminados correctamente.');
-    }
-
-
-
-
+    // Editar tarea
     public function edit(Request $request, $id)
     {
         $task = Task::with(['students', 'tools', 'machines', 'products'])->findOrFail($id);
@@ -158,13 +117,10 @@ class TaskController extends Controller
         $machines = Machine::all(); // Obtener máquinas
         $products = Product::all(); // Obtener productos
 
-        return view('admin.tasks.edit', compact('task', 'students', 'tools', 'machines', 'products'));
+        return view('professor.tasks.edit', compact('task', 'students', 'tools', 'machines', 'products'));
     }
 
-
-
-
-
+    // Actualizar tarea
     public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
@@ -232,9 +188,28 @@ class TaskController extends Controller
         $task->machines()->sync($request->machines ?? []); // Actualizar máquinas
         $task->products()->sync($request->products ?? []); // Actualizar productos
 
-        return redirect()->route('admin.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
+        return redirect()->route('professor.tasks.panel')->with('success', 'Tarea actualizada correctamente.');
     }
 
-
+     // Eliminar una tarea
+     public function destroy($id)
+     {
+         $task = Task::findOrFail($id);
+ 
+         // Verificar y eliminar el archivo PDF de la tarea
+         if ($task->pdf && \Storage::disk('public')->exists($task->pdf)) {
+             \Storage::disk('public')->delete($task->pdf);
+         }
+ 
+         // Verificar y eliminar los archivos PDF entregados por los estudiantes
+         if ($task->student_pdf && \Storage::disk('public')->exists($task->student_pdf)) {
+             \Storage::disk('public')->delete($task->student_pdf);
+         }
+ 
+         // Eliminar la tarea
+         $task->delete();
+ 
+         return redirect()->route('professor.tasks.panel')->with('success', 'Tarea y archivos asociados eliminados correctamente.');
+     }
 
 }

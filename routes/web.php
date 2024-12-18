@@ -7,6 +7,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ProfessorController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ProfessorTaskController;
+
 
 // Rutas públicas
 Route::view('/', 'welcome')->name('welcome');
@@ -52,46 +55,71 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     // Gestión de tareas
     Route::prefix('tasks')->group(function () {
-        Route::get('/', [TaskController::class, 'index'])->name('admin.tasks.panel'); // Panel de tareas
-        Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create'); // Crear tarea
-        Route::post('/', [TaskController::class, 'store'])->name('admin.tasks.store'); // Guardar tarea
-        Route::delete('/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy'); // Eliminar tarea
-        // Ruta para mostrar el formulario de edición
-        Route::get('/admin/tasks/{id}/edit', [TaskController::class, 'edit'])->name('admin.tasks.edit')->middleware('auth');
-        // Ruta para actualizar la tarea
-        Route::put('/admin/tasks/{id}', [TaskController::class, 'update'])->name('admin.tasks.update')->middleware('auth');
-
+        Route::get('/', [TaskController::class, 'index'])->name('admin.tasks.panel');
+        Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create');
+        Route::post('/', [TaskController::class, 'store'])->name('admin.tasks.store');
+        Route::delete('/{id}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy');
+        Route::get('/{id}/edit', [TaskController::class, 'edit'])->name('admin.tasks.edit');
+        Route::put('/{id}', [TaskController::class, 'update'])->name('admin.tasks.update');
     });
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/student', [StudentController::class, 'dashboard'])->name('student.dashboard');
+// Rutas del estudiante
+Route::middleware('auth')->prefix('student')->group(function () {
+    Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/task/{id}', [StudentController::class, 'taskDetails'])->name('student.details');
+    Route::post('/tasks/{id}/upload', [StudentController::class, 'uploadTask'])->name('student.tasks.upload');
 });
 
-Route::get('/student/task/{id}', [StudentController::class, 'taskDetails'])->name('student.details');
-Route::post('/student/tasks/{id}/upload', [StudentController::class, 'uploadTask'])->name('student.tasks.upload');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::post('/inventory/products', [InventoryController::class, 'storeProduct'])->name('inventory.store.product');
+    Route::post('/inventory/machines', [InventoryController::class, 'storeMachine'])->name('inventory.store.machine');
+    Route::post('/inventory/tools', [InventoryController::class, 'storeTool'])->name('inventory.store.tool');
+});
+
+
+
+// Productos
+Route::post('/inventory/products', [InventoryController::class, 'storeProduct'])->name('inventory.store.product');
+Route::put('/inventory/products/{id}', [InventoryController::class, 'updateProduct'])->name('inventory.update.product');
+Route::delete('/inventory/products/{id}', [InventoryController::class, 'destroyProduct'])->name('inventory.destroy.product');
+
+// Máquinas
+Route::post('/inventory/machines', [InventoryController::class, 'storeMachine'])->name('inventory.store.machine');
+Route::put('/inventory/machines/{id}', [InventoryController::class, 'updateMachine'])->name('inventory.update.machine');
+Route::delete('/inventory/machines/{id}', [InventoryController::class, 'destroyMachine'])->name('inventory.destroy.machine');
+
+// Herramientas
+Route::post('/inventory/tools', [InventoryController::class, 'storeTool'])->name('inventory.store.tool');
+Route::put('/inventory/tools/{id}', [InventoryController::class, 'updateTool'])->name('inventory.update.tool');
+Route::delete('/inventory/tools/{id}', [InventoryController::class, 'destroyTool'])->name('inventory.destroy.tool');
+
+// Página principal del inventario
+Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+
+
 
 
 Route::middleware('auth')->prefix('professor')->group(function () {
-    Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
-    
-    // Reutilizamos el CRUD del admin
-    Route::get('/tasks/panel', [ProfessorController::class, 'panelTasks'])->name('professor.tasks.panel');
-    Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
+    Route::get('/tasks', [ProfessorTaskController::class, 'index'])->name('professor.tasks.index');
+    Route::get('/tasks/create', [ProfessorTaskController::class, 'create'])->name('professor.tasks.create');
+    Route::post('/tasks', [ProfessorTaskController::class, 'store'])->name('professor.tasks.store');
+    Route::get('/tasks/{id}/edit', [ProfessorTaskController::class, 'edit'])->name('professor.tasks.edit');
+    Route::put('/tasks/{id}', [ProfessorTaskController::class, 'update'])->name('professor.tasks.update');
+    Route::delete('/tasks/{id}', [ProfessorTaskController::class, 'destroy'])->name('professor.tasks.destroy');
+        Route::get('/tasks/completed', [ProfessorTaskController::class, 'completedTasks'])->name('professor.tasks.completed');
 
-    // Opcional: vincular crear/editar tareas del admin
-    Route::get('/tasks/create', [TaskController::class, 'create'])->name('professor.tasks.create');
-    Route::post('/tasks', [TaskController::class, 'store'])->name('professor.tasks.store');
-    Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('professor.tasks.edit');
-    Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('professor.tasks.update');
-    Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('professor.tasks.destroy');
+        Route::get('/tasks/panel', [ProfessorTaskController::class, 'index'])->name('professor.tasks.panel');
+
 });
 
-Route::prefix('professor')->middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('professor')->group(function () {
     Route::get('/dashboard', [ProfessorController::class, 'dashboard'])->name('professor.dashboard');
-    Route::get('/tasks/panel', [ProfessorController::class, 'panelTasks'])->name('professor.tasks.panel');
     Route::get('/tasks/completed', [ProfessorController::class, 'completedTasks'])->name('professor.tasks.completed');
-    Route::get('/tasks/{id}', [ProfessorController::class, 'taskDetails'])->name('professor.task.details');
-    Route::post('/tasks/{taskId}/student/{studentId}/feedback', [ProfessorController::class, 'submitFeedback'])
-        ->name('professor.task.feedback');
+    Route::get('/tasks/{id}', [ProfessorController::class, 'taskDetails'])->name('professor.tasks.details');
+
+    Route::get('/professor/tasks/{id}/details', [ProfessorController::class, 'taskDetails'])->name('professor.task.details');
+
 });

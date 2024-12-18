@@ -8,12 +8,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     @vite('resources/css/app2.css')
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('admin.dashboard') }}">User Panel</a>
+        <!-- Enlace dinámico según el rol del usuario -->
+        <a class="navbar-brand" href="
+             @if (Auth::user()->isAdmin())
+                {{ route('admin.dashboard') }}
+             @elseif (Auth::user()->isStudent())
+                {{ route('student.dashboard') }}
+            @elseif (Auth::user()->isProfessor())
+                {{ route('professor.dashboard') }}
+            @else
+                {{ route('home') }}
+            @endif
+                ">
+            @if (Auth::user()->isAdmin())
+                Panel Admin
+            @elseif (Auth::user()->isStudent())
+                Panel Estudiante
+            @elseif (Auth::user()->isProfessor())
+                Panel Profesor
+            @else
+                User Panel
+            @endif
+        </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -38,7 +61,6 @@
                                     @csrf
                                     <button type="submit" class="dropdown-item">
                                         <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-
                                     </button>
                                 </form>
                             </li>

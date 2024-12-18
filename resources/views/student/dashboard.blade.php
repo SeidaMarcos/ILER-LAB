@@ -11,23 +11,36 @@
     @else
         <div class="row">
             @foreach ($tasks as $task)
+                @php
+                    // Obtener la entrega del estudiante actual
+                    $submission = $task->submissions->where('student_id', auth()->user()->student->id)->first();
+                @endphp
                 <div class="col-md-4 mb-4">
                     <div class="card task-card h-100 shadow-lg border-0">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title text-white" style="background-color: #13a292; padding: 10px; border-radius: 5px;">
-                                Tarea #{{ $task->id }}
+                                {{ $task->name }}
                             </h5>
                             <p class="card-text mt-3"><strong>Descripción:</strong> {{ \Illuminate\Support\Str::limit($task->description, 50) }}</p>
                             <p class="card-text"><strong>Prioridad:</strong> 
                                 <span class="badge text-white" style="background-color: 
                                     {{ $task->priority === 'baja' ? '#28a745' : 
                                        ($task->priority === 'media' ? '#ffc107' : 
-                                       ($task->priority === 'alta' ? '#fd7e14' : '#dc3545')) }}">
+                                       ($task->priority === 'alta' ? '#fd7e14' : '#dc3545')) }};">
                                     {{ ucfirst($task->priority) }}
                                 </span>
                             </p>
-                            <p class="card-text"><strong>Progreso:</strong> {{ $task->progress }}%</p>
                             <p class="card-text"><strong>Fecha de Entrega:</strong> {{ \Carbon\Carbon::parse($task->date)->format('d/m/Y') }}</p>
+
+                            <!-- Estado de la Entrega -->
+                            <p class="card-text">
+                                <strong>Estado:</strong>
+                                @if ($submission)
+                                    <span class="badge bg-success">Entregado</span>
+                                @else
+                                    <span class="badge bg-danger">No entregado</span>
+                                @endif
+                            </p>
                         </div>
                         <div class="card-footer d-flex justify-content-between align-items-center" style="background-color: #e8f5f5;">
                             @if ($task->pdf)

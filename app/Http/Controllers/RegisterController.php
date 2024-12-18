@@ -18,8 +18,8 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $messages = [
-            'name.required' => 'El nombre con los apellidos es obligatorio.',
-            'name.regex' => 'El nombre debe incluir solo letras, espacios y al menos dos apellidos.',
+            'name.required' => 'El nombre completo es obligatorio.',
+            'name.regex' => 'El nombre debe incluir al menos un nombre y dos apellidos, y solo puede contener letras y espacios.',
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.email' => 'El correo electrónico debe ser válido.',
             'email.unique' => 'Este correo electrónico ya está registrado o pendiente de aprobación.',
@@ -37,7 +37,7 @@ class RegisterController extends Controller
         $request->validate([
             'name' => [
                 'required',
-                'regex:/^[A-ZÁÉÍÓÚÑa-záéíóúñ]+(\s[A-ZÁÉÍÓÚÑa-záéíóúñ]+)+$/', // Asegura que haya al menos un apellido y solo letras
+                'regex:/^[A-ZÁÉÍÓÚÑa-záéíóúñ]+(\s[A-ZÁÉÍÓÚÑa-záéíóúñ]+){2,}$/', // Mínimo un nombre y dos apellidos
                 'max:255',
             ],
             'email' => [
