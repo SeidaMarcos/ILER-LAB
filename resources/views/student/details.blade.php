@@ -90,19 +90,23 @@
                 <p>No se requieren productos.</p>
             @endif
 
-            <!-- Última entrega del estudiante -->
-@php
-    $submission = $task->submissions->where('student_id', Auth::user()->student->id)->first();
+            @php
+    $submission = $task->submissions()
+        ->where('student_id', Auth::user()->student->id)
+        ->latest('created_at') // Ordenar por fecha de creación descendente
+        ->first();
 @endphp
 
 @if ($submission)
     <div class="mb-4">
         <h6><strong>Tu última entrega:</strong></h6>
         <a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank" class="btn btn-info">
-            <i class="fas fa-file-pdf"></i> Ver mi Entrega
+            <i class="fas fa-file-pdf"></i> Ver mi Última Entrega
         </a>
+        <p class="mt-2 text-muted"><strong>Fecha de entrega:</strong> {{ \Carbon\Carbon::parse($submission->created_at)->format('d/m/Y H:i') }}</p>
     </div>
 @endif
+
 
 <!-- Formulario para entregar la tarea -->
 <form action="{{ route('student.tasks.upload', $task->id) }}" method="POST" enctype="multipart/form-data" class="mt-4">

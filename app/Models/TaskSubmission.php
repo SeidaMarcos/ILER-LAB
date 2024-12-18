@@ -11,6 +11,8 @@ class TaskSubmission extends Model
 
     protected $fillable = ['student_id', 'task_id', 'file_path'];
 
+    public $timestamps = true; // Asegura que Laravel administre los timestamps
+
     public function student()
     {
         return $this->belongsTo(Student::class);
@@ -21,3 +23,5 @@ class TaskSubmission extends Model
         return $this->belongsTo(Task::class);
     }
 }
+
+

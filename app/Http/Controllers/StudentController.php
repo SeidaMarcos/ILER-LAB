@@ -53,47 +53,60 @@ class StudentController extends Controller
     }
     
     public function uploadTask(Request $request, $taskId)
-{
-    $user = Auth::user();
-
-    // Obtener el estudiante asociado al usuario logueado
-    $student = Student::where('user_id', $user->id)->first();
-
-    if (!$student) {
-        abort(404, 'Estudiante no encontrado');
+    {
+        $user = Auth::user();
+    
+        // Obtener el estudiante asociado al usuario logueado
+        $student = Student::where('user_id', $user->id)->first();
+    
+        if (!$student) {
+            abort(404, 'Estudiante no encontrado');
+        }
+    
+        // Verificar si la tarea existe
+        $task = Task::findOrFail($taskId);
+    
+        // Validar el archivo PDF
+        $request->validate([
+            'student_pdf' => 'required|file|mimes:pdf|max:2048',
+        ], [
+            'student_pdf.required' => 'Es obligatorio subir un archivo.',
+            'student_pdf.file' => 'El archivo debe ser válido.',
+            'student_pdf.mimes' => 'El archivo debe ser un PDF.',
+            'student_pdf.max' => 'El tamaño del archivo no debe exceder los 2MB.',
+        ]);
+    
+        // Subir el archivo PDF
+        if ($request->hasFile('student_pdf')) {
+            $filePath = $request->file('student_pdf')->store('task_submissions', 'public');
+    
+            // Buscar la entrega existente
+            $submission = TaskSubmission::where('student_id', $student->id)
+                ->where('task_id', $task->id)
+                ->first();
+    
+            if ($submission) {
+                // Actualizar el archivo y la fecha de creación
+                $submission->update([
+                    'file_path' => $filePath,
+                ]);
+    
+                // Forzar la actualización del campo created_at
+                $submission->created_at = now();
+                $submission->save();
+            } else {
+                // Crear una nueva entrega si no existe
+                TaskSubmission::create([
+                    'student_id' => $student->id,
+                    'task_id' => $task->id,
+                    'file_path' => $filePath,
+                ]);
+            }
+        }
+    
+        return redirect()->route('student.dashboard', $taskId)
+            ->with('success', 'Tarea entregada correctamente.');
     }
-
-    // Verificar si la tarea existe
-    $task = Task::findOrFail($taskId);
-
-    // Validar el archivo PDF
-    $request->validate([
-        'student_pdf' => 'required|file|mimes:pdf|max:2048',
-    ], [
-        'student_pdf.required' => 'Es obligatorio subir un archivo.',
-        'student_pdf.file' => 'El archivo debe ser válido.',
-        'student_pdf.mimes' => 'El archivo debe ser un PDF.',
-        'student_pdf.max' => 'El tamaño del archivo no debe exceder los 2MB.',
-    ]);
-
-    // Subir el archivo PDF
-    if ($request->hasFile('student_pdf')) {
-        $filePath = $request->file('student_pdf')->store('task_submissions', 'public');
-
-        // Registrar la entrega (si ya existe, se actualiza)
-        TaskSubmission::updateOrCreate(
-            [
-                'student_id' => $student->id,
-                'task_id' => $task->id,
-            ],
-            [
-                'file_path' => $filePath,
-            ]
-        );
-    }
-
-    return redirect()->route('student.dashboard', $taskId)
-        ->with('success', 'Tarea entregada correctamente.');
-}
+    
 
 }

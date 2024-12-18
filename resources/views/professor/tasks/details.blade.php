@@ -59,48 +59,54 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($task->students as $student)
-                        @php
-                            // Obtener la entrega del estudiante
-                            $submission = $student->submissions->where('task_id', $task->id)->first();
-                            $fechaEntrega = \Carbon\Carbon::parse($task->date)->endOfDay(); // La fecha límite incluye todo el día
-                            $entregadoConRetraso = $submission && \Carbon\Carbon::parse($submission->created_at)->gt($fechaEntrega);
-                        @endphp
+                @foreach ($task->students as $student)
+    @php
+        // Obtener la última entrega del estudiante
+        $submission = $student->submissions()
+            ->where('task_id', $task->id)
+            ->latest('created_at') // Ordenar por fecha de creación descendente
+            ->first();
 
-                                <tr>
-                                    <!-- Nombre del estudiante -->
-                                    <td class="text-start fw-bold">
-                                        {{ $student->user->name ?? 'Sin nombre' }}
-                                    </td>
+        $fechaEntrega = \Carbon\Carbon::parse($task->date)->endOfDay(); // La fecha límite incluye todo el día
+        $entregadoConRetraso = $submission && \Carbon\Carbon::parse($submission->created_at)->gt($fechaEntrega);
+    @endphp
 
-                                    <!-- Estado de la entrega -->
-                                    <td class="text-center">
-                                        @if ($submission)
-                                            <span class="badge {{ $entregadoConRetraso ? 'bg-warning text-dark' : 'bg-success' }}">
-                                                {{ $entregadoConRetraso ? 'Entregado con retraso' : 'Entregado' }}
-                                            </span>
-                                        @else
-                                            <span class="badge bg-danger">No entregado</span>
-                                        @endif
-                                    </td>
+    <tr>
+        <!-- Nombre del estudiante -->
+        <td class="text-start fw-bold">
+            {{ $student->user->name ?? 'Sin nombre' }}
+        </td>
 
-                                    <!-- Archivo entregado y fecha -->
-                                    <td class="text-center">
-                                        @if ($submission)
-                                            <a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank"
-                                                class="btn btn-custom-green btn-sm">
-                                                <i class="fas fa-file-pdf"></i> Ver PDF
-                                            </a>
-                                            <p class="mt-1 text-muted" style="font-size: 0.9rem;">
-                                                <strong>Fecha de entrega:</strong>
-                                                {{ \Carbon\Carbon::parse($submission->created_at)->format('d/m/Y H:i') }}
-                                            </p>
-                                        @else
-                                            <span class="text-muted">Sin archivo</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                    @endforeach
+        <!-- Estado de la entrega -->
+        <td class="text-center">
+            @if ($submission)
+                <span class="badge {{ $entregadoConRetraso ? 'bg-warning text-dark' : 'bg-success' }}">
+                    {{ $entregadoConRetraso ? 'Entregado con retraso' : 'Entregado' }}
+                </span>
+            @else
+                <span class="badge bg-danger">No entregado</span>
+            @endif
+        </td>
+
+        <!-- Archivo entregado y fecha -->
+        <td class="text-center">
+            @if ($submission)
+                <a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank"
+                    class="btn btn-custom-green btn-sm">
+                    <i class="fas fa-file-pdf"></i> Ver PDF
+                </a>
+                <p class="mt-1 text-muted" style="font-size: 0.9rem;">
+                    <strong>Última entrega:</strong>
+                    {{ \Carbon\Carbon::parse($submission->created_at)->format('d/m/Y H:i') }}
+                </p>
+            @else
+                <span class="text-muted">Sin archivo</span>
+            @endif
+        </td>
+    </tr>
+@endforeach
+
+
                 </tbody>
 
             </table>

@@ -12,8 +12,15 @@
         <div class="row">
             @foreach ($tasks as $task)
                 @php
-                    // Obtener la entrega del estudiante actual
-                    $submission = $task->submissions->where('student_id', auth()->user()->student->id)->first();
+                    // Obtener la última entrega del estudiante actual
+                    $submission = $task->submissions
+                        ->where('student_id', auth()->user()->student->id)
+                        ->sortByDesc('created_at')
+                        ->first();
+
+                    // Comparar con la fecha límite
+                    $fechaEntrega = \Carbon\Carbon::parse($task->date)->endOfDay();
+                    $entregadoConRetraso = $submission && \Carbon\Carbon::parse($submission->created_at)->gt($fechaEntrega);
                 @endphp
                 <div class="col-md-4 mb-4">
                     <div class="card task-card h-100 shadow-lg border-0">
@@ -36,7 +43,11 @@
                             <p class="card-text">
                                 <strong>Estado:</strong>
                                 @if ($submission)
-                                    <span class="badge bg-success">Entregado</span>
+                                    @if ($entregadoConRetraso)
+                                        <span class="badge bg-warning text-dark">Entregado con retraso</span>
+                                    @else
+                                        <span class="badge bg-success">Entregado</span>
+                                    @endif
                                 @else
                                     <span class="badge bg-danger">No entregado</span>
                                 @endif
