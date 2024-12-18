@@ -15,15 +15,14 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <!-- Enlace dinámico según el rol del usuario -->
-            <a class="navbar-brand"
-                href="
+            <a class="navbar-brand" href="
              @if (Auth::user()->isAdmin()) {{ route('admin.dashboard') }}
              @elseif (Auth::user()->isStudent())
                 {{ route('student.dashboard') }}
             @elseif (Auth::user()->isProfessor())
                 {{ route('professor.dashboard') }}
             @else
-                {{ route('home') }} @endif
+            {{ route('home') }} @endif
                 ">
                 @if (Auth::user()->isAdmin())
                     Panel Admin
@@ -90,7 +89,9 @@
                         <div class="form-group mb-3">
                             <label for="name">Nombre Completo</label>
                             <input type="text" name="name" id="name" class="form-control"
-                                value="{{ Auth::user()->name }}" required>
+                                value="{{ Auth::user()->name }}"
+                                pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1]+ [a-zA-ZÀ-ÿ\u00f1\u00d1]+ [a-zA-ZÀ-ÿ\u00f1\u00d1]+$"
+                                title="Debe incluir nombre y dos apellidos separados por espacios" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="email">Correo Electrónico</label>
@@ -99,7 +100,8 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="password">Nueva Contraseña (Opcional)</label>
-                            <input type="password" name="password" id="password" class="form-control">
+                            <input type="password" name="password" id="password" class="form-control" minlength="6"
+                                title="La contraseña debe tener al menos 6 caracteres">
                         </div>
                         <div class="form-group mb-3">
                             <label for="password_confirmation">Confirmar Nueva Contraseña</label>
