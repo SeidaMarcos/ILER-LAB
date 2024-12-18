@@ -8,34 +8,33 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     @vite('resources/css/app2.css')
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('logo-2-transparente.png') }}" type="image/png">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-        <!-- Enlace dinámico según el rol del usuario -->
-        <a class="navbar-brand" href="
-             @if (Auth::user()->isAdmin())
-                {{ route('admin.dashboard') }}
+            <!-- Enlace dinámico según el rol del usuario -->
+            <a class="navbar-brand"
+                href="
+             @if (Auth::user()->isAdmin()) {{ route('admin.dashboard') }}
              @elseif (Auth::user()->isStudent())
                 {{ route('student.dashboard') }}
             @elseif (Auth::user()->isProfessor())
                 {{ route('professor.dashboard') }}
             @else
-                {{ route('home') }}
-            @endif
+                {{ route('home') }} @endif
                 ">
-            @if (Auth::user()->isAdmin())
-                Panel Admin
-            @elseif (Auth::user()->isStudent())
-                Panel Estudiante
-            @elseif (Auth::user()->isProfessor())
-                Panel Profesor
-            @else
-                User Panel
-            @endif
-        </a>
+                @if (Auth::user()->isAdmin())
+                    Panel Admin
+                @elseif (Auth::user()->isStudent())
+                    Panel Estudiante
+                @elseif (Auth::user()->isProfessor())
+                    Panel Profesor
+                @else
+                    User Panel
+                @endif
+            </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,7 +108,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                                class="fas fa-times"></i></button>
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i></button>
                     </div>
                 </form>
